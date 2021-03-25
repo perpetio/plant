@@ -37,15 +37,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   final List<BottomNavigationBarItem> items = [
     BottomNavigationBarItem(
-      icon: Icon(Icons.home, size: 30),
+      icon: Image.asset('assets/icons/home.png',
+          height: 25.0, color: Colors.grey),
+      activeIcon: Image.asset('assets/icons/home.png', height: 25.0),
       label: 'Home',
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.scanner, size: 30),
+      icon: Image.asset('assets/icons/scan.png', height: 25.0),
+      activeIcon: Image.asset('assets/icons/scan.png',
+          height: 25.0, color: Colors.amber),
       label: 'Scan',
     ),
     BottomNavigationBarItem(
-      icon: Icon(Icons.account_circle_outlined, size: 30),
+      icon: Image.asset('assets/icons/profile.png', height: 25.0),
+      activeIcon: Image.asset('assets/icons/profile.png',
+          height: 25.0, color: Colors.amber),
       label: 'Profile',
     ),
   ];
@@ -63,8 +69,6 @@ class CustomBottomNavigationBar extends StatelessWidget {
         elevation: 0.0,
         showUnselectedLabels: false,
         showSelectedLabels: false,
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.grey,
         selectedLabelStyle: TextStyle(letterSpacing: 1.0, fontSize: 10.0),
         unselectedLabelStyle: TextStyle(letterSpacing: 1.0, fontSize: 10.0),
         items: items,

@@ -34,9 +34,14 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _Body extends StatelessWidget {
+class _Body extends StatefulWidget {
   _Body({Key key}) : super(key: key);
 
+  @override
+  __BodyState createState() => __BodyState();
+}
+
+class __BodyState extends State<_Body> {
   final CarouselController _controller = CarouselController();
 
   @override
@@ -50,33 +55,47 @@ class _Body extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(top: 150.0),
-      child: Container(
-        height: height * 0.455,
-        child: Stack(
-          children: [
-            CarouselSlider(
-              items: promoSliders,
-              options: CarouselOptions(
-                height: height * 0.44,
-                autoPlay: false,
-                enableInfiniteScroll: true,
-                autoPlayInterval: Duration(seconds: 4),
-                enlargeCenterPage: false,
-                viewportFraction: 0.7,
-                aspectRatio: 16 / 9,
-                onPageChanged: (index, reason) => provider.add(
-                  NextImageEvent(index: index),
-                ),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30.0, bottom: 13.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'My plants',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
-              carouselController: _controller,
             ),
-            Positioned(
-              bottom: 0.0,
-              right: 40.0,
-              child: _NextButton(controller: _controller),
-            )
-          ],
-        ),
+          ),
+          Container(
+            height: height * 0.44,
+            child: Stack(
+              children: [
+                CarouselSlider(
+                  items: promoSliders,
+                  options: CarouselOptions(
+                    height: height * 0.43,
+                    autoPlay: false,
+                    enableInfiniteScroll: true,
+                    autoPlayInterval: Duration(seconds: 4),
+                    enlargeCenterPage: true,
+                    viewportFraction: 0.7,
+                    aspectRatio: 16 / 9,
+                    onPageChanged: (index, reason) => provider.add(
+                      NextImageEvent(index: index),
+                    ),
+                  ),
+                  carouselController: _controller,
+                ),
+                Positioned(
+                  bottom: 0.0,
+                  right: 40.0,
+                  child: _NextButton(controller: _controller),
+                )
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -90,7 +109,7 @@ class _PromoImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(13.0),
+      padding: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 20.0),
       child: Material(
         borderRadius: BorderRadius.all(Radius.circular(20.0)),
         elevation: 5.0,
@@ -128,32 +147,30 @@ class _PromoImageInfo extends StatelessWidget {
       width: size.width,
       color: Color.fromRGBO(255, 255, 255, 0.97),
       child: Padding(
-        padding: const EdgeInsets.only(top: 60, bottom: 60),
+        padding:
+            const EdgeInsets.only(top: 60, bottom: 60, left: 10.0, right: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               promo.date,
               style: TextStyle(
-                  color: Colors.black, letterSpacing: 1.0, fontSize: 20.0),
+                  color: Colors.black,
+                  letterSpacing: 1.0,
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold),
             ),
             SizedBox(height: 10.0),
             Text(
               promo.discount,
               style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.0,
-                  fontSize: 33.0),
+                  color: Colors.black, letterSpacing: 1.0, fontSize: 20.0),
             ),
             SizedBox(height: 4.0),
             Text(
               promo.category,
               style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.0,
-                  fontSize: 17.0),
+                  color: Colors.black, letterSpacing: 1.0, fontSize: 17.0),
             ),
           ],
         ),
@@ -173,11 +190,11 @@ class _NextButton extends StatelessWidget {
       elevation: 7.0,
       fillColor: Colors.orangeAccent,
       child: Icon(
-        Icons.navigate_next,
-        size: 35.0,
+        Icons.arrow_forward_rounded,
+        size: 30.0,
         color: Colors.white,
       ),
-      padding: EdgeInsets.all(14.0),
+      padding: EdgeInsets.all(16.0),
       shape: CircleBorder(),
     );
   }
