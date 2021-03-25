@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/profile/view/profile_screen.dart';
@@ -12,18 +13,21 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   _handleBottomNavigation(BuildContext context, int index) {
     if (index == 0) {
+      HapticFeedback.selectionClick();
       Navigator.of(context).pushAndRemoveUntil(
         PageTransition(type: PageTransitionType.fade, child: HomeScreen()),
         ModalRoute.withName(Routers.home),
       );
     }
     if (index == 1) {
+      HapticFeedback.selectionClick();
       Navigator.of(context).pushAndRemoveUntil(
         PageTransition(type: PageTransitionType.fade, child: ScanScreen()),
         ModalRoute.withName(Routers.scan),
       );
     }
     if (index == 2) {
+      HapticFeedback.selectionClick();
       Navigator.of(context).pushAndRemoveUntil(
         PageTransition(type: PageTransitionType.fade, child: ProfileScreen()),
         ModalRoute.withName(Routers.profile),

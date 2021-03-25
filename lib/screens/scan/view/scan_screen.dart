@@ -21,6 +21,7 @@ class ScanScreen extends StatelessWidget {
         builder: (context, state) {
           return ScreenTemplate(
             index: 1,
+            title: "Scan",
             body: _Body(),
           );
         },

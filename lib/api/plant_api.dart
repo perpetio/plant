@@ -6,6 +6,8 @@ import 'package:plant/core/settings.dart';
 import 'package:plant/models/models.dart';
 
 Future fetchPlants(File image) async {
+  Dio dio = new Dio();
+
   FormData formData = new FormData.fromMap(
     {
       "organs": "flower",
@@ -15,8 +17,6 @@ Future fetchPlants(File image) async {
       )
     },
   );
-
-  Dio dio = new Dio();
 
   Response response = await dio.post(
     "https://my-api.plantnet.org/v2/identify/all?api-key=" + api_key,

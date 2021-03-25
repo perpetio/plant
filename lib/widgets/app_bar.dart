@@ -1,29 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:plant/screens/profile/view/profile_screen.dart';
+import 'package:plant/utils/router.dart';
 import 'package:plant/widgets/avatar.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar({Key key}) : super(key: key);
+  final String title;
+
+  CustomAppBar({Key key, this.title}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(70);
 
-  final List<Widget> actions = [
-    IconButton(
-      icon: Icon(Icons.search, color: Colors.black, size: 30),
-      onPressed: () {},
-    ),
-    SizedBox(width: 10.0),
-    InkWell(
-      onTap: () {},
-      child: Avatar(
-        assetName: 'assets/plant.jpg',
-      ),
-    ),
-    SizedBox(width: 15.0)
-  ];
-
   @override
   Widget build(BuildContext context) {
+    final List<Widget> actions = [
+      IconButton(
+        icon: Icon(Icons.search, color: Colors.black, size: 30),
+        onPressed: () {},
+      ),
+      SizedBox(width: 10.0),
+      InkWell(
+        onTap: () {
+          HapticFeedback.selectionClick();
+          Navigator.of(context).pushAndRemoveUntil(
+            PageTransition(
+                type: PageTransitionType.fade, child: ProfileScreen()),
+            ModalRoute.withName(Routers.profile),
+          );
+        },
+        child: Avatar(
+          assetName: 'assets/images/plant.jpg',
+        ),
+      ),
+      SizedBox(width: 15.0)
+    ];
+
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: AppBar(
@@ -36,20 +49,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           title: Row(
-            children: [SizedBox(width: 2), SizedBox(width: 15.0), _AppLogo()],
+            children: [SizedBox(width: 2), SizedBox(width: 15.0), buildLogo()],
           ),
           actions: actions),
     );
   }
-}
 
-class _AppLogo extends StatelessWidget {
-  const _AppLogo({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildLogo() {
     return Text(
-      'Home',
+      title,
       style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,

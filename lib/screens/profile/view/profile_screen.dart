@@ -19,6 +19,7 @@ class ProfileScreen extends StatelessWidget {
 
           return ScreenTemplate(
             index: 2,
+            title: "Profile",
             body: _Body(),
           );
         },
