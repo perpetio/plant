@@ -4,7 +4,7 @@
 <dict>
     
     <key>NSCameraUsageDescription</key>
-    <string>Explanation on why the camera access is needed.</string>
+    <string>Requires access to the camera to scan plants.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Need Microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>

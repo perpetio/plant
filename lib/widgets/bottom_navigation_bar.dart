@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
@@ -11,7 +12,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   CustomBottomNavigationBar({Key key, this.index}) : super(key: key);
 
-  _handleBottomNavigation(BuildContext context, int index) {
+  _handleBottomNavigation(BuildContext context, int index) async {
     if (index == 0) {
       HapticFeedback.selectionClick();
       Navigator.of(context).pushAndRemoveUntil(
@@ -20,9 +21,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
       );
     }
     if (index == 1) {
+      List<CameraDescription> cameras = await availableCameras();
+      CameraDescription camera = cameras.first;
+
       HapticFeedback.selectionClick();
       Navigator.of(context).pushAndRemoveUntil(
-        PageTransition(type: PageTransitionType.fade, child: ScanScreen()),
+        PageTransition(
+            type: PageTransitionType.fade,
+            child: CameraScreen(
+              camera: camera,
+            )),
         ModalRoute.withName(Routers.scan),
       );
     }

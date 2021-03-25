@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/profile/view/profile_screen.dart';
-import 'package:plant/screens/scan/view/scan_screen.dart';
+import 'package:plant/screens/scan/view/detect.dart';
 
 /// Generator callback allowing the app to be navigated to a named route.
 
@@ -25,7 +25,7 @@ Route<dynamic> router(routeSetting) {
       break;
     case Routers.scan:
       return new MaterialPageRoute(
-        builder: (context) => ScanScreen(),
+        builder: (context) => Detect(),
         settings: routeSetting,
       );
       break;

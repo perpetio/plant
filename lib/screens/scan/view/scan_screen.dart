@@ -1,186 +1,160 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:plant/api/plant_api.dart';
-import 'package:plant/screens/camera_screen.dart';
-import 'package:plant/screens/scan/bloc/scan_bloc.dart';
-import 'package:plant/widgets/screen_template.dart';
+import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
+import 'package:plant/screens/home/view/home_screen.dart';
+import 'package:plant/utils/router.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class ScanScreen extends StatelessWidget {
-  const ScanScreen({Key key}) : super(key: key);
+class CameraScreen extends StatefulWidget {
+  final CameraDescription camera;
+
+  const CameraScreen({Key key, @required this.camera}) : super(key: key);
+
+  @override
+  CameraScreenState createState() => CameraScreenState();
+}
+
+class CameraScreenState extends State<CameraScreen> {
+  CameraController _controller;
+  Future<void> _initializeControllerFuture;
+  final RoundedLoadingButtonController _buttonController =
+      new RoundedLoadingButtonController();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = CameraController(widget.camera, ResolutionPreset.high);
+    _initializeControllerFuture = _controller.initialize();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _doSomething() async {
+    Timer(Duration(seconds: 3), () {
+      _buttonController.success();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return ScanBloc();
-      },
-      child: BlocBuilder<ScanBloc, ScanState>(
-        builder: (context, state) {
-          return ScreenTemplate(
-            index: 1,
-            title: "Scan",
-            body: _Body(),
-          );
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      body: FutureBuilder<void>(
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Stack(
+              children: [
+                Transform.scale(
+                  scale: 1 / (size.aspectRatio * _controller.value.aspectRatio),
+                  child: Center(
+                    child: CameraPreview(_controller),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 60.0, left: 20.0),
+                  child: InkWell(
+                    onTap: () {
+                      HapticFeedback.selectionClick();
+                      Navigator.of(context).pushAndRemoveUntil(
+                        PageTransition(
+                          type: PageTransitionType.fade,
+                          child: HomeScreen(),
+                        ),
+                        ModalRoute.withName(Routers.home),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.arrow_back_ios_rounded,
+                          size: 30.0,
+                        ),
+                        SizedBox(width: 8.0),
+                        Text(
+                          'Scan the plant',
+                          style: TextStyle(fontSize: 20.0),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 40,
+                  left: 60,
+                  child: RoundedLoadingButton(
+                    height: 100,
+                    child: Icon(
+                      Icons.camera,
+                      color: Colors.white,
+                    ),
+                    controller: _buttonController,
+                    onPressed: _doSomething,
+                  ),
+                )
+              ],
+            );
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
         },
       ),
     );
   }
 }
 
-class _Body extends StatefulWidget {
-  const _Body({Key key}) : super(key: key);
+// A widget that displays the picture taken by the user.
+class DisplayPictureScreen extends StatelessWidget {
+  final String imagePath;
 
-  @override
-  _BodyState createState() => _BodyState();
-}
-
-class _BodyState extends State<_Body> {
-  bool _loading = true;
-  File _image;
-  final picker = ImagePicker();
-
-  pickImage(ImageSource source) async {
-    //this function to grab the image from camera
-    PickedFile image = await picker.getImage(source: source);
-    if (image == null) return null;
-
-    setState(() {
-      _image = File(image.path);
-      _loading = false;
-    });
-
-    await fetchPlants(_image);
-  }
-
-  openCamera() async {
-    final cameras = await availableCameras();
-    final firstCamera = cameras.first;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => CameraScreen(camera: firstCamera)),
-    );
-  }
+  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.symmetric(horizontal: 35, vertical: 100),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(height: 20.0),
-          buildImage(),
-          Spacer(),
-          Container(
-            child: Column(
-              children: [
-                buildTakePhoto(),
-                SizedBox(height: 30),
-                buildPickFromGallery()
-              ],
-            ),
-          ),
-          SizedBox(height: 40.0)
-        ],
-      ),
-    );
-  }
-
-  Widget buildImage() {
-    return Container(
-      child: Center(
-        child: _loading == true
-            ? null //show nothing if no picture selected
-            : Container(
-                child: Column(
-                  children: [
-                    SizedBox(height: 20.0),
-                    Container(
-                      height: 250,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image.file(
-                          _image,
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 40.0),
-                    Divider(height: 25, thickness: 1),
-                    FutureBuilder(
-                      future: fetchPlants(_image),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          List results = snapshot.data.map<Widget>((result) {
-                            return Text(
-                              result.species.scientificNameWithoutAuthor,
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 22.0),
-                            );
-                          }).toList();
-                          List score = snapshot.data.map<Widget>((result) {
-                            return Text(
-                              result.score.toStringAsFixed(2),
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 18.0),
-                            );
-                          }).toList();
-
-                          return Column(
-                            children: [results[0], score[0]],
-                          );
-                        }
-                        // By default, show a loading spinner
-                        return Text('');
-                      },
-                    ),
-                    Divider(height: 25, thickness: 1),
-                  ],
-                ),
-              ),
-      ),
-    );
-  }
-
-  Widget buildTakePhoto() {
-    return GestureDetector(
-      onTap: () => openCamera(),
-      child: Container(
-        width: MediaQuery.of(context).size.width - 200,
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 17),
-        decoration: BoxDecoration(
-            color: Colors.blueGrey[600],
-            borderRadius: BorderRadius.circular(15)),
-        child: Text(
-          'Take A Photo',
-          style: TextStyle(color: Colors.white, fontSize: 16),
-        ),
-      ),
-    );
-  }
-
-  Widget buildPickFromGallery() {
-    return GestureDetector(
-      onTap: () => pickImage(ImageSource.gallery),
-      child: Container(
-        width: MediaQuery.of(context).size.width - 200,
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 17),
-        decoration: BoxDecoration(
-            color: Colors.blueGrey[600],
-            borderRadius: BorderRadius.circular(15)),
-        child: Text(
-          'Pick From Gallery',
-          style: TextStyle(color: Colors.white, fontSize: 16),
-        ),
-      ),
+    return Scaffold(
+      appBar: AppBar(title: Text('Display the Picture')),
+      body: Image.file(File(imagePath)),
     );
   }
 }
+
+// InkWell(
+//           onTap: () {},
+//           child: Row(
+//             children: [
+//               Icon(Icons.arrow_back_ios_rounded),
+//               Text('Scan the plant')
+//             ],
+//           ),
+//         ),
+
+// floatingActionButton: FloatingActionButton(
+//   child: Icon(Icons.camera_alt),
+//   // Provide an onPressed callback.
+//   onPressed: () async {
+//     try {
+//       await _initializeControllerFuture;
+
+//       final image = await _controller.takePicture();
+
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) => DisplayPictureScreen(
+//             imagePath: image?.path,
+//           ),
+//         ),
+//       );
+//     } catch (e) {
+//       print(e);
+//     }
+//   },
+// ),
