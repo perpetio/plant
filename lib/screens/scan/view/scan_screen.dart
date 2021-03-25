@@ -18,7 +18,7 @@ class ScanScreen extends StatefulWidget {
   ScanScreenState createState() => ScanScreenState();
 }
 
-class ScanScreenState extends State<ScanScreen> {
+class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
   final RoundedLoadingButtonController _buttonController =
@@ -27,12 +27,21 @@ class ScanScreenState extends State<ScanScreen> {
   bool _loading = true;
   File _image;
   final picker = ImagePicker();
+  AnimationController controller;
+  Animation<Offset> offset;
 
   @override
   void initState() {
     super.initState();
     _controller = CameraController(widget.camera, ResolutionPreset.high);
     _initializeControllerFuture = _controller.initialize();
+
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+
+    offset = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, 1.0))
+        .animate(controller);
+    controller.forward(from: 1.0);
   }
 
   @override
@@ -54,7 +63,7 @@ class ScanScreenState extends State<ScanScreen> {
 
   void _doSomething() async {
     Timer(Duration(seconds: 3), () {
-      _buttonController.success();
+      _buttonController.stop();
     });
   }
 
@@ -84,7 +93,26 @@ class ScanScreenState extends State<ScanScreen> {
                 buildBackButton(),
                 buildCameraButton(),
                 buildGaleryButton(),
-                buildFlashButton()
+                buildFlashButton(),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SlideTransition(
+                    position: offset,
+                    child: Padding(
+                      padding: EdgeInsets.all(50.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(20),
+                          ),
+                          color: Color.fromRGBO(255, 255, 255, 0.96),
+                        ),
+                        height: size.height * 0.1,
+                        width: size.width,
+                      ),
+                    ),
+                  ),
+                )
               ],
             );
           } else {
@@ -144,9 +172,30 @@ class ScanScreenState extends State<ScanScreen> {
           size: 44,
         ),
         controller: _buttonController,
-        onPressed: () {
-          HapticFeedback.mediumImpact();
-          _doSomething();
+        onPressed: () async {
+          // HapticFeedback.mediumImpact();
+          // await _initializeControllerFuture;
+
+          // final image = await _controller.takePicture();
+
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => DisplayPictureScreen(
+          //       imagePath: image?.path,
+          //     ),
+          //   ),
+          // );
+          switch (controller.status) {
+            case AnimationStatus.completed:
+              controller.reverse();
+              break;
+            case AnimationStatus.dismissed:
+              controller.forward();
+              break;
+            default:
+          }
+          _buttonController.stop();
         },
       ),
     );
@@ -207,8 +256,7 @@ class DisplayPictureScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Display the Picture')),
-      body: Image.file(File(imagePath)),
+      body: Container(height: 2000, child: Image.file(File(imagePath))),
     );
   }
 }
