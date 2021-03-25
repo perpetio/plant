@@ -3,25 +3,30 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/utils/router.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
-class CameraScreen extends StatefulWidget {
+class ScanScreen extends StatefulWidget {
   final CameraDescription camera;
 
-  const CameraScreen({Key key, @required this.camera}) : super(key: key);
+  const ScanScreen({Key key, @required this.camera}) : super(key: key);
 
   @override
-  CameraScreenState createState() => CameraScreenState();
+  ScanScreenState createState() => ScanScreenState();
 }
 
-class CameraScreenState extends State<CameraScreen> {
+class ScanScreenState extends State<ScanScreen> {
   CameraController _controller;
   Future<void> _initializeControllerFuture;
   final RoundedLoadingButtonController _buttonController =
       new RoundedLoadingButtonController();
+  bool _toggleFlash = false;
+  bool _loading = true;
+  File _image;
+  final picker = ImagePicker();
 
   @override
   void initState() {
@@ -34,6 +39,17 @@ class CameraScreenState extends State<CameraScreen> {
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  void _pickImage() async {
+    //this function to grab the image from camera
+    PickedFile image = await picker.getImage(source: ImageSource.gallery);
+    if (image == null) return null;
+
+    setState(() {
+      _image = File(image.path);
+      _loading = false;
+    });
   }
 
   void _doSomething() async {
@@ -59,55 +75,126 @@ class CameraScreenState extends State<CameraScreen> {
                     child: CameraPreview(_controller),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 60.0, left: 20.0),
-                  child: InkWell(
-                    onTap: () {
-                      HapticFeedback.selectionClick();
-                      Navigator.of(context).pushAndRemoveUntil(
-                        PageTransition(
-                          type: PageTransitionType.fade,
-                          child: HomeScreen(),
-                        ),
-                        ModalRoute.withName(Routers.home),
-                      );
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.arrow_back_ios_rounded,
-                          size: 30.0,
-                        ),
-                        SizedBox(width: 8.0),
-                        Text(
-                          'Scan the plant',
-                          style: TextStyle(fontSize: 20.0),
-                        )
-                      ],
-                    ),
+                Center(
+                  child: Image.asset(
+                    'assets/images/scanner.png',
+                    height: 300,
                   ),
                 ),
-                Positioned(
-                  bottom: 40,
-                  left: 60,
-                  child: RoundedLoadingButton(
-                    height: 100,
-                    child: Icon(
-                      Icons.camera,
-                      color: Colors.white,
-                    ),
-                    controller: _buttonController,
-                    onPressed: _doSomething,
-                  ),
-                )
+                buildBackButton(),
+                buildCameraButton(),
+                buildGaleryButton(),
+                buildFlashButton()
               ],
             );
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),
     );
+  }
+
+  Widget buildBackButton() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 60.0, left: 20.0),
+      child: InkWell(
+        onTap: () {
+          Navigator.of(context).pushAndRemoveUntil(
+            PageTransition(
+              type: PageTransitionType.fade,
+              child: HomeScreen(),
+            ),
+            ModalRoute.withName(Routers.home),
+          );
+        },
+        child: Row(
+          children: [
+            Icon(
+              Icons.arrow_back_ios_rounded,
+              size: 30.0,
+              color: Colors.white,
+            ),
+            SizedBox(width: 8.0),
+            Text(
+              'Scan the plant',
+              style: TextStyle(fontSize: 20.0, color: Colors.white),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildCameraButton() {
+    return Positioned(
+      bottom: 60,
+      left: 170,
+      child: RoundedLoadingButton(
+        width: 70,
+        height: 70,
+        color: Colors.orange,
+        successColor: Colors.green,
+        borderRadius: 50,
+        child: Icon(
+          Icons.camera,
+          color: Colors.white,
+          size: 44,
+        ),
+        controller: _buttonController,
+        onPressed: () {
+          HapticFeedback.mediumImpact();
+          _doSomething();
+        },
+      ),
+    );
+  }
+
+  Widget buildGaleryButton() {
+    return Positioned(
+      bottom: 50,
+      right: 40,
+      child: IconButton(
+          onPressed: () {
+            HapticFeedback.selectionClick();
+            _pickImage();
+          },
+          icon: Icon(
+            Icons.add_photo_alternate_outlined,
+            size: 40,
+            color: Colors.white,
+          )),
+    );
+  }
+
+  Widget buildFlashButton() {
+    return Positioned(
+        bottom: 50,
+        left: 30,
+        child: IconButton(
+          icon: _toggleFlash
+              ? Icon(
+                  Icons.flash_on,
+                  color: Colors.white,
+                  size: 30,
+                )
+              : Icon(
+                  Icons.flash_off,
+                  color: Colors.white,
+                  size: 35,
+                ),
+          onPressed: () async {
+            HapticFeedback.selectionClick();
+            _toggleFlash
+                ? await _controller.setFlashMode(FlashMode.off)
+                : await _controller.setFlashMode(FlashMode.torch);
+            setState(() {
+              _toggleFlash == true ? _toggleFlash = false : _toggleFlash = true;
+            });
+          },
+        ));
   }
 }
 
@@ -125,16 +212,6 @@ class DisplayPictureScreen extends StatelessWidget {
     );
   }
 }
-
-// InkWell(
-//           onTap: () {},
-//           child: Row(
-//             children: [
-//               Icon(Icons.arrow_back_ios_rounded),
-//               Text('Scan the plant')
-//             ],
-//           ),
-//         ),
 
 // floatingActionButton: FloatingActionButton(
 //   child: Icon(Icons.camera_alt),

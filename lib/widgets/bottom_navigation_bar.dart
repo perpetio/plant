@@ -28,7 +28,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       Navigator.of(context).pushAndRemoveUntil(
         PageTransition(
             type: PageTransitionType.fade,
-            child: CameraScreen(
+            child: ScanScreen(
               camera: camera,
             )),
         ModalRoute.withName(Routers.scan),
