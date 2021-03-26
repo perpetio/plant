@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:plant/api/plant_api.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/utils/router.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -24,8 +25,8 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
   final RoundedLoadingButtonController _buttonController =
       new RoundedLoadingButtonController();
   bool _toggleFlash = false;
-  bool _loading = true;
   File _image;
+  bool _isFromGallery = false;
   final picker = ImagePicker();
   AnimationController controller;
   Animation<Offset> offset;
@@ -38,7 +39,6 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
 
     controller =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
-
     offset = Tween<Offset>(begin: Offset.zero, end: Offset(0.0, 1.0))
         .animate(controller);
     controller.forward(from: 1.0);
@@ -51,20 +51,57 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
   }
 
   void _pickImage() async {
-    //this function to grab the image from camera
+    //this function to pick the image from galery
+    HapticFeedback.selectionClick();
     PickedFile image = await picker.getImage(source: ImageSource.gallery);
     if (image == null) return null;
 
     setState(() {
       _image = File(image.path);
-      _loading = false;
+      _isFromGallery = true;
+    });
+    _buttonController.start();
+    await fetchPlants(_image);
+    _buttonController.stop();
+
+    switch (controller.status) {
+      case AnimationStatus.completed:
+        controller.reverse();
+        break;
+      case AnimationStatus.dismissed:
+        controller.forward();
+        break;
+      default:
+    }
+    setState(() {
+      _isFromGallery = false;
     });
   }
 
-  void _doSomething() async {
-    Timer(Duration(seconds: 3), () {
+  void _takeImage() async {
+    //this function to take the image from camera
+    HapticFeedback.mediumImpact();
+    print(_isFromGallery);
+    if (!_isFromGallery) {
+      await _initializeControllerFuture;
+      final image = await _controller.takePicture();
+
+      setState(() {
+        _image = File(image.path);
+      });
+      await fetchPlants(_image);
+
+      switch (controller.status) {
+        case AnimationStatus.completed:
+          controller.reverse();
+          break;
+        case AnimationStatus.dismissed:
+          controller.forward();
+          break;
+        default:
+      }
       _buttonController.stop();
-    });
+    }
   }
 
   @override
@@ -75,51 +112,32 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
       body: FutureBuilder<void>(
         future: _initializeControllerFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return Stack(
-              children: [
-                Transform.scale(
-                  scale: 1 / (size.aspectRatio * _controller.value.aspectRatio),
-                  child: Center(
-                    child: CameraPreview(_controller),
-                  ),
-                ),
-                Center(
-                  child: Image.asset(
-                    'assets/images/scanner.png',
-                    height: 300,
-                  ),
-                ),
-                buildBackButton(),
-                buildCameraButton(),
-                buildGaleryButton(),
-                buildFlashButton(),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SlideTransition(
-                    position: offset,
-                    child: Padding(
-                      padding: EdgeInsets.all(50.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                          color: Color.fromRGBO(255, 255, 255, 0.96),
-                        ),
-                        height: size.height * 0.1,
-                        width: size.width,
+          return snapshot.connectionState == ConnectionState.done
+              ? Stack(
+                  children: [
+                    Transform.scale(
+                      scale: 1 /
+                          (size.aspectRatio * _controller.value.aspectRatio),
+                      child: Center(
+                        child: CameraPreview(_controller),
                       ),
                     ),
-                  ),
+                    Center(
+                      child: Image.asset(
+                        'assets/images/scanner.png',
+                        height: 300,
+                      ),
+                    ),
+                    buildBackButton(),
+                    buildCameraButton(),
+                    buildGaleryButton(),
+                    buildFlashButton(),
+                    buildAnimatedContainer()
+                  ],
                 )
-              ],
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+              : Center(
+                  child: CircularProgressIndicator(),
+                );
         },
       ),
     );
@@ -166,37 +184,10 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
         color: Colors.orange,
         successColor: Colors.green,
         borderRadius: 50,
-        child: Icon(
-          Icons.camera,
-          color: Colors.white,
-          size: 44,
-        ),
+        loaderSize: 35.0,
+        child: Icon(Icons.camera, color: Colors.white, size: 44),
         controller: _buttonController,
-        onPressed: () async {
-          // HapticFeedback.mediumImpact();
-          // await _initializeControllerFuture;
-
-          // final image = await _controller.takePicture();
-
-          // Navigator.push(
-          //   context,
-          //   MaterialPageRoute(
-          //     builder: (context) => DisplayPictureScreen(
-          //       imagePath: image?.path,
-          //     ),
-          //   ),
-          // );
-          switch (controller.status) {
-            case AnimationStatus.completed:
-              controller.reverse();
-              break;
-            case AnimationStatus.dismissed:
-              controller.forward();
-              break;
-            default:
-          }
-          _buttonController.stop();
-        },
+        onPressed: () => _takeImage(),
       ),
     );
   }
@@ -206,80 +197,136 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
       bottom: 50,
       right: 40,
       child: IconButton(
-          onPressed: () {
-            HapticFeedback.selectionClick();
-            _pickImage();
-          },
-          icon: Icon(
-            Icons.add_photo_alternate_outlined,
-            size: 40,
-            color: Colors.white,
-          )),
+        onPressed: () => _pickImage(),
+        icon: Icon(
+          Icons.add_photo_alternate_outlined,
+          size: 40,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 
   Widget buildFlashButton() {
     return Positioned(
-        bottom: 50,
-        left: 30,
-        child: IconButton(
-          icon: _toggleFlash
-              ? Icon(
-                  Icons.flash_on,
-                  color: Colors.white,
-                  size: 30,
-                )
-              : Icon(
-                  Icons.flash_off,
-                  color: Colors.white,
-                  size: 35,
-                ),
-          onPressed: () async {
-            HapticFeedback.selectionClick();
-            _toggleFlash
-                ? await _controller.setFlashMode(FlashMode.off)
-                : await _controller.setFlashMode(FlashMode.torch);
-            setState(() {
+      bottom: 50,
+      left: 30,
+      child: IconButton(
+        icon: _toggleFlash
+            ? Icon(Icons.flash_on, color: Colors.white, size: 30)
+            : Icon(Icons.flash_off, color: Colors.white, size: 35),
+        onPressed: () async {
+          HapticFeedback.selectionClick();
+          _toggleFlash
+              ? await _controller.setFlashMode(FlashMode.off)
+              : await _controller.setFlashMode(FlashMode.torch);
+          setState(
+            () {
               _toggleFlash == true ? _toggleFlash = false : _toggleFlash = true;
-            });
-          },
-        ));
+            },
+          );
+        },
+      ),
+    );
   }
-}
 
-// A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
-  final String imagePath;
+  Widget buildAnimatedContainer() {
+    final size = MediaQuery.of(context).size;
 
-  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: SlideTransition(
+        position: offset,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 65.0, left: 10, right: 10),
+          child: GestureDetector(
+            onPanUpdate: (details) {
+              if (details.delta.dy > 0) {
+                controller.forward();
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(23),
+                ),
+                color: Color.fromRGBO(255, 255, 255, 0.96),
+              ),
+              height: size.height * 0.11,
+              width: size.width,
+              child: Row(
+                children: [
+                  SizedBox(width: 10.0),
+                  _image != null
+                      ? Container(
+                          height: 80,
+                          width: 80,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.file(_image, fit: BoxFit.cover),
+                          ),
+                        )
+                      : Container(),
+                  FutureBuilder(
+                    future: fetchPlants(_image),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List plants = snapshot.data.map<Widget>(
+                          (result) {
+                            return Text(
+                              result.species.scientificNameWithoutAuthor,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 17.0,
+                                  fontWeight: FontWeight.bold),
+                            );
+                          },
+                        ).toList();
+                        List score = snapshot.data.map<Widget>((result) {
+                          return Text(
+                            result.score.toStringAsFixed(2),
+                            style:
+                                TextStyle(color: Colors.black, fontSize: 16.0),
+                          );
+                        }).toList();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(height: 2000, child: Image.file(File(imagePath))),
+                        return Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              plants[0],
+                              SizedBox(height: 5),
+                              score[0],
+                            ],
+                          ),
+                        );
+                      }
+                      return Text('');
+                    },
+                  ),
+                  Spacer(),
+                  ClipOval(
+                    child: Material(
+                      color: Colors.amber, // button color
+                      child: InkWell(
+                        child: SizedBox(
+                          width: 56,
+                          height: 56,
+                          child:
+                              Icon(Icons.add, color: Colors.white, size: 35.0),
+                        ),
+                        onTap: () {},
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 15.0)
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
-
-// floatingActionButton: FloatingActionButton(
-//   child: Icon(Icons.camera_alt),
-//   // Provide an onPressed callback.
-//   onPressed: () async {
-//     try {
-//       await _initializeControllerFuture;
-
-//       final image = await _controller.takePicture();
-
-//       Navigator.push(
-//         context,
-//         MaterialPageRoute(
-//           builder: (context) => DisplayPictureScreen(
-//             imagePath: image?.path,
-//           ),
-//         ),
-//       );
-//     } catch (e) {
-//       print(e);
-//     }
-//   },
-// ),

@@ -14,9 +14,6 @@ class ProfileScreen extends StatelessWidget {
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
-          // ignore: close_sinks
-          final provider = context.watch<ProfileBloc>();
-
           return ScreenTemplate(
             index: 2,
             title: "Profile",
