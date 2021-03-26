@@ -47,19 +47,23 @@ class CustomBottomNavigationBar extends StatelessWidget {
     BottomNavigationBarItem(
       icon: Image.asset('assets/icons/home.png',
           height: 25.0, color: Colors.grey),
-      activeIcon: Image.asset('assets/icons/home.png', height: 25.0),
+      activeIcon: Image.asset(
+        'assets/icons/home.png',
+        height: 25.0,
+        color: Colors.orange,
+      ),
       label: 'Home',
     ),
     BottomNavigationBarItem(
       icon: Image.asset('assets/icons/scan.png', height: 25.0),
       activeIcon: Image.asset('assets/icons/scan.png',
-          height: 25.0, color: Colors.amber),
+          height: 25.0, color: Colors.orange),
       label: 'Scan',
     ),
     BottomNavigationBarItem(
       icon: Image.asset('assets/icons/profile.png', height: 25.0),
       activeIcon: Image.asset('assets/icons/profile.png',
-          height: 25.0, color: Colors.amber),
+          height: 25.0, color: Colors.orange),
       label: 'Profile',
     ),
   ];
