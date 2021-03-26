@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
-import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/utils/router.dart';
 
 // ignore: must_be_immutable
 class SignUpScreen extends StatelessWidget {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
@@ -16,6 +17,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Stack(
         children: [
           Container(
@@ -32,7 +34,7 @@ class SignUpScreen extends StatelessWidget {
                     onTap: () => Navigator.pop(context),
                     child: Icon(
                       Icons.arrow_back_ios_rounded,
-                      color: Colors.white,
+                      color: Colors.white70,
                       size: 25.0,
                     ),
                   ),
@@ -142,14 +144,14 @@ class SignUpScreen extends StatelessWidget {
                         SizedBox(height: 40),
                         InkWell(
                           onTap: () async {
+                            FocusScope.of(context).unfocus();
                             _formKey.currentState.save();
                             try {
-                              final new_user =
+                              final newUser =
                                   await _auth.createUserWithEmailAndPassword(
                                       email: _email, password: _password);
-                              print(_email);
-                              print(_password);
-                              if (new_user != null) {
+
+                              if (newUser != null) {
                                 Navigator.of(context).pushAndRemoveUntil(
                                   PageTransition(
                                       type: PageTransitionType.fade,
@@ -157,8 +159,13 @@ class SignUpScreen extends StatelessWidget {
                                   ModalRoute.withName(Routers.home),
                                 );
                               }
-                            } catch (e) {
-                              print(e);
+                            } catch (error) {
+                              _scaffoldKey.currentState.showSnackBar(
+                                new SnackBar(
+                                  backgroundColor: Colors.orange,
+                                  content: new Text(error.toString()),
+                                ),
+                              );
                             }
                           },
                           child: Container(

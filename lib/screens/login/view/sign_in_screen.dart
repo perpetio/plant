@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
-import 'package:plant/screens/login/view/sign_up_screen.dart';
 import 'package:plant/utils/router.dart';
 
 // ignore: must_be_immutable
 class SignInScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   final _auth = FirebaseAuth.instance;
   String _email;
   String _password;
@@ -15,6 +16,7 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       body: Stack(
         children: [
           Container(
@@ -140,6 +142,7 @@ class SignInScreen extends StatelessWidget {
                         SizedBox(height: 40),
                         InkWell(
                           onTap: () async {
+                            FocusScope.of(context).unfocus();
                             _formKey.currentState.save();
                             try {
                               final user =
@@ -153,8 +156,13 @@ class SignInScreen extends StatelessWidget {
                                   ModalRoute.withName(Routers.home),
                                 );
                               }
-                            } catch (e) {
-                              print(e);
+                            } catch (error) {
+                              _scaffoldKey.currentState.showSnackBar(
+                                new SnackBar(
+                                  backgroundColor: Colors.orange,
+                                  content: new Text(error.toString()),
+                                ),
+                              );
                             }
                           },
                           child: Container(
