@@ -11,7 +11,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   CustomAppBar({Key key, this.title}) : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(70);
+  Size get preferredSize => const Size.fromHeight(60);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           );
         },
         child: Avatar(
-          assetName: 'assets/images/plant.jpg',
+          assetName: 'assets/images/profile.png',
         ),
       ),
       SizedBox(width: 15.0)
@@ -49,7 +49,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           title: Row(
-            children: [SizedBox(width: 2), SizedBox(width: 15.0), buildLogo()],
+            children: [SizedBox(width: 15.0), buildLogo()],
           ),
           actions: actions),
     );

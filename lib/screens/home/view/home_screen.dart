@@ -1,10 +1,12 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/core/data.dart';
-import 'package:plant/models/models.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/widgets/screen_template.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key key}) : super(key: key);
@@ -26,6 +28,7 @@ class HomeScreen extends StatelessWidget {
           return ScreenTemplate(
             index: 0,
             title: 'Home',
+            isAppBar: true,
             body: _Body(),
           );
         },
@@ -42,6 +45,82 @@ class _Body extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
+  CollectionReference collection = FirebaseFirestore.instance
+      .collection('users')
+      .doc(FirebaseAuth.instance.currentUser.uid)
+      .collection('plants');
+
+  RefreshController _refreshController = RefreshController(
+    initialRefresh: false,
+  );
+
+  void _onRefresh() async {
+    HapticFeedback.heavyImpact();
+    await Future.delayed(
+      Duration(milliseconds: 1000),
+    );
+    _refreshController.refreshCompleted();
+    setState(() {});
+  }
+
+  void _onLoading() async {
+    await Future.delayed(
+      Duration(milliseconds: 1000),
+    );
+    _refreshController.loadComplete();
+  }
+
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 150.0),
+      child: SmartRefresher(
+        enablePullDown: true,
+        controller: _refreshController,
+        onRefresh: _onRefresh,
+        onLoading: _onLoading,
+        child: SingleChildScrollView(
+          child: StreamBuilder<QuerySnapshot>(
+            stream: collection.snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+              if (snapshot.hasData) {
+                return snapshot.data.docs.length != 0
+                    ? PlantsSlider(data: snapshot.data.docs)
+                    : Padding(
+                        padding: const EdgeInsets.only(top: 270.0),
+                        child: Center(
+                          child: Text(
+                            'No plants yet',
+                            style:
+                                TextStyle(color: Colors.grey, fontSize: 23.0),
+                          ),
+                        ),
+                      );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class PlantsSlider extends StatefulWidget {
+  List<QueryDocumentSnapshot> data;
+
+  PlantsSlider({Key key, this.data}) : super(key: key);
+
+  @override
+  _PlantsSliderState createState() => _PlantsSliderState();
+}
+
+class _PlantsSliderState extends State<PlantsSlider> {
   final CarouselController _controller = CarouselController();
 
   @override
@@ -50,11 +129,8 @@ class __BodyState extends State<_Body> {
     // ignore: close_sinks
     final provider = context.watch<HomeBloc>();
 
-    final List<Widget> promoSliders =
-        promoList.map((promo) => _PromoImage(promo: promo)).toList();
-
     return Padding(
-      padding: const EdgeInsets.only(top: 150.0),
+      padding: const EdgeInsets.only(top: 10.0),
       child: Column(
         children: [
           Padding(
@@ -72,14 +148,16 @@ class __BodyState extends State<_Body> {
             child: Stack(
               children: [
                 CarouselSlider(
-                  items: promoSliders,
+                  items: widget.data
+                      .map((plant) => _PlantItem(plant: plant))
+                      .toList(),
                   options: CarouselOptions(
                     height: height * 0.43,
                     autoPlay: false,
-                    enableInfiniteScroll: true,
+                    enableInfiniteScroll: false,
                     autoPlayInterval: Duration(seconds: 4),
                     enlargeCenterPage: true,
-                    viewportFraction: 0.7,
+                    viewportFraction: 0.75,
                     aspectRatio: 16 / 9,
                     onPageChanged: (index, reason) => provider.add(
                       NextImageEvent(index: index),
@@ -101,10 +179,10 @@ class __BodyState extends State<_Body> {
   }
 }
 
-class _PromoImage extends StatelessWidget {
-  final Promo promo;
+class _PlantItem extends StatelessWidget {
+  final QueryDocumentSnapshot plant;
 
-  const _PromoImage({Key key, this.promo}) : super(key: key);
+  const _PlantItem({Key key, this.plant}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -121,10 +199,13 @@ class _PromoImage extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  child: Image.asset(promo.image,
+                  child: Image.network(plant['image'],
                       fit: BoxFit.cover, width: 1000.0, height: 1000.0),
                 ),
-                Positioned(bottom: 0, child: _PromoImageInfo(promo: promo)),
+                Positioned(
+                  bottom: 0,
+                  child: buildMainInfo(context),
+                ),
               ],
             ),
           ),
@@ -132,17 +213,9 @@ class _PromoImage extends StatelessWidget {
       ),
     );
   }
-}
 
-class _PromoImageInfo extends StatelessWidget {
-  final Promo promo;
-
-  const _PromoImageInfo({Key key, this.promo}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget buildMainInfo(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
     return Container(
       width: size.width,
       color: Color.fromRGBO(255, 255, 255, 0.97),
@@ -153,7 +226,7 @@ class _PromoImageInfo extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              promo.date,
+              plant['name'],
               style: TextStyle(
                   color: Colors.black,
                   letterSpacing: 1.0,
@@ -162,15 +235,9 @@ class _PromoImageInfo extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             Text(
-              promo.discount,
+              plant['score'],
               style: TextStyle(
                   color: Colors.black, letterSpacing: 1.0, fontSize: 20.0),
-            ),
-            SizedBox(height: 4.0),
-            Text(
-              promo.category,
-              style: TextStyle(
-                  color: Colors.black, letterSpacing: 1.0, fontSize: 17.0),
             ),
           ],
         ),

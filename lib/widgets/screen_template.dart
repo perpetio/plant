@@ -5,8 +5,9 @@ import 'package:plant/widgets/bottom_navigation_bar.dart';
 class ScreenTemplate extends StatelessWidget {
   final Widget body;
   final String title;
+  final bool isAppBar;
   final int index;
-  const ScreenTemplate({Key key, this.body, this.index, this.title})
+  ScreenTemplate({Key key, this.body, this.index, this.title, this.isAppBar})
       : super(key: key);
 
   @override
@@ -15,9 +16,11 @@ class ScreenTemplate extends StatelessWidget {
       extendBodyBehindAppBar: true,
       extendBody: true,
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(
-        title: title,
-      ),
+      appBar: isAppBar
+          ? CustomAppBar(
+              title: title,
+            )
+          : null,
       body: body,
       bottomNavigationBar: CustomBottomNavigationBar(
         index: index,

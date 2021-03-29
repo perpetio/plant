@@ -65,14 +65,3 @@ class Family {
         "scientificNameAuthorship": scientificNameAuthorship,
       };
 }
-
-class Promo {
-  final String image, date, discount, category;
-
-  Promo({
-    this.image,
-    this.date,
-    this.discount,
-    this.category,
-  });
-}

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
+import 'package:plant/screens/login/view/sign_up_screen.dart';
 import 'package:plant/utils/router.dart';
 
 // ignore: must_be_immutable
@@ -88,7 +89,7 @@ class SignInScreen extends StatelessWidget {
                           },
                           style: TextStyle(color: Colors.grey),
                           decoration: InputDecoration(
-                            hintText: 'Email',
+                            hintText: 'example@gmail.com',
                             errorStyle: TextStyle(color: Colors.grey),
                             labelStyle: TextStyle(color: Colors.grey),
                             hintStyle: TextStyle(color: Colors.grey),
@@ -190,8 +191,14 @@ class SignInScreen extends StatelessWidget {
                           children: [
                             Text('Don\'t have an account? '),
                             InkWell(
-                              onTap: () => Navigator.of(context)
-                                  .pushNamed(Routers.sign_up),
+                              onTap: () =>
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                PageTransition(
+                                  type: PageTransitionType.fade,
+                                  child: SignUpScreen(),
+                                ),
+                                ModalRoute.withName(Routers.sign_up),
+                              ),
                               child: Text(
                                 'Sign Up',
                                 style: TextStyle(

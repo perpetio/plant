@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
+import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/utils/router.dart';
 
 // ignore: must_be_immutable
@@ -13,6 +15,7 @@ class SignUpScreen extends StatelessWidget {
 
   String _email;
   String _password;
+  String _name;
 
   @override
   Widget build(BuildContext context) {
@@ -25,22 +28,21 @@ class SignUpScreen extends StatelessWidget {
             height: MediaQuery.of(context).size.height,
             color: Colors.orange,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(26.0, 50.0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(26.0, 65.0, 0, 0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InkWell(
-                    onTap: () => Navigator.pop(context),
-                    child: Icon(
-                      Icons.arrow_back_ios_rounded,
+                  Text(
+                    'Welcome',
+                    style: TextStyle(
+                      fontSize: 16.0,
                       color: Colors.white70,
-                      size: 25.0,
                     ),
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 5),
                   Text(
-                    'Sign Up Here',
+                    'Sign Up',
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 25.0,
@@ -75,6 +77,40 @@ class SignUpScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.topLeft,
                           child: Text(
+                            'Your Name',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 17.0,
+                              color: Colors.black87,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 5.0),
+                        TextFormField(
+                          onSaved: (nameValue) {
+                            _name = nameValue;
+                          },
+                          style: TextStyle(color: Colors.grey),
+                          decoration: InputDecoration(
+                            hintText: 'Name',
+                            errorStyle: TextStyle(color: Colors.grey),
+                            labelStyle: TextStyle(color: Colors.grey),
+                            hintStyle: TextStyle(color: Colors.grey),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                            errorBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
                             'Email',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -90,7 +126,7 @@ class SignUpScreen extends StatelessWidget {
                           },
                           style: TextStyle(color: Colors.grey),
                           decoration: InputDecoration(
-                            hintText: 'Email',
+                            hintText: 'example@gmail.com',
                             errorStyle: TextStyle(color: Colors.grey),
                             labelStyle: TextStyle(color: Colors.grey),
                             hintStyle: TextStyle(color: Colors.grey),
@@ -152,6 +188,15 @@ class SignUpScreen extends StatelessWidget {
                                       email: _email, password: _password);
 
                               if (newUser != null) {
+                                FirebaseFirestore.instance
+                                    .collection("users")
+                                    .doc(newUser.user.uid)
+                                    .set({
+                                  "uid": newUser.user.uid,
+                                  "name": _name,
+                                  "email": _email,
+                                  "image": ''
+                                });
                                 Navigator.of(context).pushAndRemoveUntil(
                                   PageTransition(
                                       type: PageTransitionType.fade,
@@ -186,6 +231,29 @@ class SignUpScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                        ),
+                        SizedBox(height: 20.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Already have an account? '),
+                            InkWell(
+                              onTap: () =>
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      PageTransition(
+                                        type: PageTransitionType.fade,
+                                        child: SignInScreen(),
+                                      ),
+                                      ModalRoute.withName(Routers.sign_in)),
+                              child: Text(
+                                'Sign In',
+                                style: TextStyle(
+                                  color: Colors.orange,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
