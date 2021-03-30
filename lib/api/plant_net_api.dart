@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:plant/core/settings.dart';
-import 'package:plant/models/models.dart';
+import 'package:plant/models/plant_net.dart';
 
 Future fetchPlants(File image) async {
   Dio dio = new Dio();
@@ -19,7 +19,7 @@ Future fetchPlants(File image) async {
   );
 
   Response response = await dio.post(
-    "https://my-api.plantnet.org/v2/identify/all?api-key=" + api_key,
+    "https://my-api.plantnet.org/v2/identify/all?api-key=" + plant_key,
     data: formData,
     options: Options(),
   );
@@ -28,9 +28,9 @@ Future fetchPlants(File image) async {
 
   if (response.statusCode != 200) throw Exception('Failed to load plant');
 
-  List<Plant> results =
-      jsonDecode(response.toString())['results'].map<Plant>((data) {
-    return Plant.fromJson(data);
+  List<PlantDetect> results =
+      jsonDecode(response.toString())['results'].map<PlantDetect>((data) {
+    return PlantDetect.fromJson(data);
   }).toList();
 
   return results;

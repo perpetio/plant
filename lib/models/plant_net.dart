@@ -1,10 +1,10 @@
-class Plant {
+class PlantDetect {
   double score;
   Species species;
 
-  Plant({this.score, this.species});
+  PlantDetect({this.score, this.species});
 
-  factory Plant.fromJson(Map<String, dynamic> json) => Plant(
+  factory PlantDetect.fromJson(Map<String, dynamic> json) => PlantDetect(
         score: json["score"].toDouble(),
         species: Species.fromJson(json["species"]),
       );

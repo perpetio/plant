@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
+import 'package:plant/utils/router.dart';
 import 'package:plant/widgets/screen_template.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
@@ -71,6 +72,8 @@ class __BodyState extends State<_Body> {
   }
 
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Padding(
       padding: const EdgeInsets.only(top: 150.0),
       child: SmartRefresher(
@@ -80,13 +83,97 @@ class __BodyState extends State<_Body> {
         onLoading: _onLoading,
         child: SingleChildScrollView(
           child: StreamBuilder<QuerySnapshot>(
-            stream: collection.snapshots(),
+            stream: collection.orderBy('createdAt').snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               if (snapshot.hasData) {
+                List plants = [];
+                snapshot.data.docs.map((plant) => plants.add(plant)).toList();
+
                 return snapshot.data.docs.length != 0
-                    ? PlantsSlider(data: snapshot.data.docs)
+                    ? Column(
+                        children: [
+                          Container(
+                            height: size.height * 0.13,
+                            width: size.width * 0.9,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.1),
+                                  spreadRadius: 7,
+                                  blurRadius: 7,
+                                  offset: Offset(
+                                      0, 3), // changes position of shadow
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 14.0, left: 14.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Recently added:',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 17.0),
+                                      ),
+                                      SizedBox(height: 10.0),
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                                left: 10.0),
+                                            child: Text(
+                                              plants.last['name'],
+                                              style: TextStyle(
+                                                  color: Colors.orange,
+                                                  fontWeight: FontWeight.w600,
+                                                  fontSize: 18),
+                                            ),
+                                          ),
+                                          SizedBox(height: 4.0),
+                                          Text(
+                                            plants.last['score'],
+                                            style: TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 15),
+                                          )
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Spacer(),
+                                Container(
+                                  width: 100,
+                                  height: 100,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: Image.network(
+                                      plants.last['image'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 10.0,
+                                )
+                              ],
+                            ),
+                          ),
+                          PlantsSlider(data: snapshot.data.docs),
+                        ],
+                      )
                     : Padding(
                         padding: const EdgeInsets.only(top: 270.0),
                         child: Center(
@@ -130,7 +217,7 @@ class _PlantsSliderState extends State<PlantsSlider> {
     final provider = context.watch<HomeBloc>();
 
     return Padding(
-      padding: const EdgeInsets.only(top: 10.0),
+      padding: const EdgeInsets.only(top: 50.0),
       child: Column(
         children: [
           Padding(
@@ -139,7 +226,7 @@ class _PlantsSliderState extends State<PlantsSlider> {
               alignment: Alignment.topLeft,
               child: Text(
                 'My plants',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
               ),
             ),
           ),
@@ -186,16 +273,32 @@ class _PlantItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 4.0, right: 4.0, bottom: 20.0),
-      child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        elevation: 5.0,
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(
-            Radius.circular(20.0),
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, Routers.plant);
+      },
+      child: Padding(
+        padding:
+            EdgeInsets.only(left: 4.0, right: 4.0, bottom: 20.0, top: 10.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.2),
+                spreadRadius: 7,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
+            ],
           ),
-          child: Container(
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(
+              Radius.circular(20.0),
+            ),
             child: Stack(
               children: [
                 Container(

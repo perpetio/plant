@@ -30,9 +30,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ModalRoute.withName(Routers.profile),
           );
         },
-        child: Avatar(
-          assetName: 'assets/images/profile.png',
-        ),
+        child: Avatar(),
       ),
       SizedBox(width: 15.0)
     ];

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:plant/api/plant_api.dart';
+import 'package:plant/api/plant_net_api.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/utils/router.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -355,13 +355,13 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
 
                       sightingRef.set(
                         {
+                          "createdAt": DateTime.now().microsecondsSinceEpoch,
                           "name": plant,
                           "score": score,
                           "image": '',
                         },
                       );
 
-                      print('11');
                       await saveImages(_image, sightingRef);
                       _addPlantController.success();
                     },

@@ -7,8 +7,13 @@ class ScreenTemplate extends StatelessWidget {
   final String title;
   final bool isAppBar;
   final int index;
-  ScreenTemplate({Key key, this.body, this.index, this.title, this.isAppBar})
-      : super(key: key);
+  ScreenTemplate({
+    Key key,
+    this.body,
+    this.index,
+    this.title,
+    this.isAppBar,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

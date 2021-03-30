@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -120,13 +119,10 @@ class __BodyState extends State<_Body> {
               if (snapshot.hasData) {
                 QueryDocumentSnapshot user;
                 snapshot.data.docs.map((element) {
-                  print(element['uid']);
                   if (element['uid'] == FirebaseAuth.instance.currentUser.uid) {
                     user = element;
                   }
                 }).toList();
-
-                print(user['image']);
 
                 return Column(
                   children: [
