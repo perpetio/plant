@@ -2,9 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    
-    <key>NSCameraUsageDescription</key>
-    <string>Requires access to the camera to scan plants.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Requires access to the camera to scan plants.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Need Microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>

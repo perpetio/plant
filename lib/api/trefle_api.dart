@@ -1,8 +1,6 @@
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:plant/core/settings.dart';
-import 'package:plant/models/trefle.dart';
 
 Future<void> getPlant({String plant}) async {
   String url =
