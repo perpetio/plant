@@ -287,8 +287,8 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
                   SizedBox(width: 10.0),
                   _image != null
                       ? Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
                           height: 80,
-                          width: 80,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Image.file(_image, fit: BoxFit.cover),

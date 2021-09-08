@@ -22,16 +22,15 @@ class _AvatarState extends State<Avatar> {
         if (snapshot.hasData) {
           QueryDocumentSnapshot user;
           snapshot.data.docs.map((element) {
-            if (element['uid'] == FirebaseAuth.instance.currentUser.uid) {
+            if (element.id == FirebaseAuth.instance.currentUser.uid) {
               user = element;
             }
           }).toList();
-
           return Padding(
             padding: const EdgeInsets.all(2.0),
             child: CircleAvatar(
               backgroundImage: user['image'] == ''
-                  ? AssetImage('assets/images/profile')
+                  ? AssetImage('assets/images/profile.png')
                   : NetworkImage(user['image']),
             ),
           );

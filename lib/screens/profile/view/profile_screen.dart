@@ -10,6 +10,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
 import 'package:plant/utils/router.dart';
+import 'package:plant/widgets/avatar.dart';
 import 'package:plant/widgets/screen_template.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -119,57 +120,61 @@ class __BodyState extends State<_Body> {
               if (snapshot.hasData) {
                 QueryDocumentSnapshot user;
                 snapshot.data.docs.map((element) {
-                  if (element['uid'] == FirebaseAuth.instance.currentUser.uid) {
+                  if (element.id == FirebaseAuth.instance.currentUser.uid) {
                     user = element;
                   }
                 }).toList();
 
-                return Column(
-                  children: [
-                    Center(
-                      child: Stack(
-                        children: <Widget>[
-                          CircleAvatar(
-                            radius: 80,
-                            backgroundImage: user['image'] == ''
-                                ? AssetImage('assets/images/profile.png')
-                                : NetworkImage(user['image']),
-                          ),
-                          Positioned(
-                            bottom: 0.0,
-                            right: 17.0,
-                            child: InkWell(
-                              onTap: () => _pickImage(),
-                              child: Container(
-                                height: 35,
-                                width: 35,
-                                decoration: BoxDecoration(
-                                  color: Colors.orange,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  heightFactor: 10,
-                                  widthFactor: 10,
-                                  child: Icon(Icons.edit_outlined, size: 20),
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Stack(
+                          children: <Widget>[
+                            CircleAvatar(
+                              radius: 80,
+                              backgroundImage: user['image'] == ''
+                                  ? AssetImage('assets/images/profile.png')
+                                  : NetworkImage(user['image']),
+                            ),
+                            Positioned(
+                              bottom: 0.0,
+                              right: 17.0,
+                              child: InkWell(
+                                onTap: () => _pickImage(),
+                                child: Container(
+                                  height: 35,
+                                  width: 35,
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    heightFactor: 10,
+                                    widthFactor: 10,
+                                    child: Icon(Icons.edit_outlined, size: 20),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 15),
-                    Text(
-                      user['name'],
-                      style: TextStyle(
-                          fontSize: 24.0, fontWeight: FontWeight.w600),
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      user['email'],
-                      style: TextStyle(fontSize: 15.0, color: Colors.grey),
-                    ),
-                  ],
+                      SizedBox(height: 15),
+                      Text(
+                        // 'name',
+                        user['name'],
+                        style: TextStyle(
+                            fontSize: 24.0, fontWeight: FontWeight.w600),
+                      ),
+                      SizedBox(height: 10.0),
+                      Text(
+                        // 'email',
+                        user['email'],
+                        style: TextStyle(fontSize: 15.0, color: Colors.grey),
+                      ),
+                    ],
+                  ),
                 );
               } else {
                 return Center(

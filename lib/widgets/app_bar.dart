@@ -38,29 +38,33 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: AppBar(
-          elevation: 0.0,
-          brightness: Brightness.light,
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
+        elevation: 0.0,
+        brightness: Brightness.light,
+        backgroundColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
           ),
-          title: Row(
-            children: [SizedBox(width: 15.0), buildLogo()],
-          ),
-          actions: actions),
+        ),
+        title: Row(
+          children: [SizedBox(width: 15.0), buildLogo()],
+        ),
+        actions: actions,
+      ),
     );
   }
 
   Widget buildLogo() {
-    return Text(
-      title,
-      style: TextStyle(
+    return Flexible(
+      child: Text(
+        title,
+        style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 24.0,
-          letterSpacing: 1.0),
+          letterSpacing: 1.0,
+        ),
+      ),
     );
   }
 }

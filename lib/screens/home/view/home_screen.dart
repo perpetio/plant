@@ -95,7 +95,8 @@ class __BodyState extends State<_Body> {
                     ? Column(
                         children: [
                           Container(
-                            height: size.height * 0.13,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 10),
                             width: size.width * 0.9,
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -131,8 +132,8 @@ class __BodyState extends State<_Body> {
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 10.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 5),
                                             child: Text(
                                               plants.last['name'],
                                               style: TextStyle(
@@ -145,8 +146,9 @@ class __BodyState extends State<_Body> {
                                           Text(
                                             plants.last['score'],
                                             style: TextStyle(
-                                                color: Colors.grey,
-                                                fontSize: 15),
+                                              color: Colors.grey,
+                                              fontSize: 15,
+                                            ),
                                           )
                                         ],
                                       )
@@ -172,10 +174,12 @@ class __BodyState extends State<_Body> {
                             ),
                           ),
                           PlantsSlider(data: snapshot.data.docs),
+                          SizedBox(height: size.height * 0.13),
                         ],
                       )
                     : Padding(
-                        padding: const EdgeInsets.only(top: 270.0),
+                        padding: EdgeInsets.only(top: size.height * 0.3),
+                        // padding: const EdgeInsets.only(top: 270.0),
                         child: Center(
                           child: Text(
                             'No plants yet',
