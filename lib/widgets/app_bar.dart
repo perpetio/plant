@@ -46,9 +46,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             bottom: Radius.circular(20),
           ),
         ),
-        title: Row(
-          children: [SizedBox(width: 15.0), buildLogo()],
-        ),
+        // title: Row(
+        //   children: [SizedBox(width: 15.0), buildLogo()],
+        // ),
         actions: actions,
       ),
     );

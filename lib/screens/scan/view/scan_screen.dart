@@ -361,8 +361,6 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
                           "image": '',
                         },
                       );
-
-                      await saveImages(_image, sightingRef);
                       _addPlantController.success();
                     },
                   ),

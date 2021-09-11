@@ -10,7 +10,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
 import 'package:plant/utils/router.dart';
-import 'package:plant/widgets/avatar.dart';
 import 'package:plant/widgets/screen_template.dart';
 
 class ProfileScreen extends StatelessWidget {

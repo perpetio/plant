@@ -52,7 +52,7 @@ Route<dynamic> router(routeSetting) {
 
     case Routers.plant:
       return new MaterialPageRoute(
-        builder: (context) => PlantScreen(),
+        builder: (context) => PlantScreen(name: 'Ficus benjamina'),
         settings: routeSetting,
       );
       break;
