@@ -1,11 +1,17 @@
 class PlantDetect {
   double score;
   Species species;
+  String image;
 
-  PlantDetect({this.score, this.species});
+  PlantDetect({
+    this.score,
+    this.species,
+    this.image,
+  });
 
   factory PlantDetect.fromJson(Map<String, dynamic> json) => PlantDetect(
         score: json["score"].toDouble(),
+        image: json["image"],
         species: Species.fromJson(json["species"]),
       );
 
@@ -32,9 +38,11 @@ class Species {
   factory Species.fromJson(Map<String, dynamic> json) => Species(
         scientificNameWithoutAuthor: json["scientificNameWithoutAuthor"],
         scientificNameAuthorship: json["scientificNameAuthorship"],
-        genus: Family.fromJson(json["genus"]),
+        genus: json["genus"] != null ? Family.fromJson(json["genus"]) : null,
         family: Family.fromJson(json["family"]),
-        commonNames: List<String>.from(json["commonNames"].map((x) => x)),
+        commonNames: json["commonNames"] != null
+            ? List<String>.from(json["commonNames"].map((x) => x))
+            : null,
       );
 
   Map<String, dynamic> toJson() => {

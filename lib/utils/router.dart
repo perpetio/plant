@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
@@ -20,7 +21,7 @@ class Routers {
 ///Return MaterialPageRoute depends of route name
 
 // ignore: missing_return
-Route<dynamic> router(routeSetting) {
+Route<dynamic> router(RouteSettings routeSetting) {
   switch (routeSetting.name) {
     case Routers.sign_up:
       return new MaterialPageRoute(
@@ -51,8 +52,11 @@ Route<dynamic> router(routeSetting) {
       break;
 
     case Routers.plant:
+      final plantDetect = routeSetting.arguments as PlantDetect;
       return new MaterialPageRoute(
-        builder: (context) => PlantScreen(name: 'Ficus benjamina'),
+        builder: (context) => PlantScreen(
+          plantDetect: plantDetect,
+        ),
         settings: routeSetting,
       );
       break;

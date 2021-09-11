@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:plant/models/plant_net.dart';
 import 'package:plant/utils/router.dart';
 
 class HomePlantItem extends StatelessWidget {
-  final QueryDocumentSnapshot plant;
+  final PlantDetect plant;
 
   const HomePlantItem({Key key, this.plant}) : super(key: key);
 
@@ -11,7 +11,11 @@ class HomePlantItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, Routers.plant);
+        Navigator.pushNamed(
+          context,
+          Routers.plant,
+          arguments: plant,
+        );
       },
       child: Padding(
         padding:
@@ -38,8 +42,12 @@ class HomePlantItem extends StatelessWidget {
             child: Stack(
               children: [
                 Container(
-                  child: Image.network(plant['image'],
-                      fit: BoxFit.cover, width: 1000.0, height: 1000.0),
+                  child: Image.network(
+                    plant.image,
+                    fit: BoxFit.cover,
+                    width: 1000.0,
+                    height: 1000.0,
+                  ),
                 ),
                 Positioned(
                   bottom: 0,
@@ -65,7 +73,7 @@ class HomePlantItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              plant['name'],
+              plant.species.scientificNameWithoutAuthor,
               style: TextStyle(
                   color: Colors.black,
                   letterSpacing: 1.0,
@@ -74,7 +82,7 @@ class HomePlantItem extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             Text(
-              plant['score'],
+              plant.score.toStringAsFixed(2),
               style: TextStyle(
                   color: Colors.black, letterSpacing: 1.0, fontSize: 20.0),
             ),

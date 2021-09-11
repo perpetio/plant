@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/view/home_next_button.dart';
 import 'package:plant/screens/home/view/home_plant_item.dart';
@@ -9,9 +9,9 @@ import 'package:plant/screens/home/view/home_plant_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePlantsSlider extends StatefulWidget {
-  final List<QueryDocumentSnapshot> data;
+  final List<PlantDetect> plants;
 
-  HomePlantsSlider({@required this.data});
+  HomePlantsSlider({@required this.plants});
 
   @override
   _HomePlantSliderState createState() => _HomePlantSliderState();
@@ -44,7 +44,7 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
             child: Stack(
               children: [
                 CarouselSlider(
-                  items: widget.data
+                  items: widget.plants
                       .map((plant) => HomePlantItem(plant: plant))
                       .toList(),
                   options: CarouselOptions(

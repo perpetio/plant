@@ -35,8 +35,10 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
   final picker = ImagePicker();
   AnimationController controller;
   Animation<Offset> offset;
+
   String plant;
-  String score;
+  double score;
+  String familyName;
 
   @override
   void initState() {
@@ -301,14 +303,18 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
                       if (snapshot.hasData) {
                         List plants = [];
                         List scores = [];
+                        List familyNames = [];
                         snapshot.data.map<Widget>((result) {
                           plants
                               .add(result.species.scientificNameWithoutAuthor);
                           scores.add(result.score);
+                          familyNames.add(result
+                              .species.family.scientificNameWithoutAuthor);
                         }).toList();
 
                         plant = plants[0].toString();
-                        score = scores[0].toStringAsFixed(2);
+                        score = scores[0];
+                        familyName = familyNames[0];
 
                         return Padding(
                           padding: const EdgeInsets.only(left: 10),
@@ -324,10 +330,10 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
                               ),
                               SizedBox(height: 5),
                               Text(
-                                score,
+                                score.toStringAsFixed(2),
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 16.0),
-                              )
+                              ),
                             ],
                           ),
                         );
@@ -353,12 +359,19 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
                           .collection('plants')
                           .doc();
 
+                      final imageUrl = await uploadFile(_image);
+
                       sightingRef.set(
                         {
-                          "createdAt": DateTime.now().microsecondsSinceEpoch,
-                          "name": plant,
                           "score": score,
-                          "image": '',
+                          "image": imageUrl,
+                          "createdAt": DateTime.now().microsecondsSinceEpoch,
+                          "species": {
+                            "scientificNameWithoutAuthor": plant,
+                            "family": {
+                              "scientificNameWithoutAuthor": familyName,
+                            }
+                          }
                         },
                       );
                       _addPlantController.success();

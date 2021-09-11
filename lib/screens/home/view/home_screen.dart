@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/view/home_recently_added.dart';
 import 'package:plant/widgets/screen_template.dart';
@@ -74,7 +75,7 @@ class __BodyState extends State<_Body> {
     final size = MediaQuery.of(context).size;
 
     return Padding(
-      padding: const EdgeInsets.only(top: 150.0),
+      padding: const EdgeInsets.only(top: 120.0),
       child: SmartRefresher(
         enablePullDown: true,
         controller: _refreshController,
@@ -87,13 +88,15 @@ class __BodyState extends State<_Body> {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               if (snapshot.hasData) {
-                List plants = [];
-                snapshot.data.docs.map((plant) => plants.add(plant)).toList();
+                List<PlantDetect> plants = [];
+                snapshot.data.docs
+                    .map((plant) =>
+                        plants.add(PlantDetect.fromJson(plant.data())))
+                    .toList();
 
                 return snapshot.data.docs.length != 0
                     ? HomeRecentlyAdded(
                         plants: plants,
-                        docs: snapshot.data.docs,
                         size: size,
                       )
                     : _createNoPlants(size);

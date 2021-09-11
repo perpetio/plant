@@ -41,6 +41,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         elevation: 0.0,
         brightness: Brightness.light,
         backgroundColor: Colors.white,
+        title: Text(
+          title,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             bottom: Radius.circular(20),

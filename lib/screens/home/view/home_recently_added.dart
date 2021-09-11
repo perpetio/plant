@@ -1,15 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/view/home_plant_slider.dart';
 
 class HomeRecentlyAdded extends StatelessWidget {
-  final List<dynamic> plants;
-  final List<QueryDocumentSnapshot> docs;
+  final List<PlantDetect> plants;
   final Size size;
 
   const HomeRecentlyAdded({
     @required this.plants,
-    @required this.docs,
     @required this.size,
   });
 
@@ -52,7 +50,7 @@ class HomeRecentlyAdded extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
                           child: Text(
-                            plants.last['name'],
+                            plants.last.species.scientificNameWithoutAuthor,
                             style: TextStyle(
                                 color: Colors.orange,
                                 fontWeight: FontWeight.w600,
@@ -61,7 +59,7 @@ class HomeRecentlyAdded extends StatelessWidget {
                         ),
                         SizedBox(height: 4.0),
                         Text(
-                          plants.last['score'],
+                          plants.last.score.toStringAsFixed(2),
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 15,
@@ -79,7 +77,7 @@ class HomeRecentlyAdded extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.network(
-                    plants.last['image'],
+                    plants.last.image ?? "",
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -90,7 +88,7 @@ class HomeRecentlyAdded extends StatelessWidget {
             ],
           ),
         ),
-        HomePlantsSlider(data: docs),
+        HomePlantsSlider(plants: plants),
         SizedBox(height: size.height * 0.13),
       ],
     );
