@@ -34,63 +34,69 @@ class HomeRecentlyAdded extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 14.0, left: 14.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Recently added:',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 17.0),
-                    ),
-                    SizedBox(height: 10.0),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Text(
-                            plants.last.species.scientificNameWithoutAuthor,
-                            style: TextStyle(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18),
-                          ),
-                        ),
-                        SizedBox(height: 4.0),
-                        Text(
-                          plants.last.score.toStringAsFixed(2),
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 15,
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
+              _createPlantData(),
               Spacer(),
-              Container(
-                width: 100,
-                height: 100,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    plants.last.image ?? "",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10.0,
-              )
+              _createPlantImage(),
             ],
           ),
         ),
         HomePlantsSlider(plants: plants),
         SizedBox(height: size.height * 0.13),
       ],
+    );
+  }
+
+  Widget _createPlantData() {
+    return Expanded(
+      flex: 6,
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10, left: 20, bottom: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Recently added:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 17.0,
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Text(
+                    plants.last.species.scientificNameWithoutAuthor,
+                    style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18),
+                  ),
+                ),
+                SizedBox(height: 4.0),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _createPlantImage() {
+    return Expanded(
+      flex: 3,
+      child: Container(
+        width: 100,
+        height: 100,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: Image.network(
+            plants.last.image ?? "",
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
     );
   }
 }

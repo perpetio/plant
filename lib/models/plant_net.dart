@@ -10,7 +10,7 @@ class PlantDetect {
   });
 
   factory PlantDetect.fromJson(Map<String, dynamic> json) => PlantDetect(
-        score: json["score"].toDouble(),
+        score: json["score"],
         image: json["image"],
         species: Species.fromJson(json["species"]),
       );
