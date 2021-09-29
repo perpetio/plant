@@ -27,7 +27,7 @@ class PlantScreen extends StatelessWidget {
   Widget _createPlantDetails(BuildContext context) {
     return SlidingUpPanel(
       color: Colors.white,
-      panel: PlantDetailsPanel(),
+      panel: PlantDetailsPanel(plantDetect: plantDetect),
       body: PlantDetailsBody(image: plantDetect.image ?? ''),
       minHeight: MediaQuery.of(context).size.height * 0.65,
       isDraggable: false,
