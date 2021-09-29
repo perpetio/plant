@@ -12,7 +12,5 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   @override
   Stream<ScanState> mapEventToState(
     ScanEvent event,
-  ) async* {
-    // TODO: implement mapEventToState
-  }
+  ) async* {}
 }

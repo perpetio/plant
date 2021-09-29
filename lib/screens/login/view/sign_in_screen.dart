@@ -51,7 +51,7 @@ class SignInScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: MediaQuery.of(context).size.height / 6,
+            top: MediaQuery.of(context).size.height / 4,
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,

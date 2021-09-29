@@ -1,18 +1,34 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
+import 'dart:io';
+import 'package:dio/dio.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:plant/core/settings.dart';
-import 'package:plant/models/trefle.dart';
 
-Future<void> getPlant({String plant}) async {
-  String url =
-      'https://trefle.io/api/v1/plants/search?token=$trefle_key&q=$plant';
-  Map<String, String> header = {"Content-type": "application/json"};
+Future<void> getPlant({
+  String image,
+}) async {
+  Dio dio = new Dio();
 
-  Response response = await http.get(url, headers: header);
+  var documentDirectory = await getApplicationDocumentsDirectory();
+  // var firstPath = documentDirectory.path + "/images";
+  var filePathAndName = documentDirectory.path + '/images/pic.jpg';
 
-  print(response.statusCode);
-  print(response.body);
+  File imageFile = new File(filePathAndName);
 
-  if (response.statusCode != 200) throw Exception('Failed to load plant');
+  // FormData formData = new FormData.fromMap(
+  //   {
+  //     "organs": "flower",
+  //     "images": await MultipartFile.fromFile(
+  //       imageFile.path,
+  //       contentType: new MediaType("images", "jpg"),
+  //     )
+  //   },
+  // );
+
+  final response = await dio.post(
+    "https://my-api.plantnet.org/v2/identify/all?api-key=" + plant_key,
+    data: imageFile,
+    options: Options(),
+  );
+
+  print(response);
 }
