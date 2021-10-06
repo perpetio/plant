@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant/models/plant_net.dart';
-import 'package:plant/screens/home/view/home_plant_slider.dart';
+import 'package:plant/screens/home/widget/home_plant_slider.dart';
 
 class HomeRecentlyAdded extends StatelessWidget {
   final List<PlantDetect> plants;

@@ -36,8 +36,12 @@ class Species {
   });
 
   factory Species.fromJson(Map<String, dynamic> json) => Species(
-        scientificNameWithoutAuthor: json["scientificNameWithoutAuthor"],
-        scientificNameAuthorship: json["scientificNameAuthorship"],
+        scientificNameWithoutAuthor: json["scientificNameWithoutAuthor"] != null
+            ? json["scientificNameWithoutAuthor"]
+            : '',
+        scientificNameAuthorship: json["scientificNameAuthorship"] != null
+            ? json["scientificNameAuthorship"]
+            : '',
         genus: json["genus"] != null ? Family.fromJson(json["genus"]) : null,
         family: Family.fromJson(json["family"]),
         commonNames: json["commonNames"] != null
@@ -64,8 +68,12 @@ class Family {
   String scientificNameAuthorship;
 
   factory Family.fromJson(Map<String, dynamic> json) => Family(
-        scientificNameWithoutAuthor: json["scientificNameWithoutAuthor"],
-        scientificNameAuthorship: json["scientificNameAuthorship"],
+        scientificNameWithoutAuthor: json["scientificNameWithoutAuthor"] != null
+            ? json["scientificNameWithoutAuthor"]
+            : '',
+        scientificNameAuthorship: json["scientificNameAuthorship"] != null
+            ? json["scientificNameAuthorship"]
+            : '',
       );
 
   Map<String, dynamic> toJson() => {
