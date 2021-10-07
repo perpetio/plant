@@ -19,7 +19,7 @@ Future fetchPlants(File image) async {
   );
 
   Response response = await dio.post(
-    "https://my-api.plantnet.org/v2/identify/all?api-key=" + plant_key,
+    "https://my-api.plantnet.org/v2/identify/all?api-key=" + ApiKey.plant_key,
     data: formData,
     options: Options(),
   );
