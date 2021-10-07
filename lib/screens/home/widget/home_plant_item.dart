@@ -65,20 +65,25 @@ class HomePlantItem extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
+      height: size.height * 0.25,
       color: Color.fromRGBO(255, 255, 255, 0.97),
       child: Padding(
-        padding:
-            const EdgeInsets.only(top: 60, bottom: 60, left: 10.0, right: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+        // const EdgeInsets.only(top: 40, bottom: 60, left: 10.0, right: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              plant.species.scientificNameWithoutAuthor,
-              style: TextStyle(
-                  color: Colors.black,
-                  letterSpacing: 1.0,
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold),
+            Flexible(
+              child: Container(
+                width: size.width * 0.6,
+                child: Text(
+                  plant.species.scientificNameWithoutAuthor,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
             SizedBox(height: 10.0),
             Text(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -158,11 +159,11 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
                         height: 300,
                       ),
                     ),
-                    buildBackButton(),
-                    buildCameraButton(),
-                    buildGaleryButton(),
-                    buildFlashButton(),
-                    buildAnimatedContainer()
+                    _buildBackButton(),
+                    _buildCameraButton(),
+                    _buildGaleryButton(),
+                    _buildFlashButton(),
+                    _buildAnimatedContainer()
                   ],
                 )
               : Center(
@@ -173,7 +174,7 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildBackButton() {
+  Widget _buildBackButton() {
     return Padding(
       padding: const EdgeInsets.only(top: 60.0, left: 20.0),
       child: InkWell(
@@ -204,7 +205,7 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildCameraButton() {
+  Widget _buildCameraButton() {
     return Positioned(
       bottom: 60,
       left: 170,
@@ -222,7 +223,7 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildGaleryButton() {
+  Widget _buildGaleryButton() {
     return Positioned(
       bottom: 50,
       right: 40,
@@ -237,7 +238,7 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildFlashButton() {
+  Widget _buildFlashButton() {
     return Positioned(
       bottom: 50,
       left: 30,
@@ -260,7 +261,7 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildAnimatedContainer() {
+  Widget _buildAnimatedContainer() {
     final size = MediaQuery.of(context).size;
 
     return Align(
@@ -282,101 +283,15 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
                 ),
                 color: Color.fromRGBO(255, 255, 255, 0.96),
               ),
-              height: size.height * 0.11,
+              height: size.height * 0.13,
               width: size.width,
               child: Row(
                 children: [
-                  SizedBox(width: 10.0),
-                  _image != null
-                      ? Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
-                          height: 80,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.file(_image, fit: BoxFit.cover),
-                          ),
-                        )
-                      : Container(),
-                  FutureBuilder(
-                    future: fetchPlants(_image),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List plants = [];
-                        List scores = [];
-                        List familyNames = [];
-                        snapshot.data.map<Widget>((result) {
-                          plants
-                              .add(result.species.scientificNameWithoutAuthor);
-                          scores.add(result.score);
-                          familyNames.add(result
-                              .species.family.scientificNameWithoutAuthor);
-                        }).toList();
-
-                        plant = plants[0].toString();
-                        score = scores[0];
-                        familyName = familyNames[0];
-
-                        return Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                plant,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 17.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                score.toStringAsFixed(2),
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 16.0),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-                      return Text('');
-                    },
-                  ),
+                  _image != null ? _createPlantImage() : Container(),
+                  SizedBox(width: 5),
+                  _createPlantsDetails(),
                   Spacer(),
-                  RoundedLoadingButton(
-                    width: 60,
-                    height: 60,
-                    color: Colors.orange,
-                    successColor: Colors.green,
-                    borderRadius: 50,
-                    loaderSize: 35.0,
-                    child: Icon(Icons.add, color: Colors.white, size: 44),
-                    controller: _addPlantController,
-                    onPressed: () async {
-                      HapticFeedback.selectionClick();
-                      DocumentReference sightingRef = FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(FirebaseAuth.instance.currentUser.uid)
-                          .collection('plants')
-                          .doc();
-
-                      final imageUrl = await uploadFile(_image);
-
-                      sightingRef.set(
-                        {
-                          "score": score,
-                          "image": imageUrl,
-                          "createdAt": DateTime.now().microsecondsSinceEpoch,
-                          "species": {
-                            "scientificNameWithoutAuthor": plant,
-                            "family": {
-                              "scientificNameWithoutAuthor": familyName,
-                            }
-                          }
-                        },
-                      );
-                      _addPlantController.success();
-                    },
-                  ),
+                  _createAddPlantButton(),
                   SizedBox(width: 15.0)
                 ],
               ),
@@ -384,6 +299,105 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _createPlantImage() {
+    return Expanded(
+      flex: 3,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Image.file(_image, fit: BoxFit.cover),
+      ),
+    );
+  }
+
+  Widget _createPlantsDetails() {
+    return Expanded(
+      flex: 6,
+      child: FutureBuilder(
+        future: fetchPlants(_image),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List plants = [];
+            List scores = [];
+            List familyNames = [];
+            snapshot.data.map<Widget>((result) {
+              plants.add(result.species.scientificNameWithoutAuthor);
+              scores.add(result.score);
+              familyNames
+                  .add(result.species.family.scientificNameWithoutAuthor);
+            }).toList();
+
+            plant = plants[0].toString();
+            score = scores[0];
+            familyName = familyNames[0];
+
+            return Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    child: Text(
+                      plant,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 17.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    score.toStringAsFixed(2),
+                    style: TextStyle(color: Colors.black, fontSize: 16.0),
+                  ),
+                ],
+              ),
+            );
+          }
+          return Text('');
+        },
+      ),
+    );
+  }
+
+  Widget _createAddPlantButton() {
+    return RoundedLoadingButton(
+      width: 60,
+      height: 60,
+      color: Colors.orange,
+      successColor: Colors.green,
+      borderRadius: 50,
+      loaderSize: 35.0,
+      child: Icon(Icons.add, color: Colors.white, size: 44),
+      controller: _addPlantController,
+      onPressed: () async {
+        HapticFeedback.selectionClick();
+        DocumentReference sightingRef = FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser.uid)
+            .collection('plants')
+            .doc();
+
+        final imageUrl = await uploadFile(_image);
+
+        sightingRef.set(
+          {
+            "score": score,
+            "image": imageUrl,
+            "createdAt": DateTime.now().microsecondsSinceEpoch,
+            "species": {
+              "scientificNameWithoutAuthor": plant,
+              "family": {
+                "scientificNameWithoutAuthor": familyName,
+              }
+            }
+          },
+        );
+        _addPlantController.success();
+      },
     );
   }
 }

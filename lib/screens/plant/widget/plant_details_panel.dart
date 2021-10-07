@@ -8,29 +8,37 @@ class PlantDetailsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(height: 15),
-        _createPlantTitle(),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _createPlantDetails(),
-              _createFamily(),
-              _createOrigin(),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          Center(child: _createPlantTitle()),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                _createPlantDetails(),
+                const SizedBox(height: 15),
+                _createFamily(),
+                const SizedBox(height: 15),
+                _createOrigin(),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _createPlantTitle() {
     return Text(
-      '${plantDetect.species.scientificNameWithoutAuthor}',
+      plantDetect.species.scientificNameWithoutAuthor,
       style: TextStyle(
-        fontSize: 28,
+        fontSize: 27,
         color: Colors.black,
         fontWeight: FontWeight.bold,
       ),
@@ -38,20 +46,45 @@ class PlantDetailsPanel extends StatelessWidget {
   }
 
   Widget _createPlantDetails() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Text(
-        'Plant Details',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
+    return Row(
+      children: [
+        Expanded(
+          flex: 4,
+          child: Text(
+            'Plant Details',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Expanded(
+          flex: 6,
+          child: Image.asset('assets/images/slider_line.png'),
+        )
+      ],
     );
   }
 
   Widget _createFamily() {
-    return Text('Family');
+    return Row(
+      children: [
+        Text('Family: ',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        const SizedBox(width: 7),
+        Text(
+          plantDetect.species.family.scientificNameWithoutAuthor,
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+        ),
+      ],
+    );
   }
 
   Widget _createOrigin() {
-    return Text('Origin');
+    return Row(
+      children: [
+        Text('Origin: ',
+            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+        const SizedBox(width: 7),
+        Text('${plantDetect.species.commonNames}'),
+      ],
+    );
   }
 }

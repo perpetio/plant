@@ -3,8 +3,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
-import 'package:plant/screens/home/view/home_next_button.dart';
-import 'package:plant/screens/home/view/home_plant_item.dart';
+import 'package:plant/screens/home/widget/home_next_button.dart';
+import 'package:plant/screens/home/widget/home_plant_item.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
