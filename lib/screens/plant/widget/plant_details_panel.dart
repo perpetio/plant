@@ -8,26 +8,29 @@ class PlantDetailsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 15),
-        Center(child: _createPlantTitle()),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              _createPlantDetails(),
-              const SizedBox(height: 15),
-              _createFamily(),
-              const SizedBox(height: 15),
-              _createOrigin(),
-            ],
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 15),
+          Center(child: _createPlantTitle()),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                _createPlantDetails(),
+                const SizedBox(height: 15),
+                _createFamily(),
+                const SizedBox(height: 15),
+                _createOrigin(),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

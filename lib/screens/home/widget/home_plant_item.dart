@@ -68,19 +68,21 @@ class HomePlantItem extends StatelessWidget {
       height: size.height * 0.25,
       color: Color.fromRGBO(255, 255, 255, 0.97),
       child: Padding(
-        padding:
-            const EdgeInsets.only(top: 40, bottom: 60, left: 10.0, right: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+        // const EdgeInsets.only(top: 40, bottom: 60, left: 10.0, right: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
-              child: Text(
-                plant.species.scientificNameWithoutAuthor,
-                style: TextStyle(
-                    color: Colors.black,
-                    letterSpacing: 1.0,
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold),
+              child: Container(
+                width: size.width * 0.6,
+                child: Text(
+                  plant.species.scientificNameWithoutAuthor,
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                ),
               ),
             ),
             SizedBox(height: 10.0),
