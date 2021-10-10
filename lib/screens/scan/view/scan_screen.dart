@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:plant/api/plant_id_api.dart';
 import 'package:plant/api/plant_net_api.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/utils/router.dart';
@@ -91,6 +92,7 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
     });
     _takePhotoController.start();
     await fetchPlants(_image);
+    await getPlants(_image);
     _takePhotoController.stop();
 
     switch (controller.status) {
@@ -120,6 +122,7 @@ class ScanScreenState extends State<ScanScreen> with TickerProviderStateMixin {
         _image = File(image.path);
       });
       await fetchPlants(_image);
+      await getPlants(_image);
 
       switch (controller.status) {
         case AnimationStatus.completed:

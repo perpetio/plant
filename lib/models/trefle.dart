@@ -1,9 +1,9 @@
-class Plant {
+class PlantTreffle {
   List<Data> data;
 
-  Plant({this.data});
+  PlantTreffle({this.data});
 
-  Plant.fromJson(Map<String, dynamic> json) {
+  PlantTreffle.fromJson(Map<String, dynamic> json) {
     if (json['data'] != null) {
       data = [];
       json['data'].forEach((v) {

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:plant/models/plant.dart';
 import 'package:plant/models/plant_net.dart';
+import 'package:plant/screens/plant/view/plant_screen.dart';
 import 'package:plant/utils/router.dart';
 
 class HomePlantItem extends StatelessWidget {
-  final PlantDetect plant;
+  final PlantDetect plantDetect;
+  final Plant plant;
 
-  const HomePlantItem({Key key, this.plant}) : super(key: key);
+  const HomePlantItem({Key key, this.plantDetect, this.plant})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,10 @@ class HomePlantItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           Routers.plant,
-          arguments: plant,
+          arguments: PlantScreenArgs(
+            plantDetect: plantDetect,
+            plant: plant,
+          ),
         );
       },
       child: Padding(
@@ -43,7 +50,7 @@ class HomePlantItem extends StatelessWidget {
               children: [
                 Container(
                   child: Image.network(
-                    plant.image,
+                    plantDetect.image,
                     fit: BoxFit.cover,
                     width: 1000.0,
                     height: 1000.0,
@@ -77,7 +84,7 @@ class HomePlantItem extends StatelessWidget {
               child: Container(
                 width: size.width * 0.6,
                 child: Text(
-                  plant.species.scientificNameWithoutAuthor,
+                  plantDetect.species.scientificNameWithoutAuthor,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20.0,
@@ -87,7 +94,7 @@ class HomePlantItem extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             Text(
-              plant.score.toStringAsFixed(2),
+              plantDetect.score.toStringAsFixed(2),
               style: TextStyle(
                   color: Colors.black, letterSpacing: 1.0, fontSize: 20.0),
             ),

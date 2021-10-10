@@ -52,10 +52,11 @@ Route<dynamic> router(RouteSettings routeSetting) {
       break;
 
     case Routers.plant:
-      final plantDetect = routeSetting.arguments as PlantDetect;
+      final args = routeSetting.arguments as PlantScreenArgs;
       return new MaterialPageRoute(
         builder: (context) => PlantScreen(
-          plantDetect: plantDetect,
+          plantDetect: args?.plantDetect,
+          plant: args?.plant,
         ),
         settings: routeSetting,
       );

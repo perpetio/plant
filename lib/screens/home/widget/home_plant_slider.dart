@@ -45,7 +45,8 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
               children: [
                 CarouselSlider(
                   items: widget.plants
-                      .map((plant) => HomePlantItem(plant: plant))
+                      .map((plantDetect) =>
+                          HomePlantItem(plantDetect: plantDetect))
                       .toList(),
                   options: CarouselOptions(
                     height: height * 0.43,

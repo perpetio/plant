@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:plant/models/plant.dart';
 import 'package:plant/models/plant_net.dart';
 
 class PlantDetailsPanel extends StatelessWidget {
   final PlantDetect plantDetect;
+  final Plant plant;
 
-  PlantDetailsPanel({@required this.plantDetect});
+  PlantDetailsPanel({
+    @required this.plantDetect,
+    @required this.plant,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,8 @@ class PlantDetailsPanel extends StatelessWidget {
 
   Widget _createPlantTitle() {
     return Text(
-      plantDetect.species.scientificNameWithoutAuthor,
+      plant.plantDetails.wikiDescription.value,
+      // plantDetect.species.scientificNameWithoutAuthor,
       style: TextStyle(
         fontSize: 27,
         color: Colors.black,
@@ -49,14 +55,14 @@ class PlantDetailsPanel extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          flex: 4,
+          flex: 5,
           child: Text(
             'Plant Details',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ),
         Expanded(
-          flex: 6,
+          flex: 5,
           child: Image.asset('assets/images/slider_line.png'),
         )
       ],
