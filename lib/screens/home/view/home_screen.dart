@@ -88,10 +88,10 @@ class __BodyState extends State<_Body> {
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) return Text('Error: ${snapshot.error}');
               if (snapshot.hasData) {
-                List<PlantDetect> plants = [];
+                List<PlantDetectModel> plants = [];
                 snapshot.data.docs
                     .map((plant) =>
-                        plants.add(PlantDetect.fromJson(plant.data())))
+                        plants.add(PlantDetectModel.fromJson(plant.data())))
                     .toList();
 
                 return snapshot.data.docs.length != 0

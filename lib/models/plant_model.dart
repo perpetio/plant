@@ -1,17 +1,17 @@
-class Plant {
+class PlantModel {
   int id;
   String plantName;
   PlantDetails plantDetails;
 
-  Plant({
+  PlantModel({
     this.id,
     this.plantName,
     this.plantDetails,
   });
 
-  factory Plant.fromJson(Map<String, dynamic> json) => Plant(
-        id: json["id"],
-        plantName: json["plant_name"],
+  factory PlantModel.fromJson(Map<String, dynamic> json) => PlantModel(
+        id: json != null ? json["id"] : 0,
+        plantName: json != null ? json["plant_name"] : '',
         plantDetails: PlantDetails.fromJson(json["plant_details"]),
       );
 
@@ -49,8 +49,8 @@ class PlantDetails {
       }
     }
     return PlantDetails(
-      commonNames: List<String>.from(json["common_names"].map((e) => e)),
-      url: json["url"],
+      commonNames: List<String>.from(json["common_names"] ?? [].map((e) => e)),
+      url: json != null ? json["url"] : '',
       wikiDescription: WikiDescription.fromJson(json["wiki_description"]),
       taxonomy: Taxonomy.fromJson(json["taxonomy"]),
       wikiImages: tempWikiImages,
@@ -95,8 +95,8 @@ class WikiDescription {
 
   factory WikiDescription.fromJson(Map<String, dynamic> json) =>
       WikiDescription(
-        value: json["value"],
-        citation: json["citation"],
+        value: json != null ? json["value"] : "",
+        citation: json != null ? json["citation"] : "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -117,9 +117,9 @@ class Taxonomy {
   });
 
   factory Taxonomy.fromJson(Map<String, dynamic> json) => Taxonomy(
-        tClass: json["class"],
-        family: json["family"],
-        genus: json["genus"],
+        tClass: json != null ? json["class"] : "",
+        family: json != null ? json["family"] : "",
+        genus: json != null ? json["genus"] : "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -135,7 +135,7 @@ class WikiImage {
   WikiImage({this.value});
 
   factory WikiImage.fromJson(Map<String, dynamic> json) => WikiImage(
-        value: json['value'] ?? "",
+        value: json != null ? json['value'] : '',
       );
 
   Map<String, dynamic> toJson() => {

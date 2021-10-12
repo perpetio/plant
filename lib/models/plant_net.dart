@@ -1,15 +1,16 @@
-class PlantDetect {
+class PlantDetectModel {
   double score;
   Species species;
   String image;
 
-  PlantDetect({
+  PlantDetectModel({
     this.score,
     this.species,
     this.image,
   });
 
-  factory PlantDetect.fromJson(Map<String, dynamic> json) => PlantDetect(
+  factory PlantDetectModel.fromJson(Map<String, dynamic> json) =>
+      PlantDetectModel(
         score: json["score"],
         image: json["image"],
         species: Species.fromJson(json["species"]),

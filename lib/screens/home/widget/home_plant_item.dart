@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant.dart';
+import 'package:plant/models/plant_model.dart';
 import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/plant/view/plant_screen.dart';
 import 'package:plant/utils/router.dart';
 
 class HomePlantItem extends StatelessWidget {
-  final PlantDetect plantDetect;
-  final Plant plant;
+  final PlantDetectModel plantDetect;
+  final PlantModel plant;
 
   const HomePlantItem({Key key, this.plantDetect, this.plant})
       : super(key: key);

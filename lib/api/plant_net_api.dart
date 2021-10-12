@@ -28,9 +28,9 @@ Future fetchPlants(File image) async {
 
   if (response.statusCode != 200) throw Exception('Failed to load plant');
 
-  List<PlantDetect> results =
-      jsonDecode(response.toString())['results'].map<PlantDetect>((data) {
-    return PlantDetect.fromJson(data);
+  List<PlantDetectModel> results =
+      jsonDecode(response.toString())['results'].map<PlantDetectModel>((data) {
+    return PlantDetectModel.fromJson(data);
   }).toList();
 
   return results;

@@ -9,9 +9,9 @@ import 'package:plant/screens/home/widget/home_plant_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePlantsSlider extends StatefulWidget {
-  final List<PlantDetect> plants;
+  final List<PlantDetectModel> plantsDetect;
 
-  HomePlantsSlider({@required this.plants});
+  HomePlantsSlider({@required this.plantsDetect});
 
   @override
   _HomePlantSliderState createState() => _HomePlantSliderState();
@@ -44,7 +44,7 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
             child: Stack(
               children: [
                 CarouselSlider(
-                  items: widget.plants
+                  items: widget.plantsDetect
                       .map((plantDetect) =>
                           HomePlantItem(plantDetect: plantDetect))
                       .toList(),

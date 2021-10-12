@@ -3,7 +3,7 @@ import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/widget/home_plant_slider.dart';
 
 class HomeRecentlyAdded extends StatelessWidget {
-  final List<PlantDetect> plants;
+  final List<PlantDetectModel> plants;
   final Size size;
 
   const HomeRecentlyAdded({
@@ -40,7 +40,7 @@ class HomeRecentlyAdded extends StatelessWidget {
             ],
           ),
         ),
-        HomePlantsSlider(plants: plants),
+        HomePlantsSlider(plantsDetect: plants),
         SizedBox(height: size.height * 0.13),
       ],
     );

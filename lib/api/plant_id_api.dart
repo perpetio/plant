@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:http/http.dart';
 import 'package:plant/core/settings.dart';
-import 'package:plant/models/plant.dart';
+import 'package:plant/models/plant_model.dart';
 import 'package:http/http.dart' as http;
 
-Future getPlants(File image) async {
-  // Dio dio = new Dio();
+Future<List<PlantModel>> getPlants(File image) async {
   final Uint8List bytes = image.readAsBytesSync();
   final String url = 'https://api.plant.id/v2/identify';
 
-  Map data = {
+  Map formData = {
     "images": ["${base64Encode(bytes)}"],
     "modifiers": ["similar_images"],
     "plant_details": [
@@ -27,39 +27,22 @@ Future getPlants(File image) async {
     ]
   };
 
-  var bodyJson = json.encode(data);
+  var bodyJson = json.encode(formData);
 
-  http.post(url, body: bodyJson, headers: {
+  Response response = await http.post(url, body: bodyJson, headers: {
     "Api-Key": ApiKey.plant_id_key,
     "Content-Type": "application/json"
-  }).then((http.Response response) async {
-    log("${response.body}");
-    final int statusCode = response.statusCode;
-    if (statusCode != 200) throw Exception('Failed to load plant');
-
-    List<Plant> results =
-        jsonDecode(response.body)['suggestions'].map<Plant>((data) {
-      return Plant.fromJson(data);
-    }).toList();
-
-    log('$results');
-    return results;
   });
 
-  // Response response = await dio.post(
-  //   "https://api.plant.id/v2/identify" + ApiKey.plant_id_key,
-  //   data: formData,
-  //   options: Options(),
-  // );
+  log("${response.body}");
+  final int statusCode = response.statusCode;
+  if (statusCode != 200) throw Exception('Failed to load plant');
 
-  // print(response.data);
+  List<PlantModel> results =
+      jsonDecode(response.body)['suggestions'].map<PlantModel>((data) {
+    return PlantModel.fromJson(data);
+  }).toList();
+  log('$results');
 
-  // if (response.statusCode != 200) throw Exception('Failed to load plant');
-
-  // List<PlantId> results =
-  //     jsonDecode(response.toString())['suggestions'].map<PlantId>((data) {
-  //   return PlantDetect.fromJson(data);
-  // }).toList();
-
-  // return results;
+  return results;
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';

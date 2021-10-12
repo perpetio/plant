@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant.dart';
+import 'package:plant/models/plant_model.dart';
 import 'package:plant/models/plant_net.dart';
 
 class PlantDetailsPanel extends StatelessWidget {
-  final PlantDetect plantDetect;
-  final Plant plant;
+  final PlantDetectModel plantDetect;
+  final PlantModel plant;
 
   PlantDetailsPanel({
     @required this.plantDetect,
@@ -41,8 +41,8 @@ class PlantDetailsPanel extends StatelessWidget {
 
   Widget _createPlantTitle() {
     return Text(
-      plant.plantDetails.wikiDescription.value,
-      // plantDetect.species.scientificNameWithoutAuthor,
+      // ('${plant.plantDetails.commonNames}'),
+      plantDetect.species.scientificNameWithoutAuthor,
       style: TextStyle(
         fontSize: 27,
         color: Colors.black,
