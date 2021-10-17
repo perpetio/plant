@@ -18,3 +18,11 @@ class ScanErrorState extends ScanState {
 
   ScanErrorState({@required this.message});
 }
+
+class ScanGetPlantImage extends ScanState {
+  final String image;
+
+  ScanGetPlantImage({
+    @required this.image,
+  });
+}

@@ -1,9 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/models/plant_net.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_recently_added.dart';
 import 'package:plant/widgets/screen_template.dart';
@@ -19,12 +16,11 @@ class HomeScreen extends StatelessWidget {
         return HomeBloc();
       },
       child: BlocBuilder<HomeBloc, HomeState>(
+        buildWhen: (currState, _) => currState is HomeInitial,
         builder: (context, state) {
-          // ignore: close_sinks
-          final provider = context.watch<HomeBloc>();
-
-          if (state is RefreshState) {
-            provider.add(RefreshEvent());
+          final bloc = BlocProvider.of<HomeBloc>(context);
+          if (state is HomeInitial) {
+            bloc.add(HomeInitialEvent());
           }
           return ScreenTemplate(
             index: 0,
@@ -46,11 +42,6 @@ class _Body extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
-  CollectionReference collection = FirebaseFirestore.instance
-      .collection('users')
-      .doc(FirebaseAuth.instance.currentUser.uid)
-      .collection('plants');
-
   RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -73,40 +64,57 @@ class __BodyState extends State<_Body> {
 
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final bloc = BlocProvider.of<HomeBloc>(context);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 120.0),
+      padding: const EdgeInsets.only(top: 90.0),
       child: SmartRefresher(
         enablePullDown: true,
         controller: _refreshController,
         onRefresh: _onRefresh,
         onLoading: _onLoading,
-        child: SingleChildScrollView(
-          child: StreamBuilder<QuerySnapshot>(
-            stream: collection.orderBy('createdAt').snapshots(),
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-              if (snapshot.hasData) {
-                List<PlantDetectModel> plants = [];
-                snapshot.data.docs
-                    .map((plant) =>
-                        plants.add(PlantDetectModel.fromJson(plant.data())))
-                    .toList();
+        child: BlocBuilder<HomeBloc, HomeState>(
+          builder: (context, state) {
+            bloc.add(RefreshEvent());
+            return SingleChildScrollView(
+              child: (bloc.plantsModels?.plantModels ?? []).isNotEmpty ?? false
+                  ? HomeRecentlyAdded(
+                      plantsModels: bloc.plantsModels,
+                      size: size,
+                    )
+                  : _createNoPlants(size),
 
-                return snapshot.data.docs.length != 0
-                    ? HomeRecentlyAdded(
-                        plants: plants,
-                        size: size,
-                      )
-                    : _createNoPlants(size);
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ),
+              // StreamBuilder<QuerySnapshot>(
+              //   stream: collection.orderBy('createdAt').snapshots(),
+              //   builder:
+              //       (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              //     if (snapshot.hasError) return Text('Error: ${snapshot.error}');
+              //     if (snapshot.hasData) {
+              //       List<PlantModel> plants = [];
+              //       PlantsModels plantsModels = PlantsModels(
+              //         plantsImages: [],
+              //         plantModels: [],
+              //       );
+              //       // snapshot.data.docs
+              //       //     .map((plant) =>
+              //       //         plants.add(PlantModel.fromJson(plant.data())))
+              //       //     .toList();
+
+              //       return snapshot.data.docs.length != 0
+              //           ? HomeRecentlyAdded(
+              //               plantsModels: plantsModels,
+              //               size: size,
+              //             )
+              //           : _createNoPlants(size);
+              //     } else {
+              //       return Center(
+              //         child: CircularProgressIndicator(),
+              //       );
+              //     }
+              //   },
+              // ),
+            );
+          },
         ),
       ),
     );

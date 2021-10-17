@@ -1,3 +1,37 @@
+import 'package:flutter/material.dart';
+import 'package:plant/models/plant_image.dart';
+
+class PlantsModels {
+  final List<PlantImage> plantsImages;
+  final List<PlantModel> plantModels;
+
+  PlantsModels({
+    @required this.plantsImages,
+    @required this.plantModels,
+  });
+
+  factory PlantsModels.fromJson(Map<String, dynamic> json) {
+    final images = (json["images"] as List) ?? [];
+    final plants = (json["suggestions"] as List) ?? [];
+    return PlantsModels(
+      plantsImages: images.map((e) => PlantImage.fromJson(e)).toList(),
+      plantModels: plants.map((e) => PlantModel.fromJson(e)).toList(),
+    );
+  }
+
+  String getPlantName() {
+    if (plantModels.isNotEmpty) {
+      return plantModels.first.plantName;
+    }
+    return "";
+  }
+
+  Map<String, dynamic> toJson() => {
+        "images": plantsImages.map((e) => e.toJson()).toList(),
+        "suggestions": plantModels.map((e) => e.toJson()).toList(),
+      };
+}
+
 class PlantModel {
   int id;
   String plantName;
@@ -10,8 +44,8 @@ class PlantModel {
   });
 
   factory PlantModel.fromJson(Map<String, dynamic> json) => PlantModel(
-        id: json != null ? json["id"] : 0,
-        plantName: json != null ? json["plant_name"] : '',
+        id: json != null ? json['id'] : 0,
+        plantName: json != null ? json['plant_name'] : '',
         plantDetails: PlantDetails.fromJson(json["plant_details"]),
       );
 
@@ -42,18 +76,21 @@ class PlantDetails {
   });
 
   factory PlantDetails.fromJson(Map<String, dynamic> json) {
-    List<WikiImage> tempWikiImages = <WikiImage>[];
-    if (json['wiki_images'] != null) {
-      for (final Map<String, dynamic> data in json['wiki_images'] as List) {
-        tempWikiImages.add(WikiImage.fromJson(data));
-      }
-    }
+    // List<WikiImage> tempWikiImages = <WikiImage>[];
+    // if (json['wiki_images'] != null) {
+    //   json['wiki_images'].forEach((v) {
+    //     tempWikiImages.add(WikiImage.fromJson(v));
+    //   });
+    //   // for (final Map<String, dynamic> data in json['wiki_images'] as List) {
+    //   //   tempWikiImages.add(WikiImage.fromJson(data));
+    //   // }
+    // }
     return PlantDetails(
       commonNames: List<String>.from(json["common_names"] ?? [].map((e) => e)),
       url: json != null ? json["url"] : '',
       wikiDescription: WikiDescription.fromJson(json["wiki_description"]),
       taxonomy: Taxonomy.fromJson(json["taxonomy"]),
-      wikiImages: tempWikiImages,
+      // wikiImages: tempWikiImages != null ? tempWikiImages : [],
       synonyms: List<String>.from((json["synonyms"] ?? []).map((e) => e)),
       propagationMethods:
           List<String>.from((json["propagation_methods"] ?? []).map((e) => e)),
@@ -61,26 +98,20 @@ class PlantDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data["common_names"] = commonNames;
     data["url"] = url;
     data["wiki_description"] = wikiDescription.toJson();
     data["taxonomy"] = taxonomy.toJson();
-    // "common_names": commonNames,
-    // "url": url,
-    // "wiki_description": wikiDescription.toJson(),
-    // "taxonomy": taxonomy.toJson(),
 
-    if (data != null) {
+    if (wikiImages != null) {
       data['wiki_images'] = wikiImages.map((e) => e.toJson()).toList();
     }
 
+    data["synonyms"] = synonyms;
+    data["propagationMethods"] = propagationMethods;
+
     return data;
-    // "wiki_images": wikiImages
-    //     .map((e) => WikiImages.fromJson(e as Map<String, dynamic>)),
-    // "synonyms": List<dynamic>.from(synonyms.map((e) => e)),
-    // "propagation_methods":
-    //     List<dynamic>.from(propagationMethods.map((e) => e)),
   }
 }
 

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
@@ -34,8 +33,10 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   final picker = ImagePicker();
   AnimationController animationController;
   Animation<Offset> offset;
+  String plantImage;
 
   PlantModel plantModel;
+  PlantsModels plantsModels;
 
   @override
   Stream<ScanState> mapEventToState(
@@ -47,11 +48,12 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
       _takeImage();
     } else if (event is GetDataPlantEvent) {
       try {
-        final plants = await getPlants(event.image);
-        if (plants.isNotEmpty) {
-          plantModel = plants[0];
+        plantsModels = await getPlants(event.image);
+        print(plantsModels.toJson());
+        if (plantsModels.plantModels.isNotEmpty) {
+          plantModel = plantsModels.plantModels[0];
         }
-        log('$plants');
+        yield ScanGetPlantImage(image: event.image.toString());
         yield DataPlantGotState(plantModel: plantModel);
       } catch (e) {
         yield ScanErrorState(message: e.toString());
@@ -122,33 +124,9 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
         .collection('plants')
         .doc();
 
-    final imageUrl = await uploadFile(image);
+    plantImage = await uploadFile(image);
+    sightingRef.set(plantsModels.toJson());
 
-    sightingRef.set(
-      {
-        "images": {
-          "url": imageUrl,
-        },
-        "createdAt": DateTime.now().microsecondsSinceEpoch,
-        "id": plantModel.id,
-        "plant_name": plantModel.plantName,
-        "plant_details": {
-          "common_names": plantModel.plantDetails.commonNames,
-          "url": plantModel.plantDetails.url,
-          "wiki_description": {
-            "value": plantModel.plantDetails.wikiDescription.value,
-          },
-          "taxonomy": {
-            "class": plantModel.plantDetails.taxonomy.tClass,
-            "family": plantModel.plantDetails.taxonomy.family,
-            "genus": plantModel.plantDetails.taxonomy.genus,
-          },
-          "wiki_images": plantModel.plantDetails.wikiImages,
-          "synonyms": plantModel.plantDetails.synonyms,
-          "propagation_methods": plantModel.plantDetails.propagationMethods,
-        },
-      },
-    );
     addPlantController.success();
   }
 

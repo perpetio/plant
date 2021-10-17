@@ -22,7 +22,8 @@ class ScanScreen extends StatelessWidget {
     return BlocProvider<ScanBloc>(
       create: (BuildContext context) => ScanBloc(),
       child: BlocConsumer<ScanBloc, ScanState>(
-        buildWhen: (_, currState) => currState is ScanInitial,
+        buildWhen: (_, currState) =>
+            currState is ScanInitial || currState is DataPlantGotState,
         builder: (context, state) {
           return ScanContent(camera: camera);
         },

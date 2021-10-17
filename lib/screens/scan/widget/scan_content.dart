@@ -213,7 +213,7 @@ class _ScanContentState extends State<ScanContent>
                               height: 100,
                               width: 100,
                             ),
-                      SizedBox(width: 5),
+                      SizedBox(width: 10),
                       Expanded(
                         flex: 6,
                         child: _createPlantsDetails(
@@ -224,7 +224,7 @@ class _ScanContentState extends State<ScanContent>
                       ),
                       Spacer(),
                       _createAddPlantButton(bloc),
-                      SizedBox(width: 15.0)
+                      SizedBox(width: 15)
                     ],
                   ),
                 ),
@@ -240,6 +240,8 @@ class _ScanContentState extends State<ScanContent>
     return Expanded(
       flex: 3,
       child: Container(
+        width: 100,
+        height: 100,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Image.file(image, fit: BoxFit.cover),
@@ -255,7 +257,7 @@ class _ScanContentState extends State<ScanContent>
   }) {
     if (bloc.plantModel != null) {
       return Text(
-        '${bloc.plantModel.plantName}',
+        '${bloc.plantsModels.getPlantName() ?? ""}',
         style: TextStyle(
           color: Colors.black,
           fontSize: 17.0,

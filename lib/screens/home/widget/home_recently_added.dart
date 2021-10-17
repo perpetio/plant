@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant_net.dart';
+import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/widget/home_plant_slider.dart';
 
 class HomeRecentlyAdded extends StatelessWidget {
-  final List<PlantDetectModel> plants;
+  final PlantsModels plantsModels;
   final Size size;
 
   const HomeRecentlyAdded({
-    @required this.plants,
+    @required this.plantsModels,
     @required this.size,
   });
 
@@ -40,7 +40,7 @@ class HomeRecentlyAdded extends StatelessWidget {
             ],
           ),
         ),
-        HomePlantsSlider(plantsDetect: plants),
+        HomePlantsSlider(plantsModels: plantsModels),
         SizedBox(height: size.height * 0.13),
       ],
     );
@@ -67,7 +67,7 @@ class HomeRecentlyAdded extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Text(
-                    plants.last.species.scientificNameWithoutAuthor,
+                    plantsModels.plantModels.last.plantName,
                     style: TextStyle(
                         color: Colors.orange,
                         fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class HomeRecentlyAdded extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: Image.network(
-            plants.last.image ?? "",
+            plantsModels.plantsImages.last.url.toString() ?? "",
             fit: BoxFit.cover,
           ),
         ),

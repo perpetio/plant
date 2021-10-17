@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:plant/models/plant_model.dart';
-import 'package:plant/models/plant_net.dart';
 
 class PlantDetailsPanel extends StatelessWidget {
-  final PlantDetectModel plantDetect;
-  final PlantModel plant;
+  final PlantModel plantModel;
 
   PlantDetailsPanel({
-    @required this.plantDetect,
-    @required this.plant,
+    @required this.plantModel,
   });
 
   @override
@@ -41,8 +38,9 @@ class PlantDetailsPanel extends StatelessWidget {
 
   Widget _createPlantTitle() {
     return Text(
-      // ('${plant.plantDetails.commonNames}'),
-      plantDetect.species.scientificNameWithoutAuthor,
+      '',
+      // plantModel.plantName,
+      // plantDetect.species.scientificNameWithoutAuthor,
       style: TextStyle(
         fontSize: 27,
         color: Colors.black,
@@ -76,7 +74,9 @@ class PlantDetailsPanel extends StatelessWidget {
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
         const SizedBox(width: 7),
         Text(
-          plantDetect.species.family.scientificNameWithoutAuthor,
+          '',
+          // plantModel.plantDetails.taxonomy.family,
+          // plantDetect.species.family.scientificNameWithoutAuthor,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
         ),
       ],
@@ -89,7 +89,7 @@ class PlantDetailsPanel extends StatelessWidget {
         Text('Origin: ',
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
         const SizedBox(width: 7),
-        Text('${plantDetect.species.commonNames}'),
+        // Text('${plantModel.plantDetails.commonNames}'),
       ],
     );
   }
