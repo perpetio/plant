@@ -3,10 +3,12 @@ import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/widget/home_plant_slider.dart';
 
 class HomeRecentlyAdded extends StatelessWidget {
+  final List<PlantsModels> listPlantsModels;
   final PlantsModels plantsModels;
   final Size size;
 
   const HomeRecentlyAdded({
+    @required this.listPlantsModels,
     @required this.plantsModels,
     @required this.size,
   });
@@ -15,6 +17,7 @@ class HomeRecentlyAdded extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        SizedBox(height: 20),
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           width: size.width * 0.9,
@@ -67,7 +70,8 @@ class HomeRecentlyAdded extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Text(
-                    plantsModels.plantModels.last.plantName,
+                    listPlantsModels.first.plantModels.first.plantName,
+                    // plantsModels.plantModels.last.plantName,
                     style: TextStyle(
                         color: Colors.orange,
                         fontWeight: FontWeight.w600,

@@ -30,7 +30,7 @@ class _ScanContentState extends State<ScanContent>
   @override
   void initState() {
     super.initState();
-
+    // ignore: close_sinks
     final bloc = BlocProvider.of<ScanBloc>(context);
 
     bloc.controller = CameraController(widget.camera, ResolutionPreset.high);

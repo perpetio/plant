@@ -18,6 +18,7 @@ class HomeScreen extends StatelessWidget {
       child: BlocBuilder<HomeBloc, HomeState>(
         buildWhen: (currState, _) => currState is HomeInitial,
         builder: (context, state) {
+          // ignore: close_sinks
           final bloc = BlocProvider.of<HomeBloc>(context);
           if (state is HomeInitial) {
             bloc.add(HomeInitialEvent());
@@ -64,6 +65,7 @@ class __BodyState extends State<_Body> {
 
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    // ignore: close_sinks
     final bloc = BlocProvider.of<HomeBloc>(context);
 
     return Padding(
@@ -79,6 +81,7 @@ class __BodyState extends State<_Body> {
             return SingleChildScrollView(
               child: (bloc.plantsModels?.plantModels ?? []).isNotEmpty ?? false
                   ? HomeRecentlyAdded(
+                      listPlantsModels: bloc.listPlantsModels,
                       plantsModels: bloc.plantsModels,
                       size: size,
                     )

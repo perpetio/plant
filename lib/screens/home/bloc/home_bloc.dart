@@ -14,6 +14,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   int currentPromo = 0;
 
   PlantsModels plantsModels;
+  List<PlantsModels> listPlantsModels;
 
   @override
   Stream<HomeState> mapEventToState(
@@ -38,14 +39,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         .doc(FirebaseAuth.instance.currentUser.uid)
         .collection("plants")
         .get();
+
     final lstPlantsModels = snapshot.docs
         .map((e) => PlantsModels.fromJson({
-              "images": e["images"],
-              "suggestions": e["suggestions"],
+              "images": e["images"] == null ? [] : e["images"],
+              "suggestions": e["suggestions"] == null ? [] : e["suggestions"],
             }))
         .toList();
     if (lstPlantsModels.isNotEmpty) {
       plantsModels = lstPlantsModels.first;
+      listPlantsModels = lstPlantsModels;
     }
   }
 }

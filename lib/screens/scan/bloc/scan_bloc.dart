@@ -125,7 +125,26 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
         .doc();
 
     plantImage = await uploadFile(image);
-    sightingRef.set(plantsModels.toJson());
+
+    // final listPlantImage = plantsModels.plantsImages.map((e) => e.toJson()).toList();
+    final listPlantImage = plantsModels.plantsImages[0].toJson();
+    final listPlantModel = plantsModels.plantModels[0].toJson();
+
+    // final List<PlantImage> listPlantImage = [];
+    // final List<PlantModel> listPlantModel = [];
+
+    // listPlantImage.add(image1);
+    // listPlantModel.add(suggestion1);
+
+    // images.forEach((key, value) => listPlantImage.add(PlantImage(key, value)));
+    // suggestions.forEach((key, value) => listPlantModel.add(PlantModel(key, value)));
+
+    sightingRef.set({
+      "images": [listPlantImage],
+      "suggestions": [listPlantModel],
+    });
+
+    // sightingRef.set(plantsModels.toJson());
 
     addPlantController.success();
   }

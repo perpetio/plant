@@ -26,7 +26,7 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
     final double height = MediaQuery.of(context).size.height;
     // ignore: close_sinks
     final bloc = BlocProvider.of<HomeBloc>(context);
-    final plantsModels = widget.plantsModels.plantModels;
+    // final plantModels = widget.plantsModels.plantModels;
     final images = widget.plantsModels.plantsImages;
 
     return Padding(
