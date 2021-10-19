@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:plant/models/plant_image.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_next_button.dart';
@@ -9,10 +10,10 @@ import 'package:plant/screens/home/widget/home_plant_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePlantsSlider extends StatefulWidget {
-  final PlantsModels plantsModels;
+  final List<PlantsModels> listPlantsModels;
 
   HomePlantsSlider({
-    @required this.plantsModels,
+    @required this.listPlantsModels,
   });
 
   @override
@@ -26,8 +27,8 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
     final double height = MediaQuery.of(context).size.height;
     // ignore: close_sinks
     final bloc = BlocProvider.of<HomeBloc>(context);
-    // final plantModels = widget.plantsModels.plantModels;
-    final images = widget.plantsModels.plantsImages;
+    // final images = widget.plantsModels.plantsImages;
+    final images = widget.listPlantsModels.forEach((e) => e.plantsImages);
 
     return Padding(
       padding: const EdgeInsets.only(top: 50.0),
@@ -48,13 +49,18 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
             child: Stack(
               children: [
                 CarouselSlider(
-                  items: widget.plantsModels.plantModels
-                      .asMap()
-                      .entries
-                      .map((entry) => HomePlantItem(
-                          plantModel: entry.value,
-                          plantImage: images[entry.key]))
+                  items: widget.listPlantsModels
+                      .map((plant) => HomePlantItem(
+                            plantsModels: plant,
+                          ))
                       .toList(),
+                  // items: widget.plantsModels.plantModels
+                  //     .asMap()
+                  //     .entries
+                  //     .map((entry) => HomePlantItem(
+                  //         plantModel: entry.value,
+                  //         plantImage: images[entry.key]))
+                  //     .toList(),
                   options: CarouselOptions(
                     height: height * 0.43,
                     autoPlay: false,

@@ -79,10 +79,9 @@ class __BodyState extends State<_Body> {
           builder: (context, state) {
             bloc.add(RefreshEvent());
             return SingleChildScrollView(
-              child: (bloc.plantsModels?.plantModels ?? []).isNotEmpty ?? false
+              child: (bloc.listPlantsModels ?? []).isNotEmpty ?? false
                   ? HomeRecentlyAdded(
                       listPlantsModels: bloc.listPlantsModels,
-                      plantsModels: bloc.plantsModels,
                       size: size,
                     )
                   : _createNoPlants(size),

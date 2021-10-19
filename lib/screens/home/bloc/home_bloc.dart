@@ -13,7 +13,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   int currentPromo = 0;
 
-  PlantsModels plantsModels;
+  // PlantsModels plantsModels;
   List<PlantsModels> listPlantsModels;
 
   @override
@@ -47,7 +47,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }))
         .toList();
     if (lstPlantsModels.isNotEmpty) {
-      plantsModels = lstPlantsModels.first;
+      // plantsModels = lstPlantsModels.first;
       listPlantsModels = lstPlantsModels;
     }
   }

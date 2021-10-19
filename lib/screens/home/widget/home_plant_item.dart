@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/models/plant_image.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
 import 'package:plant/utils/router.dart';
 
 class HomePlantItem extends StatelessWidget {
-  final PlantModel plantModel;
-  final PlantImage plantImage;
+  final PlantsModels plantsModels;
 
   const HomePlantItem({
     Key key,
-    this.plantModel,
-    this.plantImage,
+    @required this.plantsModels,
   }) : super(key: key);
 
   @override
@@ -22,7 +19,7 @@ class HomePlantItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           Routers.plant,
-          arguments: plantModel,
+          arguments: plantsModels.plantModels[0],
         );
       },
       child: Padding(
@@ -53,7 +50,7 @@ class HomePlantItem extends StatelessWidget {
                 children: [
                   Container(
                     child: Image.network(
-                      plantImage.url,
+                      plantsModels.plantsImages[0].url,
                       fit: BoxFit.cover,
                       width: 1000.0,
                       height: 1000.0,
@@ -80,7 +77,6 @@ class HomePlantItem extends StatelessWidget {
       color: Color.fromRGBO(255, 255, 255, 0.97),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-        // const EdgeInsets.only(top: 40, bottom: 60, left: 10.0, right: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -88,7 +84,7 @@ class HomePlantItem extends StatelessWidget {
               child: Container(
                 width: size.width * 0.6,
                 child: Text(
-                  plantModel.plantName,
+                  plantsModels.plantModels[0].plantName,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20.0,
@@ -96,12 +92,6 @@ class HomePlantItem extends StatelessWidget {
                 ),
               ),
             ),
-            // SizedBox(height: 10.0),
-            // Text(
-            //   plantDetect.score.toStringAsFixed(2),
-            //   style: TextStyle(
-            //       color: Colors.black, letterSpacing: 1.0, fontSize: 20.0),
-            // ),
           ],
         ),
       ),
