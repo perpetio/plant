@@ -6,10 +6,10 @@ import 'package:plant/widgets/screen_template.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class PlantScreen extends StatelessWidget {
-  final PlantModel plant;
+  final PlantsModels plantsModels;
 
   const PlantScreen({
-    this.plant,
+    this.plantsModels,
   });
 
   @override
@@ -26,14 +26,31 @@ class PlantScreen extends StatelessWidget {
 
   Widget _createPlantDetails(BuildContext context) {
     return SlidingUpPanel(
-      color: Colors.white,
-      panel: PlantDetailsPanel(plantModel: plant),
-      body: PlantDetailsBody(image: plant.toString() ?? ''),
+      header: _createHeader(context),
+      panel: PlantDetailsPanel(plantModel: plantsModels.plantModels[0]),
+      body: PlantDetailsBody(
+        image: plantsModels.plantsImages[0].url ?? '',
+        plantModel: plantsModels.plantModels[0],
+      ),
       minHeight: MediaQuery.of(context).size.height * 0.65,
-      isDraggable: false,
+      maxHeight: MediaQuery.of(context).size.height * 0.95,
+      isDraggable: true,
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(55),
         topRight: Radius.circular(55),
+      ),
+    );
+  }
+
+  Widget _createHeader(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(top: 15),
+      child: Center(
+        child: Text(
+          plantsModels.plantModels[0].plantName,
+          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

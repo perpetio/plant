@@ -19,7 +19,7 @@ class HomePlantItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           Routers.plant,
-          arguments: plantsModels.plantModels[0],
+          arguments: plantsModels,
         );
       },
       child: Padding(

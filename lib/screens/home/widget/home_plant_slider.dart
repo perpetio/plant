@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant_image.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_next_button.dart';
@@ -27,8 +26,6 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
     final double height = MediaQuery.of(context).size.height;
     // ignore: close_sinks
     final bloc = BlocProvider.of<HomeBloc>(context);
-    // final images = widget.plantsModels.plantsImages;
-    final images = widget.listPlantsModels.forEach((e) => e.plantsImages);
 
     return Padding(
       padding: const EdgeInsets.only(top: 50.0),
