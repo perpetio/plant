@@ -10,7 +10,6 @@ class PlantDetailsPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
     return Padding(
       padding: const EdgeInsets.only(top: 60, left: 10, right: 10),
       child: ListView(
@@ -29,7 +28,10 @@ class PlantDetailsPanel extends StatelessWidget {
                     plantModel.plantDetails.wikiDescription.citation),
                 const SizedBox(height: 15),
                 _plantDetails('Common names: ',
-                    '${plantModel.plantDetails.commonNames.join('')}'),
+                    plantModel.plantDetails.commonNames.join(', ')),
+                const SizedBox(height: 15),
+                _plantDetails(
+                    'Synonyms: ', plantModel.plantDetails.synonyms.join(', ')),
                 const SizedBox(height: 80),
               ],
             ),
