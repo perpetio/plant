@@ -1,7 +1,7 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant_net.dart';
+import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_next_button.dart';
 import 'package:plant/screens/home/widget/home_plant_item.dart';
@@ -9,9 +9,11 @@ import 'package:plant/screens/home/widget/home_plant_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePlantsSlider extends StatefulWidget {
-  final List<PlantDetect> plants;
+  final List<PlantsModels> listPlantsModels;
 
-  HomePlantsSlider({@required this.plants});
+  HomePlantsSlider({
+    @required this.listPlantsModels,
+  });
 
   @override
   _HomePlantSliderState createState() => _HomePlantSliderState();
@@ -23,7 +25,7 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
   Widget build(BuildContext context) {
     final double height = MediaQuery.of(context).size.height;
     // ignore: close_sinks
-    final provider = context.watch<HomeBloc>();
+    final bloc = BlocProvider.of<HomeBloc>(context);
 
     return Padding(
       padding: const EdgeInsets.only(top: 50.0),
@@ -44,9 +46,18 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
             child: Stack(
               children: [
                 CarouselSlider(
-                  items: widget.plants
-                      .map((plant) => HomePlantItem(plant: plant))
+                  items: widget.listPlantsModels
+                      .map((plant) => HomePlantItem(
+                            plantsModels: plant,
+                          ))
                       .toList(),
+                  // items: widget.plantsModels.plantModels
+                  //     .asMap()
+                  //     .entries
+                  //     .map((entry) => HomePlantItem(
+                  //         plantModel: entry.value,
+                  //         plantImage: images[entry.key]))
+                  //     .toList(),
                   options: CarouselOptions(
                     height: height * 0.43,
                     autoPlay: false,
@@ -55,7 +66,7 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
                     enlargeCenterPage: true,
                     viewportFraction: 0.75,
                     aspectRatio: 16 / 9,
-                    onPageChanged: (index, reason) => provider.add(
+                    onPageChanged: (index, reason) => bloc.add(
                       NextImageEvent(index: index),
                     ),
                   ),

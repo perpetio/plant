@@ -19,7 +19,7 @@ Future fetchPlants(File image) async {
   );
 
   Response response = await dio.post(
-    "https://my-api.plantnet.org/v2/identify/all?api-key=" + plant_key,
+    "https://my-api.plantnet.org/v2/identify/all?api-key=" + ApiKey.plant_key,
     data: formData,
     options: Options(),
   );
@@ -28,9 +28,9 @@ Future fetchPlants(File image) async {
 
   if (response.statusCode != 200) throw Exception('Failed to load plant');
 
-  List<PlantDetect> results =
-      jsonDecode(response.toString())['results'].map<PlantDetect>((data) {
-    return PlantDetect.fromJson(data);
+  List<PlantDetectModel> results =
+      jsonDecode(response.toString())['results'].map<PlantDetectModel>((data) {
+    return PlantDetectModel.fromJson(data);
   }).toList();
 
   return results;

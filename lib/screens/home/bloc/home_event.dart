@@ -3,11 +3,15 @@ part of 'home_bloc.dart';
 @immutable
 abstract class HomeEvent {}
 
-// ignore: must_be_immutable
-class NextImageEvent extends HomeEvent {
-  int index;
+class HomeInitialEvent extends HomeEvent {}
 
-  NextImageEvent({this.index});
+class NextImageEvent extends HomeEvent {
+  final int index;
+
+  NextImageEvent({
+    this.index,
+  });
+
   List<Object> get props => [index];
 }
 

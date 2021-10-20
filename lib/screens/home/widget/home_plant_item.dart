@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant_net.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/models/plant_model.dart';
+import 'package:plant/screens/scan/bloc/scan_bloc.dart';
 import 'package:plant/utils/router.dart';
 
 class HomePlantItem extends StatelessWidget {
-  final PlantDetect plant;
+  final PlantsModels plantsModels;
 
-  const HomePlantItem({Key key, this.plant}) : super(key: key);
+  const HomePlantItem({
+    Key key,
+    @required this.plantsModels,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class HomePlantItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           Routers.plant,
-          arguments: plant,
+          arguments: plantsModels,
         );
       },
       child: Padding(
@@ -39,21 +44,24 @@ class HomePlantItem extends StatelessWidget {
             borderRadius: BorderRadius.all(
               Radius.circular(20.0),
             ),
-            child: Stack(
-              children: [
-                Container(
-                  child: Image.network(
-                    plant.image,
-                    fit: BoxFit.cover,
-                    width: 1000.0,
-                    height: 1000.0,
+            child: BlocProvider(
+              create: (context) => ScanBloc(),
+              child: Stack(
+                children: [
+                  Container(
+                    child: Image.network(
+                      plantsModels.plantsImages[0].url,
+                      fit: BoxFit.cover,
+                      width: 1000.0,
+                      height: 1000.0,
+                    ),
                   ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  child: buildMainInfo(context),
-                ),
-              ],
+                  Positioned(
+                    bottom: 0,
+                    child: buildMainInfo(context),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -69,7 +77,6 @@ class HomePlantItem extends StatelessWidget {
       color: Color.fromRGBO(255, 255, 255, 0.97),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-        // const EdgeInsets.only(top: 40, bottom: 60, left: 10.0, right: 10.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -77,19 +84,13 @@ class HomePlantItem extends StatelessWidget {
               child: Container(
                 width: size.width * 0.6,
                 child: Text(
-                  plant.species.scientificNameWithoutAuthor,
+                  plantsModels.plantModels[0].plantName,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-            SizedBox(height: 10.0),
-            Text(
-              plant.score.toStringAsFixed(2),
-              style: TextStyle(
-                  color: Colors.black, letterSpacing: 1.0, fontSize: 20.0),
             ),
           ],
         ),

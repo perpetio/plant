@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:plant/models/plant_net.dart';
+import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
@@ -52,10 +52,10 @@ Route<dynamic> router(RouteSettings routeSetting) {
       break;
 
     case Routers.plant:
-      final plantDetect = routeSetting.arguments as PlantDetect;
+      final plant = routeSetting.arguments as PlantsModels;
       return new MaterialPageRoute(
         builder: (context) => PlantScreen(
-          plantDetect: plantDetect,
+          plantsModels: plant,
         ),
         settings: routeSetting,
       );
