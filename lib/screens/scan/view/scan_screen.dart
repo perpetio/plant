@@ -25,6 +25,13 @@ class ScanScreen extends StatelessWidget {
         buildWhen: (_, currState) =>
             currState is ScanInitial || currState is DataPlantGotState,
         builder: (context, state) {
+          // ignore: close_sinks
+          final bloc = BlocProvider.of<ScanBloc>(context);
+          if (state is ScanInitial) {
+            bloc.add(ScanInitialEvent());
+          } else if (state is DataPlantGotState) {
+            print('plants');
+          }
           return ScanContent(camera: camera);
         },
         listenWhen: (_, currState) => true,

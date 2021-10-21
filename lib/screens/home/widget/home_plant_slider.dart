@@ -51,13 +51,6 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
                             plantsModels: plant,
                           ))
                       .toList(),
-                  // items: widget.plantsModels.plantModels
-                  //     .asMap()
-                  //     .entries
-                  //     .map((entry) => HomePlantItem(
-                  //         plantModel: entry.value,
-                  //         plantImage: images[entry.key]))
-                  //     .toList(),
                   options: CarouselOptions(
                     height: height * 0.43,
                     autoPlay: false,

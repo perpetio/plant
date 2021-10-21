@@ -71,7 +71,6 @@ class HomeRecentlyAdded extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 5),
                   child: Text(
                     listPlantsModels.last.plantModels.last.plantName,
-                    // plantsModels.plantModels.last.plantName,
                     style: TextStyle(
                         color: Colors.orange,
                         fontWeight: FontWeight.w600,

@@ -38,6 +38,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser.uid)
         .collection("plants")
+        .orderBy("createdAt")
         .get();
 
     final lstPlantsModels = snapshot.docs
@@ -47,7 +48,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
             }))
         .toList();
     if (lstPlantsModels.isNotEmpty) {
-      // plantsModels = lstPlantsModels.first;
       listPlantsModels = lstPlantsModels;
     }
   }

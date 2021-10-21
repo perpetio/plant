@@ -118,9 +118,10 @@ class _ScanContentState extends State<ScanContent>
   }
 
   Widget _buildCameraButton(ScanBloc bloc) {
+    final size = MediaQuery.of(context).size;
     return Positioned(
       bottom: 60,
-      left: 150,
+      left: size.width * 0.43,
       child: RoundedLoadingButton(
         width: 70,
         height: 70,
@@ -275,73 +276,6 @@ class _ScanContentState extends State<ScanContent>
       );
     }
     return CupertinoActivityIndicator();
-    // child: Row(
-    //   children: [
-    //     FutureBuilder(
-    //       future: null, // fetchPlants(_image),
-    //       builder: (context, snapshot) {
-    //         if (snapshot.hasData) {
-    //           List plants = [];
-    //           List scores = [];
-    //           List familyNames = [];
-    //           snapshot.data.map<Widget>((result) {
-    //             plants.add(result.species.scientificNameWithoutAuthor);
-    //             scores.add(result.score);
-    //             familyNames
-    //                 .add(result.species.family.scientificNameWithoutAuthor);
-    //           }).toList();
-
-    //           bloc.plant = plants[0].toString();
-    //           bloc.score = scores[0];
-    //           bloc.familyName = familyNames[0];
-
-    //           return Padding(
-    //             padding: const EdgeInsets.only(left: 10),
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               crossAxisAlignment: CrossAxisAlignment.start,
-    //               children: [
-    //                 Flexible(
-    //                   child: Text(
-    //                     bloc.plant,
-    //                     style: TextStyle(
-    //                         color: Colors.black,
-    //                         fontSize: 17.0,
-    //                         fontWeight: FontWeight.bold),
-    //                   ),
-    //                 ),
-    //                 SizedBox(height: 5),
-    //                 Text(
-    //                   bloc.score.toStringAsFixed(2),
-    //                   style: TextStyle(color: Colors.black, fontSize: 16.0),
-    //                 ),
-    //               ],
-    //             ),
-    //           );
-    //         }
-    //         return Text('');
-    //       },
-    //     ),
-    //     FutureBuilder(
-    //       future: null, //getPlants(_image),
-    //       builder: (context, snapshot) {
-    //         if (snapshot.hasData) {
-    //           List commonNamesList = [];
-    //           String plantUrl = "";
-
-    //           snapshot.data.map<Widget>((result) {
-    //             commonNamesList.add(result.plantDetails.commonNames);
-    //             plantUrl = result.plantDetails.url;
-    //           }).toList();
-
-    //           bloc.commonNames = commonNamesList;
-    //           bloc.url = plantUrl;
-    //         }
-    //         return Text('Hey!');
-    //       },
-    //     ),
-    //   ],
-    // ),
   }
 
   Widget _createAddPlantButton(ScanBloc bloc) {
@@ -356,33 +290,6 @@ class _ScanContentState extends State<ScanContent>
       controller: bloc.addPlantController,
       onPressed: () async {
         bloc.add(AddPlantEvent());
-        // HapticFeedback.selectionClick();
-        // DocumentReference sightingRef = FirebaseFirestore.instance
-        //     .collection('users')
-        //     .doc(FirebaseAuth.instance.currentUser.uid)
-        //     .collection('plants')
-        //     .doc();
-
-        // final imageUrl = await uploadFile(_image);
-
-        // sightingRef.set(
-        //   {
-        //     "score": score,
-        //     "image": imageUrl,
-        //     "createdAt": DateTime.now().microsecondsSinceEpoch,
-        //     "species": {
-        //       "scientificNameWithoutAuthor": plant,
-        //       "family": {
-        //         "scientificNameWithoutAuthor": familyName,
-        //       }
-        //     },
-        //     "plant_details": {
-        //       "common_names": commonNames,
-        //       "url": url,
-        //     },
-        //   },
-        // );
-        // _addPlantController.success();
       },
     );
   }

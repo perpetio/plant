@@ -37,12 +37,16 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
 
   PlantModel plantModel;
   PlantsModels plantsModels;
+  List<PlantsModels> plantsModelsList;
+  bool plantExistInList;
 
   @override
   Stream<ScanState> mapEventToState(
     ScanEvent event,
   ) async* {
-    if (event is PickImageEvent) {
+    if (event is ScanInitialEvent) {
+      _getPlantsList();
+    } else if (event is PickImageEvent) {
       _pickImage();
     } else if (event is TakeImageEvent) {
       _takeImage();
@@ -55,6 +59,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
         }
         yield ScanGetPlantImage(image: event.image.toString());
         yield DataPlantGotState(plantModel: plantModel);
+        _checkPlantsList();
       } catch (e) {
         yield ScanErrorState(message: e.toString());
       }
@@ -117,6 +122,8 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }
 
   void _addPlant() async {
+    //this function to add the plant to th Firestore
+
     HapticFeedback.selectionClick();
     DocumentReference sightingRef = FirebaseFirestore.instance
         .collection('users')
@@ -129,12 +136,16 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
     final listPlantImage = plantsModels.plantsImages[0].toJson();
     final listPlantModel = plantsModels.plantModels[0].toJson();
 
-    sightingRef.set({
-      "images": [listPlantImage],
-      "suggestions": [listPlantModel],
-    });
-
-    addPlantController.success();
+    if (plantExistInList == false) {
+      sightingRef.set({
+        "createdAt": DateTime.now().microsecondsSinceEpoch,
+        "images": [listPlantImage],
+        "suggestions": [listPlantModel],
+      });
+      addPlantController.success();
+    } else if (plantExistInList == true) {
+      addPlantController.error();
+    }
   }
 
   Future<String> uploadFile(File image) async {
@@ -148,5 +159,36 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
       returnURL = fileURL;
     });
     return returnURL;
+  }
+
+  void _getPlantsList() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection("plants")
+        .orderBy("createdAt")
+        .get();
+
+    final plantsList = snapshot.docs
+        .map((e) => PlantsModels.fromJson({
+              "images": e["images"] == null ? [] : e["images"],
+              "suggestions": e["suggestions"] == null ? [] : e["suggestions"],
+            }))
+        .toList();
+
+    plantsModelsList = plantsList;
+  }
+
+  void _checkPlantsList() {
+    for (var plant in plantsModelsList) {
+      if (plant.plantModels.every((element) =>
+          element.plantName == plantsModels.plantModels[0].plantName)) {
+        print('DO NOT SET PLANT');
+        plantExistInList = true;
+      } else {
+        print('SET PLANT');
+        plantExistInList = false;
+      }
+    }
   }
 }

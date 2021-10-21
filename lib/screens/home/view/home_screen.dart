@@ -85,36 +85,6 @@ class __BodyState extends State<_Body> {
                       size: size,
                     )
                   : _createNoPlants(size),
-
-              // StreamBuilder<QuerySnapshot>(
-              //   stream: collection.orderBy('createdAt').snapshots(),
-              //   builder:
-              //       (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              //     if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-              //     if (snapshot.hasData) {
-              //       List<PlantModel> plants = [];
-              //       PlantsModels plantsModels = PlantsModels(
-              //         plantsImages: [],
-              //         plantModels: [],
-              //       );
-              //       // snapshot.data.docs
-              //       //     .map((plant) =>
-              //       //         plants.add(PlantModel.fromJson(plant.data())))
-              //       //     .toList();
-
-              //       return snapshot.data.docs.length != 0
-              //           ? HomeRecentlyAdded(
-              //               plantsModels: plantsModels,
-              //               size: size,
-              //             )
-              //           : _createNoPlants(size);
-              //     } else {
-              //       return Center(
-              //         child: CircularProgressIndicator(),
-              //       );
-              //     }
-              //   },
-              // ),
             );
           },
         ),
