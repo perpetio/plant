@@ -66,17 +66,14 @@ class HomeRecentlyAdded extends StatelessWidget {
             ),
             SizedBox(height: 10.0),
             Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: Text(
-                    listPlantsModels.last.plantModels.last.plantName,
-                    // plantsModels.plantModels.last.plantName,
-                    style: TextStyle(
-                        color: Colors.orange,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18),
-                  ),
+                Text(
+                  listPlantsModels.last.plantModels.last.plantName,
+                  style: TextStyle(
+                      color: Colors.orange,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 18),
                 ),
                 SizedBox(height: 4.0),
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant/models/plant_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PlantDetailsPanel extends StatelessWidget {
   final PlantModel plantModel;
@@ -24,8 +25,7 @@ class PlantDetailsPanel extends StatelessWidget {
                 _plantDetails('Description: ',
                     plantModel.plantDetails.wikiDescription.value),
                 const SizedBox(height: 15),
-                _plantDetails('Wiki url for more details: ',
-                    plantModel.plantDetails.wikiDescription.citation),
+                _createWikiUrl(),
                 const SizedBox(height: 15),
                 _plantDetails('Common names: ',
                     plantModel.plantDetails.commonNames.join(', ')),
@@ -72,6 +72,35 @@ class PlantDetailsPanel extends StatelessWidget {
           description,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         ),
+      ],
+    );
+  }
+
+  Widget _createWikiUrl() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Wiki url for more details: ',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        InkWell(
+            child: Text(
+              plantModel.plantDetails.wikiDescription.citation,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.blue),
+            ),
+            onTap: () async {
+              final url = plantModel.plantDetails.wikiDescription.citation;
+              if (await launch(url)) {
+                await launch(url);
+              } else {
+                throw 'Could not launch $url';
+              }
+            }),
       ],
     );
   }

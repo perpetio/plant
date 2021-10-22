@@ -3,6 +3,8 @@ part of 'scan_bloc.dart';
 @immutable
 abstract class ScanEvent {}
 
+class ScanInitialEvent extends ScanEvent {}
+
 class GetDataPlantEvent extends ScanEvent {
   final File image;
 
