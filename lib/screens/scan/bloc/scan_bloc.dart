@@ -38,7 +38,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   PlantModel plantModel;
   PlantsModels plantsModels;
   List<PlantsModels> plantsModelsList;
-  bool plantExistInList;
+  bool plantExistInList = false;
 
   @override
   Stream<ScanState> mapEventToState(
@@ -162,6 +162,8 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }
 
   void _getPlantsList() async {
+    // function to get plants list from Firestore
+
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser.uid)
@@ -180,14 +182,13 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }
 
   void _checkPlantsList() {
+    // function to check new plant existence in list
+
     for (var plant in plantsModelsList) {
       if (plant.plantModels.every((element) =>
           element.plantName == plantsModels.plantModels[0].plantName)) {
         print('DO NOT SET PLANT');
         plantExistInList = true;
-      } else {
-        print('SET PLANT');
-        plantExistInList = false;
       }
     }
   }

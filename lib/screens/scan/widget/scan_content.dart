@@ -258,7 +258,9 @@ class _ScanContentState extends State<ScanContent>
   }) {
     if (bloc.plantModel != null) {
       return Text(
-        '${bloc.plantsModels.getPlantName() ?? ""}',
+        bloc.plantExistInList == false
+            ? '${bloc.plantsModels.getPlantName() ?? ""}'
+            : "Plant is already added",
         style: TextStyle(
           color: Colors.black,
           fontSize: 17.0,

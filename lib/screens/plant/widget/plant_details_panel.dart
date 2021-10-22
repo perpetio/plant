@@ -26,9 +26,6 @@ class PlantDetailsPanel extends StatelessWidget {
                     plantModel.plantDetails.wikiDescription.value),
                 const SizedBox(height: 15),
                 _createWikiUrl(),
-                // _plantDetails('Wiki url for more details: ',
-
-                //     plantModel.plantDetails.wikiDescription.citation),
                 const SizedBox(height: 15),
                 _plantDetails('Common names: ',
                     plantModel.plantDetails.commonNames.join(', ')),
