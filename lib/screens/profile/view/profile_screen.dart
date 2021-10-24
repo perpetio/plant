@@ -23,12 +23,34 @@ class ProfileScreen extends StatelessWidget {
       },
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
-          return ScreenTemplate(
-            index: 2,
-            isAppBar: false,
-            title: "Profile",
+          return Scaffold(
+            appBar: AppBar(
+              title: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  "Profile",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              elevation: 0,
+              brightness: Brightness.light,
+              backgroundColor: Colors.white,
+              actions: [
+                Icon(Icons.edit_outlined, size: 20),
+              ],
+            ),
             body: _Body(),
           );
+          // return ScreenTemplate(
+          //   index: 2,
+          //   isAppBar: false,
+          //   title: "Profile",
+          //   body: _Body(),
+          // );
         },
       ),
     );
@@ -96,21 +118,21 @@ class __BodyState extends State<_Body> {
       padding: const EdgeInsets.only(top: 70.0),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Profile',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
-                    letterSpacing: 1.0),
-              ),
-            ),
-          ),
-          SizedBox(height: 30.0),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 30.0),
+          //   child: Align(
+          //     alignment: Alignment.centerLeft,
+          //     child: Text(
+          //       'Profile',
+          //       style: TextStyle(
+          //           color: Colors.black,
+          //           fontWeight: FontWeight.bold,
+          //           fontSize: 24.0,
+          //           letterSpacing: 1.0),
+          //     ),
+          //   ),
+          // ),
+          // SizedBox(height: 30.0),
           StreamBuilder<QuerySnapshot>(
             stream: collection.snapshots(),
             builder:
@@ -185,7 +207,6 @@ class __BodyState extends State<_Body> {
           SizedBox(height: 20.0),
           InkWell(
             onTap: () {
-              _auth.signOut();
               Navigator.of(context).pushAndRemoveUntil(
                 PageTransition(
                     type: PageTransitionType.fade, child: SignInScreen()),
