@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:plant/models/plant_model.dart';
+import 'package:plant/screens/edit_profile/page/edit_profile_screen.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
@@ -16,6 +17,7 @@ class Routers {
   static const String scan = '/scan';
   static const String profile = '/profile';
   static const String plant = '/plant';
+  static const String edit_profile = '/edit_profile';
 }
 
 ///Return MaterialPageRoute depends of route name
@@ -57,6 +59,13 @@ Route<dynamic> router(RouteSettings routeSetting) {
         builder: (context) => PlantScreen(
           plantsModels: plant,
         ),
+        settings: routeSetting,
+      );
+      break;
+
+    case Routers.edit_profile:
+      return MaterialPageRoute(
+        builder: (context) => EditProfileScreen(),
         settings: routeSetting,
       );
       break;

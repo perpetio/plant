@@ -10,7 +10,6 @@ import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
 import 'package:plant/utils/router.dart';
-import 'package:plant/widgets/screen_template.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key key}) : super(key: key);
@@ -40,17 +39,34 @@ class ProfileScreen extends StatelessWidget {
               brightness: Brightness.light,
               backgroundColor: Colors.white,
               actions: [
-                Icon(Icons.edit_outlined, size: 20),
+                InkWell(
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                        color: Colors.orange,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.edit_outlined,
+                        size: 20,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pushNamed(
+                      context,
+                      Routers.edit_profile,
+                    );
+                  },
+                ),
               ],
             ),
             body: _Body(),
           );
-          // return ScreenTemplate(
-          //   index: 2,
-          //   isAppBar: false,
-          //   title: "Profile",
-          //   body: _Body(),
-          // );
         },
       ),
     );
@@ -65,8 +81,6 @@ class _Body extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
-  final _auth = FirebaseAuth.instance;
-
   CollectionReference collection =
       FirebaseFirestore.instance.collection('users');
 
@@ -75,6 +89,7 @@ class __BodyState extends State<_Body> {
 
   void _pickImage() async {
     //this function to pick the image from galery
+
     HapticFeedback.selectionClick();
     PickedFile image = await picker.getImage(source: ImageSource.gallery);
     if (image == null) return null;
@@ -118,21 +133,6 @@ class __BodyState extends State<_Body> {
       padding: const EdgeInsets.only(top: 70.0),
       child: Column(
         children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 30.0),
-          //   child: Align(
-          //     alignment: Alignment.centerLeft,
-          //     child: Text(
-          //       'Profile',
-          //       style: TextStyle(
-          //           color: Colors.black,
-          //           fontWeight: FontWeight.bold,
-          //           fontSize: 24.0,
-          //           letterSpacing: 1.0),
-          //     ),
-          //   ),
-          // ),
-          // SizedBox(height: 30.0),
           StreamBuilder<QuerySnapshot>(
             stream: collection.snapshots(),
             builder:
@@ -150,47 +150,21 @@ class __BodyState extends State<_Body> {
                   child: Column(
                     children: [
                       Center(
-                        child: Stack(
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 80,
-                              backgroundImage: user['image'] == ''
-                                  ? AssetImage('assets/images/profile.png')
-                                  : NetworkImage(user['image']),
-                            ),
-                            Positioned(
-                              bottom: 0.0,
-                              right: 17.0,
-                              child: InkWell(
-                                onTap: () => _pickImage(),
-                                child: Container(
-                                  height: 35,
-                                  width: 35,
-                                  decoration: BoxDecoration(
-                                    color: Colors.orange,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    heightFactor: 10,
-                                    widthFactor: 10,
-                                    child: Icon(Icons.edit_outlined, size: 20),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        child: CircleAvatar(
+                          radius: 80,
+                          backgroundImage: user['image'] == ''
+                              ? AssetImage('assets/images/profile.png')
+                              : NetworkImage(user['image']),
                         ),
                       ),
                       SizedBox(height: 15),
                       Text(
-                        // 'name',
                         user['name'],
                         style: TextStyle(
                             fontSize: 24.0, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(height: 10.0),
                       Text(
-                        // 'email',
                         user['email'],
                         style: TextStyle(fontSize: 15.0, color: Colors.grey),
                       ),
