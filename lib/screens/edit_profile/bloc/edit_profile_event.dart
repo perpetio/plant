@@ -7,12 +7,22 @@ class EditProfileInitialEvent extends EditProfileEvent {}
 
 class EditProfileChangeImageEvent extends EditProfileEvent {}
 
+class EditProfileTakeImageEvent extends EditProfileEvent {}
+
 class EditProfileChangeDataEvent extends EditProfileEvent {
-  final String displayName;
-  final String email;
+  final String userName;
+  final String userEmail;
 
   EditProfileChangeDataEvent({
-    @required this.displayName,
-    @required this.email,
+    @required this.userName,
+    @required this.userEmail,
+  });
+}
+
+class EditProfileReloadImageEvent extends EditProfileEvent {
+  final String userImage;
+
+  EditProfileReloadImageEvent({
+    @required this.userImage,
   });
 }

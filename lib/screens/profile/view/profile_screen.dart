@@ -70,8 +70,6 @@ class ProfileScreen extends StatelessWidget {
           final bloc = BlocProvider.of<ProfileBloc>(context);
           if (state is ProfileInitial) {
             bloc.add(ProfileInitialEvent());
-            // bloc.add(ProfileReloadImageEvent());
-            // bloc.add(ProfileReloadUserDataEvent());
           }
           return _Body();
         },
@@ -145,6 +143,7 @@ class __BodyState extends State<_Body> {
           children: [
             BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
+                // ignore: close_sinks
                 final bloc = BlocProvider.of<ProfileBloc>(context);
                 return Column(
                   children: [
