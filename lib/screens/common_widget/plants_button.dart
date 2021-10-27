@@ -17,7 +17,7 @@ class PlantButton extends StatelessWidget {
       width: double.infinity,
       height: 55,
       decoration: BoxDecoration(
-        color: isEnabled ? Colors.green : Colors.grey,
+        color: isEnabled ? Colors.orange : Colors.grey,
         borderRadius: BorderRadius.circular(100),
       ),
       child: Material(

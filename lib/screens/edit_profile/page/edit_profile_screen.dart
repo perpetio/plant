@@ -30,18 +30,18 @@ class EditProfileScreen extends StatelessWidget {
       child: BlocConsumer<EditProfileBloc, EditProfileState>(
         buildWhen: (_, currState) =>
             currState is EditProfileInitial ||
-            currState is EditAccountProgress ||
-            currState is EditAccountErrorState,
+            currState is EditProfileProgress ||
+            currState is EditProfileErrorState,
         builder: (context, state) {
           // ignore: close_sinks
           final bloc = BlocProvider.of<EditProfileBloc>(context);
           if (state is EditProfileInitial) {
             bloc.add(EditProfileInitialEvent());
-          } else if (state is EditAccountProgress) {
+          } else if (state is EditProfileProgress) {
             return Stack(
               children: [EditProfileContent(), PlantsLoading()],
             );
-          } else if (state is EditAccountErrorState) {
+          } else if (state is EditProfileErrorState) {
             _showErrorMessage(context, state.message);
           }
           return EditProfileContent();

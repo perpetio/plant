@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_recently_added.dart';
 import 'package:plant/widgets/screen_template.dart';
@@ -16,12 +17,21 @@ class HomeScreen extends StatelessWidget {
         return HomeBloc();
       },
       child: BlocBuilder<HomeBloc, HomeState>(
-        buildWhen: (currState, _) => currState is HomeInitial,
+        buildWhen: (currState, _) =>
+            currState is HomeInitial || currState is HomeLoadingState,
         builder: (context, state) {
           // ignore: close_sinks
           final bloc = BlocProvider.of<HomeBloc>(context);
           if (state is HomeInitial) {
             bloc.add(HomeInitialEvent());
+          } else if (state is HomeLoadingState) {
+            return Stack(
+              children: [
+                ScreenTemplate(
+                    index: 0, title: 'Home', isAppBar: true, body: _Body()),
+                PlantsLoading()
+              ],
+            );
           }
           return ScreenTemplate(
             index: 0,

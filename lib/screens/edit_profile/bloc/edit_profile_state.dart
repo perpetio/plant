@@ -5,12 +5,12 @@ abstract class EditProfileState {}
 
 class EditProfileInitial extends EditProfileState {}
 
-class EditAccountProgress extends EditProfileState {}
+class EditProfileProgress extends EditProfileState {}
 
-class EditAccountErrorState extends EditProfileState {
+class EditProfileErrorState extends EditProfileState {
   final String message;
 
-  EditAccountErrorState({
+  EditProfileErrorState({
     @required this.message,
   });
 }
@@ -22,3 +22,5 @@ class EditProfileReloadImageState extends EditProfileState {
     @required this.userImage,
   });
 }
+
+class EditProfileShowErrorState extends EditProfileState {}

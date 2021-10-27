@@ -5,6 +5,8 @@ abstract class HomeState {}
 
 class HomeInitial extends HomeState {}
 
+class HomeLoadingState extends HomeState {}
+
 class InitialOrderingState extends HomeState {
   List<Object> get props => [];
 }

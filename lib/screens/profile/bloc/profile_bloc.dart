@@ -18,6 +18,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileEvent event,
   ) async* {
     if (event is ProfileInitialEvent) {
+      yield ProfileLoadingState();
       _getData();
       yield ProfileInitial();
     }

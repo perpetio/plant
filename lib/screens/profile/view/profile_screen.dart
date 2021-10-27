@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
 import 'package:plant/utils/router.dart';
@@ -37,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
                 height: 35,
                 width: 35,
                 decoration: BoxDecoration(
-                  color: Colors.green,
+                  color: Colors.orange,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -64,12 +65,17 @@ class ProfileScreen extends StatelessWidget {
     return BlocProvider<ProfileBloc>(
       create: (BuildContext context) => ProfileBloc(),
       child: BlocConsumer<ProfileBloc, ProfileState>(
-        buildWhen: (_, currState) => currState is ProfileInitial,
+        buildWhen: (_, currState) =>
+            currState is ProfileInitial || currState is ProfileLoadingState,
         builder: (context, state) {
           // ignore: close_sinks
           final bloc = BlocProvider.of<ProfileBloc>(context);
           if (state is ProfileInitial) {
             bloc.add(ProfileInitialEvent());
+          } else if (state is ProfileLoadingState) {
+            return Stack(
+              children: [_Body(), PlantsLoading()],
+            );
           }
           return _Body();
         },
@@ -88,50 +94,6 @@ class _Body extends StatefulWidget {
 }
 
 class __BodyState extends State<_Body> {
-  // CollectionReference collection =
-  //     FirebaseFirestore.instance.collection('users');
-
-  // final picker = ImagePicker();
-  // File _image;
-
-  // void _pickImage() async {
-  //   //this function to pick the image from galery
-
-  //   HapticFeedback.selectionClick();
-  //   PickedFile image = await picker.getImage(source: ImageSource.gallery);
-  //   if (image == null) return null;
-
-  //   setState(() {
-  //     _image = File(image.path);
-  //   });
-
-  //   DocumentReference sightingRef = FirebaseFirestore.instance
-  //       .collection('users')
-  //       .doc(FirebaseAuth.instance.currentUser.uid);
-
-  //   await saveImages(_image, sightingRef);
-  // }
-
-  // Future<void> saveImages(File _image, DocumentReference ref) async {
-  //   String imageURL = await uploadFile(_image);
-  //   ref.update(
-  //     {"image": imageURL},
-  //   );
-  // }
-
-  // Future<String> uploadFile(File _image) async {
-  //   StorageReference storageReference =
-  //       FirebaseStorage.instance.ref().child(_image.path.split('/').last);
-  //   StorageUploadTask uploadTask = storageReference.putFile(_image);
-  //   await uploadTask.onComplete;
-  //   print('File Uploaded');
-  //   String returnURL;
-  //   await storageReference.getDownloadURL().then((fileURL) {
-  //     returnURL = fileURL;
-  //   });
-  //   return returnURL;
-  // }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;

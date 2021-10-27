@@ -2,11 +2,12 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/screens/common_widget/edit_account_container.dart';
-import 'package:plant/screens/common_widget/edit_account_textfield.dart';
-import 'package:plant/screens/common_widget/plant_button.dart';
+import 'package:plant/screens/common_widget/plants_container.dart';
+import 'package:plant/screens/common_widget/plants_text_field.dart';
+import 'package:plant/screens/common_widget/plants_button.dart';
 import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
+import 'package:plant/service/validation_service.dart';
 
 class EditProfileContent extends StatefulWidget {
   @override
@@ -14,19 +15,6 @@ class EditProfileContent extends StatefulWidget {
 }
 
 class _EditProfileContentState extends State<EditProfileContent> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    final bloc = BlocProvider.of<EditProfileBloc>(context);
-
-    _nameController.text = bloc.userName;
-    _emailController.text = bloc.userEmail;
-  }
-
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<EditProfileBloc>(context);
@@ -80,7 +68,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
       child: Text(
         'Edit photo',
         style: TextStyle(
-          color: Colors.green,
+          color: Colors.orange,
           fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
@@ -91,25 +79,34 @@ class _EditProfileContentState extends State<EditProfileContent> {
   Widget _getUserData(EditProfileBloc bloc) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('Name'),
-          EditAccountContainer(
-            child: EditAccountTextField(
-              controller: _nameController,
-              placeHolder: 'Enter your name',
-            ),
-          ),
-          SizedBox(height: 15),
-          Text('Email'),
-          EditAccountContainer(
-            child: EditAccountTextField(
-              controller: _emailController,
-              placeHolder: 'Enter your email',
-            ),
-          ),
-        ],
+      child: BlocBuilder<EditProfileBloc, EditProfileState>(
+        buildWhen: (_, currState) => currState is EditProfileShowErrorState,
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              PlantsTextField(
+                controller: bloc.userNameController,
+                errorText: 'Enter a valid name (more than 1 character)',
+                isError: state is EditProfileShowErrorState
+                    ? !ValidationService.username(bloc.userNameController.text)
+                    : false,
+                placeHolder: 'Enter your name',
+                title: 'Name',
+              ),
+              SizedBox(height: 15),
+              PlantsTextField(
+                controller: bloc.userEmailController,
+                errorText: 'Enter a valid email',
+                isError: state is EditProfileShowErrorState
+                    ? !ValidationService.email(bloc.userEmailController.text)
+                    : false,
+                placeHolder: 'Enter your email',
+                title: 'Email',
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -121,12 +118,8 @@ class _EditProfileContentState extends State<EditProfileContent> {
         title: 'Save',
         onTap: () {
           bloc.add(
-            EditProfileChangeDataEvent(
-              userEmail: _emailController.text,
-              userName: _nameController.text,
-            ),
+            EditProfileChangeDataEvent(),
           );
-          Navigator.pop(context);
         },
       ),
     );

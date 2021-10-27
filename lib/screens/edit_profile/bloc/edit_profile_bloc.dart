@@ -18,8 +18,8 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   EditProfileBloc() : super(EditProfileInitial());
 
   Map<String, dynamic> userData;
-  // TextEditingController nameController = TextEditingController();
-  // TextEditingController emailController = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController userEmailController = TextEditingController();
   File _image;
   String imageURL;
   String userName;
@@ -31,7 +31,7 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     EditProfileEvent event,
   ) async* {
     if (event is EditProfileInitialEvent) {
-      yield EditAccountProgress();
+      yield EditProfileProgress();
       _getUserData();
       yield EditProfileInitial();
     } else if (event is EditProfileChangeImageEvent) {
@@ -41,14 +41,17 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     } else if (event is EditProfileReloadImageEvent) {
       yield EditProfileReloadImageState(userImage: event.userImage);
     } else if (event is EditProfileChangeDataEvent) {
-      yield EditAccountProgress();
-      if (_checkValidatorsOfTextField(event.userName, event.userEmail)) {
+      if (_checkValidatorsOfTextField(
+          userNameController.text, userEmailController.text)) {
         try {
-          _saveData(event.userName, event.userEmail);
+          // yield EditProfileProgress();
+          _saveData();
         } catch (e) {
           log(e.toString());
-          yield EditAccountErrorState(message: e.toString());
+          yield EditProfileErrorState(message: e.toString());
         }
+      } else {
+        yield EditProfileShowErrorState();
       }
     }
   }
@@ -63,12 +66,8 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     userName = userData['name'] == null ? "No Username" : userData['name'];
     userEmail = userData['email'] == null ? "No email" : userData['email'];
     userImage = userData['image'] == null ? "No image" : userData['image'];
-    // nameController.text = userName;
-    // emailController.text = userEmail;
-    // nameController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: nameController.text.length));
-    // emailController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: emailController.text.length));
+    userNameController.text = userName;
+    userEmailController.text = userEmail;
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -122,13 +121,13 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     return imageURL;
   }
 
-  void _saveData(String userName, String userEmail) {
+  void _saveData() {
     DocumentReference sightingRef = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid);
     sightingRef.update({
-      "name": userName,
-      "email": userEmail,
+      "name": userNameController.text,
+      "email": userEmailController.text,
     });
   }
 

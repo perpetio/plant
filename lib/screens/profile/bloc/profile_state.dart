@@ -5,18 +5,20 @@ abstract class ProfileState {}
 
 class ProfileInitial extends ProfileState {}
 
-class ProfileReloadImageState extends ProfileState {
-  final String photoURL;
+class ProfileLoadingState extends ProfileState {}
 
-  ProfileReloadImageState({@required this.photoURL});
-}
+// class ProfileReloadImageState extends ProfileState {
+//   final String photoURL;
 
-class ProfileReloadUserDataState extends ProfileState {
-  final String displayName;
-  final String email;
+//   ProfileReloadImageState({@required this.photoURL});
+// }
 
-  ProfileReloadUserDataState({
-    @required this.displayName,
-    @required this.email,
-  });
-}
+// class ProfileReloadUserDataState extends ProfileState {
+//   final String displayName;
+//   final String email;
+
+//   ProfileReloadUserDataState({
+//     @required this.displayName,
+//     @required this.email,
+//   });
+// }

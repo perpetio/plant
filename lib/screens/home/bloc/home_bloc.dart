@@ -21,10 +21,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     HomeEvent event,
   ) async* {
     if (event is HomeInitialEvent) {
+      yield HomeLoadingState();
       await _getPlantsData();
+      yield HomeInitial();
     } else if (event is NextImageEvent) {
       currentPromo = event.index;
-
       yield RefreshState();
     }
 
