@@ -18,8 +18,13 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   EditProfileBloc() : super(EditProfileInitial());
 
   Map<String, dynamic> userData;
+  // TextEditingController nameController = TextEditingController();
+  // TextEditingController emailController = TextEditingController();
   File _image;
   String imageURL;
+  String userName;
+  String userEmail;
+  String userImage;
 
   @override
   Stream<EditProfileState> mapEventToState(
@@ -55,6 +60,15 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         .get();
 
     userData = snapshot.data();
+    userName = userData['name'] == null ? "No Username" : userData['name'];
+    userEmail = userData['email'] == null ? "No email" : userData['email'];
+    userImage = userData['image'] == null ? "No image" : userData['image'];
+    // nameController.text = userName;
+    // emailController.text = userEmail;
+    // nameController.selection = TextSelection.fromPosition(
+    //     TextPosition(offset: nameController.text.length));
+    // emailController.selection = TextSelection.fromPosition(
+    //     TextPosition(offset: emailController.text.length));
   }
 
   Future<void> _pickImageFromGallery() async {

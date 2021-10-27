@@ -14,29 +14,17 @@ class EditProfileContent extends StatefulWidget {
 }
 
 class _EditProfileContentState extends State<EditProfileContent> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  String photoUrl = '';
-  String userName = '';
-  String userEmail = '';
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
-    // ignore: close_sinks
+    super.initState();
+
     final bloc = BlocProvider.of<EditProfileBloc>(context);
 
-    if (bloc.userData != null) {
-      userName =
-          bloc.userData['name'] == null ? "No Username" : bloc.userData['name'];
-      userEmail =
-          bloc.userData['email'] == null ? "No email" : bloc.userData['email'];
-      photoUrl = bloc.userData['image'] == null
-          ? "assets/images/profile.png"
-          : bloc.userData['image'];
-      _nameController.text = userName;
-      _emailController.text = userEmail;
-    }
-    super.initState();
+    _nameController.text = bloc.userName;
+    _emailController.text = bloc.userEmail;
   }
 
   @override
@@ -53,8 +41,8 @@ class _EditProfileContentState extends State<EditProfileContent> {
                 currState is EditProfileReloadImageState,
             builder: (context, state) {
               if (state is EditProfileReloadImageState)
-                photoUrl = state.userImage;
-              return _getImage();
+                bloc.userImage = state.userImage;
+              return _getImage(bloc);
             },
           )),
           const SizedBox(height: 15),
@@ -62,7 +50,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
             child: _changeImage(bloc),
           ),
           SizedBox(height: 15),
-          _getUserData(),
+          _getUserData(bloc),
           const SizedBox(height: 15),
           _createSaveButton(bloc),
         ],
@@ -70,11 +58,11 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  Widget _getImage() {
-    if (photoUrl != null) {
-      if (photoUrl.startsWith('https://')) {
+  Widget _getImage(EditProfileBloc bloc) {
+    if (bloc.userImage != null) {
+      if (bloc.userImage.startsWith('https://')) {
         return CircleAvatar(
-            backgroundImage: NetworkImage(photoUrl), radius: 80);
+            backgroundImage: NetworkImage(bloc.userImage), radius: 80);
       } else {
         return CircleAvatar(
             backgroundImage: AssetImage('assets/images/profile.png'),
@@ -92,7 +80,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
       child: Text(
         'Edit photo',
         style: TextStyle(
-          color: Colors.blue,
+          color: Colors.green,
           fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
@@ -100,7 +88,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  Widget _getUserData() {
+  Widget _getUserData(EditProfileBloc bloc) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: Column(
