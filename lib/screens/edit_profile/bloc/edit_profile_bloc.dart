@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
+import 'package:plant/models/user_data.dart';
 import 'package:plant/service/validation_service.dart';
 
 part 'edit_profile_event.dart';
@@ -17,14 +18,9 @@ part 'edit_profile_state.dart';
 class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   EditProfileBloc() : super(EditProfileInitial());
 
-  Map<String, dynamic> userData;
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController userEmailController = TextEditingController();
+  UserData user;
   File _image;
   String imageURL;
-  String userName;
-  String userEmail;
-  String userImage;
 
   @override
   Stream<EditProfileState> mapEventToState(
@@ -32,7 +28,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
   ) async* {
     if (event is EditProfileInitialEvent) {
       yield EditProfileProgress();
-      _getUserData();
       yield EditProfileInitial();
     } else if (event is EditProfileChangeImageEvent) {
       _pickImageFromGallery();
@@ -42,10 +37,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       yield EditProfileReloadImageState(userImage: event.userImage);
     } else if (event is EditProfileChangeDataEvent) {
       if (_checkValidatorsOfTextField(
-          userNameController.text, userEmailController.text)) {
+          event.nameController.text, event.emailController.text)) {
         try {
-          // yield EditProfileProgress();
-          _saveData();
+          _saveData(event.nameController, event.emailController);
         } catch (e) {
           log(e.toString());
           yield EditProfileErrorState(message: e.toString());
@@ -54,20 +48,6 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         yield EditProfileShowErrorState();
       }
     }
-  }
-
-  Future<void> _getUserData() async {
-    DocumentSnapshot snapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .get();
-
-    userData = snapshot.data();
-    userName = userData['name'] == null ? "No Username" : userData['name'];
-    userEmail = userData['email'] == null ? "No email" : userData['email'];
-    userImage = userData['image'] == null ? "No image" : userData['image'];
-    userNameController.text = userName;
-    userEmailController.text = userEmail;
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -114,20 +94,20 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     StorageUploadTask uploadTask = storageReference.putFile(_image);
     await uploadTask.onComplete;
     print('File Uploaded');
-    // String returnURL;
     await storageReference.getDownloadURL().then((fileURL) {
       imageURL = fileURL;
     });
     return imageURL;
   }
 
-  void _saveData() {
+  void _saveData(TextEditingController nameController,
+      TextEditingController emailController) {
     DocumentReference sightingRef = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid);
     sightingRef.update({
-      "name": userNameController.text,
-      "email": userEmailController.text,
+      "name": nameController.text,
+      "email": emailController.text,
     });
   }
 

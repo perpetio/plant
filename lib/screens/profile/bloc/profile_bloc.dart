@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
+import 'package:plant/models/user_data.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';
@@ -12,6 +13,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   ProfileBloc() : super(ProfileInitial());
 
   Map<String, dynamic> userData;
+  UserData user;
 
   @override
   Stream<ProfileState> mapEventToState(
@@ -31,5 +33,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         .get();
 
     userData = snapshot.data();
+    user = UserData.fromJson(userData);
   }
 }

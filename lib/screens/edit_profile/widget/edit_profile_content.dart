@@ -2,19 +2,40 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/screens/common_widget/plants_container.dart';
+import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/common_widget/plants_text_field.dart';
 import 'package:plant/screens/common_widget/plants_button.dart';
 import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:plant/service/validation_service.dart';
+import 'package:plant/utils/router.dart';
 
 class EditProfileContent extends StatefulWidget {
+  final UserData user;
+
+  EditProfileContent({
+    @required this.user,
+  });
   @override
   _EditProfileContentState createState() => _EditProfileContentState();
 }
 
 class _EditProfileContentState extends State<EditProfileContent> {
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController userEmailController = TextEditingController();
+
+  @override
+  void initState() {
+    userNameController.text = widget.user.name;
+    userEmailController.text = widget.user.email;
+
+    // userNameController.selection = TextSelection.fromPosition(
+    //     TextPosition(offset: userNameController.text.length));
+    // userEmailController.selection = TextSelection.fromPosition(
+    //     TextPosition(offset: userEmailController.text.length));
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final bloc = BlocProvider.of<EditProfileBloc>(context);
@@ -29,16 +50,16 @@ class _EditProfileContentState extends State<EditProfileContent> {
                 currState is EditProfileReloadImageState,
             builder: (context, state) {
               if (state is EditProfileReloadImageState)
-                bloc.userImage = state.userImage;
+                widget.user.imageUrl = state.userImage;
               return _getImage(bloc);
             },
           )),
           const SizedBox(height: 15),
-          Center(
-            child: _changeImage(bloc),
-          ),
-          SizedBox(height: 15),
+          Center(child: _changeImage(bloc)),
+          const SizedBox(height: 15),
           _getUserData(bloc),
+          const SizedBox(height: 20),
+          _createChangePassword(),
           const SizedBox(height: 15),
           _createSaveButton(bloc),
         ],
@@ -47,10 +68,10 @@ class _EditProfileContentState extends State<EditProfileContent> {
   }
 
   Widget _getImage(EditProfileBloc bloc) {
-    if (bloc.userImage != null) {
-      if (bloc.userImage.startsWith('https://')) {
+    if (widget.user != null) {
+      if (widget.user.imageUrl.startsWith('https://')) {
         return CircleAvatar(
-            backgroundImage: NetworkImage(bloc.userImage), radius: 80);
+            backgroundImage: NetworkImage(widget.user.imageUrl), radius: 80);
       } else {
         return CircleAvatar(
             backgroundImage: AssetImage('assets/images/profile.png'),
@@ -86,20 +107,20 @@ class _EditProfileContentState extends State<EditProfileContent> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               PlantsTextField(
-                controller: bloc.userNameController,
+                controller: userNameController,
                 errorText: 'Enter a valid name (more than 1 character)',
                 isError: state is EditProfileShowErrorState
-                    ? !ValidationService.username(bloc.userNameController.text)
+                    ? !ValidationService.username(userNameController.text)
                     : false,
                 placeHolder: 'Enter your name',
                 title: 'Name',
               ),
               SizedBox(height: 15),
               PlantsTextField(
-                controller: bloc.userEmailController,
+                controller: userEmailController,
                 errorText: 'Enter a valid email',
                 isError: state is EditProfileShowErrorState
-                    ? !ValidationService.email(bloc.userEmailController.text)
+                    ? !ValidationService.email(userEmailController.text)
                     : false,
                 placeHolder: 'Enter your email',
                 title: 'Email',
@@ -118,7 +139,9 @@ class _EditProfileContentState extends State<EditProfileContent> {
         title: 'Save',
         onTap: () {
           bloc.add(
-            EditProfileChangeDataEvent(),
+            EditProfileChangeDataEvent(
+                emailController: userEmailController,
+                nameController: userNameController),
           );
         },
       ),
@@ -151,5 +174,32 @@ class _EditProfileContentState extends State<EditProfileContent> {
   void _getGalleryImage(EditProfileBloc bloc, BuildContext context) {
     bloc.add(EditProfileChangeImageEvent());
     Navigator.of(context).pop();
+  }
+
+  Widget _createChangePassword() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: TextButton(
+          onPressed: () {
+            Navigator.pushNamed(
+              context,
+              Routers.change_password,
+            );
+          },
+          child: Row(
+            children: [
+              Text(
+                'Change password',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Colors.orange,
+                  fontSize: 18,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Icon(Icons.arrow_forward_ios, color: Colors.orange),
+            ],
+          )),
+    );
   }
 }

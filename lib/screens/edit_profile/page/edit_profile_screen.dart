@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:plant/screens/edit_profile/widget/edit_profile_content.dart';
 
 class EditProfileScreen extends StatelessWidget {
+  final UserData user;
+
+  EditProfileScreen({
+    @required this.user,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,11 +26,11 @@ class EditProfileScreen extends StatelessWidget {
             icon: Icon(Icons.arrow_back_ios, color: Colors.black),
             onPressed: () => Navigator.of(context).pop()),
       ),
-      body: _buildContext(context),
+      body: _buildBody(context),
     );
   }
 
-  BlocProvider<EditProfileBloc> _buildContext(BuildContext context) {
+  BlocProvider<EditProfileBloc> _buildBody(BuildContext context) {
     return BlocProvider<EditProfileBloc>(
       create: (BuildContext context) => EditProfileBloc(),
       child: BlocConsumer<EditProfileBloc, EditProfileState>(
@@ -39,12 +45,12 @@ class EditProfileScreen extends StatelessWidget {
             bloc.add(EditProfileInitialEvent());
           } else if (state is EditProfileProgress) {
             return Stack(
-              children: [EditProfileContent(), PlantsLoading()],
+              children: [EditProfileContent(user: user), PlantsLoading()],
             );
           } else if (state is EditProfileErrorState) {
             _showErrorMessage(context, state.message);
           }
-          return EditProfileContent();
+          return EditProfileContent(user: user);
         },
         listenWhen: (_, currState) => true,
         listener: (context, state) {},

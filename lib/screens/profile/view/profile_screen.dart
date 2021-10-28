@@ -11,6 +11,30 @@ import 'package:plant/widgets/bottom_navigation_bar.dart';
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => ProfileBloc(),
+      child: BlocConsumer<ProfileBloc, ProfileState>(
+        listener: (context, state) {},
+        listenWhen: (_, currState) => true,
+        buildWhen: (_, currState) =>
+            currState is ProfileInitial || currState is ProfileLoadingState,
+        builder: (context, state) {
+          // ignore: close_sinks
+          final bloc = BlocProvider.of<ProfileBloc>(context);
+          if (state is ProfileInitial) {
+            bloc.add(ProfileInitialEvent());
+          } else if (state is ProfileLoadingState) {
+            return Stack(
+              children: [_createProfileScreen(context, bloc), PlantsLoading()],
+            );
+          }
+          return _createProfileScreen(context, bloc);
+        },
+      ),
+    );
+  }
+
+  Widget _createProfileScreen(BuildContext context, ProfileBloc bloc) {
     return Scaffold(
       bottomNavigationBar: CustomBottomNavigationBar(
         index: 2,
@@ -52,36 +76,13 @@ class ProfileScreen extends StatelessWidget {
               Navigator.pushNamed(
                 context,
                 Routers.edit_profile,
+                arguments: bloc.user,
               );
             },
           ),
         ],
       ),
-      body: _buildContext(context),
-    );
-  }
-
-  BlocProvider<ProfileBloc> _buildContext(BuildContext context) {
-    return BlocProvider<ProfileBloc>(
-      create: (BuildContext context) => ProfileBloc(),
-      child: BlocConsumer<ProfileBloc, ProfileState>(
-        buildWhen: (_, currState) =>
-            currState is ProfileInitial || currState is ProfileLoadingState,
-        builder: (context, state) {
-          // ignore: close_sinks
-          final bloc = BlocProvider.of<ProfileBloc>(context);
-          if (state is ProfileInitial) {
-            bloc.add(ProfileInitialEvent());
-          } else if (state is ProfileLoadingState) {
-            return Stack(
-              children: [_Body(), PlantsLoading()],
-            );
-          }
-          return _Body();
-        },
-        listenWhen: (_, currState) => true,
-        listener: (context, state) {},
-      ),
+      body: _Body(),
     );
   }
 }
@@ -112,15 +113,15 @@ class __BodyState extends State<_Body> {
                     Center(
                       child: CircleAvatar(
                         radius: 80,
-                        backgroundImage: bloc.userData == null ||
-                                bloc.userData['image'] == ''
-                            ? AssetImage('assets/images/profile.png')
-                            : NetworkImage(bloc.userData['image']),
+                        backgroundImage:
+                            bloc.user == null || bloc.user.imageUrl == ''
+                                ? AssetImage('assets/images/profile.png')
+                                : NetworkImage(bloc.user.imageUrl),
                       ),
                     ),
                     SizedBox(height: 15),
                     Text(
-                      bloc.userData != null ? bloc.userData['name'] : '',
+                      bloc.user?.name != null ? bloc.user.name : '',
                       style: TextStyle(
                         fontSize: 24.0,
                         fontWeight: FontWeight.w600,
@@ -128,7 +129,7 @@ class __BodyState extends State<_Body> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      bloc.userData != null ? bloc.userData['email'] : '',
+                      bloc.user?.email != null ? bloc.user.email : '',
                       style: TextStyle(fontSize: 15.0, color: Colors.grey),
                     ),
                   ],

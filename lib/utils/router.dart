@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:plant/models/plant_model.dart';
+import 'package:plant/models/user_data.dart';
+import 'package:plant/screens/change_password/page/change_password_screen.dart';
 import 'package:plant/screens/edit_profile/page/edit_profile_screen.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
@@ -18,6 +20,7 @@ class Routers {
   static const String profile = '/profile';
   static const String plant = '/plant';
   static const String edit_profile = '/edit_profile';
+  static const String change_password = '/change_password';
 }
 
 ///Return MaterialPageRoute depends of route name
@@ -64,10 +67,19 @@ Route<dynamic> router(RouteSettings routeSetting) {
       break;
 
     case Routers.edit_profile:
+      final user = routeSetting.arguments as UserData;
       return MaterialPageRoute(
-        builder: (context) => EditProfileScreen(),
+        builder: (context) => EditProfileScreen(
+          user: user,
+        ),
         settings: routeSetting,
       );
       break;
+
+    case Routers.change_password:
+      return MaterialPageRoute(
+        builder: (context) => ChangePasswordScreen(),
+        settings: routeSetting,
+      );
   }
 }
