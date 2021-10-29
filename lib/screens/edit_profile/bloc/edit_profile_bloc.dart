@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:plant/models/user_data.dart';
+import 'package:plant/service/user_service.dart';
 import 'package:plant/service/validation_service.dart';
 
 part 'edit_profile_event.dart';
@@ -40,6 +41,8 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
           event.nameController.text, event.emailController.text)) {
         try {
           _saveData(event.nameController, event.emailController);
+          await UserService.changeUserEmail(email: event.emailController.text);
+          yield EditProfileSuccessState(message: 'Data successfully updated!');
         } catch (e) {
           log(e.toString());
           yield EditProfileErrorState(message: e.toString());

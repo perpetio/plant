@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:plant/screens/common_widget/plants_loading.dart';
+import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
 import 'package:plant/utils/router.dart';

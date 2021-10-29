@@ -122,13 +122,6 @@ class _PlantsTextFieldState extends State<PlantsTextField> {
         filled: true,
         fillColor: Colors.white,
       ),
-      // onChanged: (newText) {
-      //   // setState(() {
-      //   // widget.controller.text = newText;
-      //   // widget.controller.selection = TextSelection.fromPosition(
-      //   // TextPosition(offset: widget.controller.text.length));
-      //   // });
-      // },
     );
   }
 

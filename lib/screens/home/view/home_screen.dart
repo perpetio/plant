@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/screens/common_widget/plants_loading.dart';
+import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_recently_added.dart';
 import 'package:plant/widgets/screen_template.dart';

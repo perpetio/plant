@@ -24,3 +24,11 @@ class EditProfileReloadImageState extends EditProfileState {
 }
 
 class EditProfileShowErrorState extends EditProfileState {}
+
+class EditProfileSuccessState extends EditProfileState {
+  final String message;
+
+  EditProfileSuccessState({
+    @required this.message,
+  });
+}

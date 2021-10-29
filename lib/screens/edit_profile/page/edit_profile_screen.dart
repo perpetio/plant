@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/models/user_data.dart';
-import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:plant/screens/edit_profile/widget/edit_profile_content.dart';
 
@@ -37,7 +37,8 @@ class EditProfileScreen extends StatelessWidget {
         buildWhen: (_, currState) =>
             currState is EditProfileInitial ||
             currState is EditProfileProgress ||
-            currState is EditProfileErrorState,
+            currState is EditProfileErrorState ||
+            currState is EditProfileSuccessState,
         builder: (context, state) {
           // ignore: close_sinks
           final bloc = BlocProvider.of<EditProfileBloc>(context);
@@ -48,27 +49,22 @@ class EditProfileScreen extends StatelessWidget {
               children: [EditProfileContent(user: user), PlantsLoading()],
             );
           } else if (state is EditProfileErrorState) {
-            _showErrorMessage(context, state.message);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text(state.message),
+                  duration: Duration(seconds: 3)));
+            });
+          } else if (state is EditProfileSuccessState) {
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              Scaffold.of(context).showSnackBar(SnackBar(
+                  content: Text(state.message),
+                  duration: Duration(seconds: 3)));
+            });
           }
           return EditProfileContent(user: user);
         },
         listenWhen: (_, currState) => true,
         listener: (context, state) {},
-      ),
-    );
-  }
-
-  _showErrorMessage(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        content: Text(message),
-        actions: [
-          TextButton(
-            child: Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
       ),
     );
   }
