@@ -6,17 +6,11 @@ import 'package:flutter/material.dart';
 class UserService {
   static final FirebaseAuth firebase = FirebaseAuth.instance;
 
-  static Future<UserCredential> reauthenticateWithCredential(
-      String email, String password) async {
-    User firebaseUser = firebase.currentUser;
-    UserCredential result = await firebaseUser.reauthenticateWithCredential(
-        EmailAuthProvider.credential(email: email, password: password));
-    return result;
-  }
-
-  static Future<bool> changeUserEmail({@required String email}) async {
-    reauthenticateWithCredential(firebase.currentUser.email, 'qweqwe');
+  static Future<bool> changeUserEmail(
+      {@required String email, @required String password}) async {
     try {
+      await firebase.signInWithEmailAndPassword(
+          email: firebase.currentUser.email, password: password);
       await firebase.currentUser?.updateEmail(email);
       return true;
     } catch (e) {
@@ -25,9 +19,11 @@ class UserService {
     }
   }
 
-  static Future<bool> changeUserPassword({@required String newPassword}) async {
-    reauthenticateWithCredential(firebase.currentUser.email, 'qweqwe');
+  static Future<void> changeUserPassword(
+      {@required String newPassword, @required String oldPassword}) async {
     try {
+      await firebase.signInWithEmailAndPassword(
+          email: firebase.currentUser.email, password: oldPassword);
       await firebase.currentUser?.updatePassword(newPassword);
       return true;
     } on FirebaseAuthException catch (e) {

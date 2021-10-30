@@ -12,10 +12,12 @@ class EditProfileTakeImageEvent extends EditProfileEvent {}
 class EditProfileChangeDataEvent extends EditProfileEvent {
   final TextEditingController nameController;
   final TextEditingController emailController;
+  final TextEditingController passwordController;
 
   EditProfileChangeDataEvent({
     @required this.nameController,
     @required this.emailController,
+    @required this.passwordController,
   });
 }
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
+import 'package:plant/service/auth_service.dart';
 import 'package:plant/utils/router.dart';
 
 // ignore: must_be_immutable
@@ -10,7 +10,6 @@ class SignInScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final _auth = FirebaseAuth.instance;
   String _email;
   String _password;
 
@@ -147,8 +146,7 @@ class SignInScreen extends StatelessWidget {
                             _formKey.currentState.save();
                             try {
                               final user =
-                                  await _auth.signInWithEmailAndPassword(
-                                      email: _email, password: _password);
+                                  await AuthService.signIn(_email, _password);
                               if (user != null) {
                                 Navigator.of(context).pushAndRemoveUntil(
                                   PageTransition(

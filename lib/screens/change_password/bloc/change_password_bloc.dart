@@ -20,11 +20,12 @@ class ChangePasswordBloc
   ) async* {
     if (event is ChangePasswordSaveTappedEvent) {
       if (_checkValidatorsOfTextField(
-          event.passwordController, event.confirmPasswordController)) {
+          event.newPasswordController, event.confirmPasswordController)) {
         try {
           yield ChangePasswordProgress();
           await UserService.changeUserPassword(
-              newPassword: event.passwordController.text);
+              newPassword: event.newPasswordController.text,
+              oldPassword: event.oldPasswordController.text);
           yield ChangePasswordSuccessState(
               message: 'Password successfully updated!');
         } catch (e) {

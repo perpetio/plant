@@ -7,6 +7,7 @@ import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/common_widget/plants_text_field.dart';
 import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
+import 'package:plant/service/auth_service.dart';
 import 'package:plant/service/validation_service.dart';
 import 'package:plant/utils/router.dart';
 
@@ -23,6 +24,7 @@ class EditProfileContent extends StatefulWidget {
 class _EditProfileContentState extends State<EditProfileContent> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
+  TextEditingController userPasswordController = TextEditingController();
 
   @override
   void initState() {
@@ -57,7 +59,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
           const SizedBox(height: 20),
           _createChangePassword(),
           const SizedBox(height: 15),
-          _createSaveButton(bloc),
+          _createSaveButton(bloc, context),
         ],
       ),
     );
@@ -128,17 +130,22 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  Widget _createSaveButton(EditProfileBloc bloc) {
+  Widget _createSaveButton(EditProfileBloc bloc, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: PlantButton(
         title: 'Save',
         onTap: () {
-          bloc.add(
-            EditProfileChangeDataEvent(
+          if (userEmailController.text != AuthService.auth.currentUser.email) {
+            _createShowYourPasswordAlert(context);
+            bloc.add(
+              EditProfileChangeDataEvent(
                 emailController: userEmailController,
-                nameController: userNameController),
-          );
+                nameController: userNameController,
+                passwordController: userPasswordController,
+              ),
+            );
+          }
         },
       ),
     );
@@ -148,14 +155,24 @@ class _EditProfileContentState extends State<EditProfileContent> {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        content: Text('Choose image source'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          'Choose image source',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
         actions: [
           TextButton(
-            child: Text('Camera'),
+            child: Text('Camera', style: TextStyle(fontSize: 15)),
             onPressed: () => _getCameraImage(bloc, context),
           ),
           TextButton(
-              child: Text('Gallery'),
+              child: Text('Gallery', style: TextStyle(fontSize: 15)),
               onPressed: () => _getGalleryImage(bloc, context)),
         ],
       ),
@@ -196,6 +213,40 @@ class _EditProfileContentState extends State<EditProfileContent> {
               Icon(Icons.arrow_forward_ios, color: Colors.orange),
             ],
           )),
+    );
+  }
+
+  void _createShowYourPasswordAlert(BuildContext context) {
+    showDialog<String>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        title: Text(
+          'Enter your password',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        content: Container(
+          height: 100,
+          child: PlantsTextField(
+            title: 'Password',
+            placeHolder: 'Enter your password',
+            controller: userPasswordController,
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Save', style: TextStyle(fontSize: 15)),
+          ),
+        ],
+      ),
     );
   }
 }

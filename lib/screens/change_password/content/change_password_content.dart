@@ -11,7 +11,8 @@ class ChangePasswordContent extends StatefulWidget {
 }
 
 class _ChangePasswordContentState extends State<ChangePasswordContent> {
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController oldPasswordController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
   @override
@@ -31,12 +32,24 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
                 children: [
                   const SizedBox(height: 25),
                   PlantsTextField(
-                    title: 'New password',
-                    placeHolder: 'Enter a new password',
-                    controller: passwordController,
+                    title: 'Old password',
+                    placeHolder: 'Enter an old password',
+                    controller: oldPasswordController,
                     errorText: 'Password should contain at least 6 characters',
                     isError: state is ChangePasswordShowErrorState
-                        ? !ValidationService.password(passwordController.text)
+                        ? !ValidationService.password(
+                            oldPasswordController.text)
+                        : false,
+                  ),
+                  const SizedBox(height: 20),
+                  PlantsTextField(
+                    title: 'New password',
+                    placeHolder: 'Enter a new password',
+                    controller: newPasswordController,
+                    errorText: 'Password should contain at least 6 characters',
+                    isError: state is ChangePasswordShowErrorState
+                        ? !ValidationService.password(
+                            newPasswordController.text)
                         : false,
                   ),
                   const SizedBox(height: 20),
@@ -47,7 +60,7 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
                     errorText: 'Password is not the same',
                     isError: state is ChangePasswordShowErrorState
                         ? !ValidationService.confirmPassword(
-                            passwordController.text,
+                            newPasswordController.text,
                             confirmPasswordController.text)
                         : false,
                   ),
@@ -68,7 +81,8 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
       onTap: () {
         bloc.add(
           ChangePasswordSaveTappedEvent(
-            passwordController: passwordController,
+            oldPasswordController: oldPasswordController,
+            newPasswordController: newPasswordController,
             confirmPasswordController: confirmPasswordController,
           ),
         );

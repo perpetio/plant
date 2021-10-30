@@ -4,11 +4,13 @@ part of 'change_password_bloc.dart';
 abstract class ChangePasswordEvent {}
 
 class ChangePasswordSaveTappedEvent extends ChangePasswordEvent {
-  final TextEditingController passwordController;
+  final TextEditingController oldPasswordController;
+  final TextEditingController newPasswordController;
   final TextEditingController confirmPasswordController;
 
   ChangePasswordSaveTappedEvent({
-    @required this.passwordController,
+    @required this.oldPasswordController,
+    @required this.newPasswordController,
     @required this.confirmPasswordController,
   });
 }

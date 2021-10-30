@@ -41,7 +41,9 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
           event.nameController.text, event.emailController.text)) {
         try {
           _saveData(event.nameController, event.emailController);
-          await UserService.changeUserEmail(email: event.emailController.text);
+          await UserService.changeUserEmail(
+              email: event.emailController.text,
+              password: event.passwordController.text);
           yield EditProfileSuccessState(message: 'Data successfully updated!');
         } catch (e) {
           log(e.toString());

@@ -17,7 +17,7 @@ class PlantsTextField extends StatefulWidget {
     this.obscureText = false,
     this.isError = false,
     @required this.controller,
-    @required this.errorText,
+    this.errorText,
     this.textInputAction = TextInputAction.done,
     this.keyboardType,
   });
