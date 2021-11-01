@@ -7,6 +7,7 @@ import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/common_widget/plants_text_field.dart';
 import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
+import 'package:plant/screens/edit_profile/widget/confirm_password_dialog.dart';
 import 'package:plant/service/auth_service.dart';
 import 'package:plant/service/validation_service.dart';
 import 'package:plant/utils/router.dart';
@@ -135,16 +136,9 @@ class _EditProfileContentState extends State<EditProfileContent> {
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: PlantButton(
         title: 'Save',
-        onTap: () {
+        onTap: () async {
           if (userEmailController.text != AuthService.auth.currentUser.email) {
-            _createShowYourPasswordAlert(context);
-            bloc.add(
-              EditProfileChangeDataEvent(
-                emailController: userEmailController,
-                nameController: userNameController,
-                passwordController: userPasswordController,
-              ),
-            );
+            _createShowYourPasswordAlert(context, bloc);
           }
         },
       ),
@@ -216,36 +210,19 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  void _createShowYourPasswordAlert(BuildContext context) {
+  void _createShowYourPasswordAlert(
+      BuildContext context, EditProfileBloc bloc) {
     showDialog<String>(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20.0),
-        ),
-        title: Text(
-          'Enter your password',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        content: Container(
-          height: 100,
-          child: PlantsTextField(
-            title: 'Password',
-            placeHolder: 'Enter your password',
-            controller: userPasswordController,
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text('Save', style: TextStyle(fontSize: 15)),
-          ),
-        ],
+      builder: (BuildContext context) => ConfirmPasswordDialog(
+        passwordController: userPasswordController,
+        onSaveTapped: (password) {
+          bloc.add(EditProfileChangeDataEvent(
+            nameController: userNameController,
+            emailController: userEmailController,
+            passwordController: userPasswordController,
+          ));
+        },
       ),
     );
   }
