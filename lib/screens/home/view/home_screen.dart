@@ -1,116 +1,79 @@
+import 'dart:async';
+
+import 'package:appbar_textfield/appbar_textfield.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
-import 'package:plant/screens/home/widget/home_recently_added.dart';
+import 'package:plant/screens/home/widget/home_content.dart';
+import 'package:plant/widgets/avatar.dart';
 import 'package:plant/widgets/screen_template.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key key}) : super(key: key);
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
         return HomeBloc();
       },
-      child: BlocBuilder<HomeBloc, HomeState>(
-        buildWhen: (currState, _) =>
+      child: BlocConsumer<HomeBloc, HomeState>(
+        listenWhen: (_, currState) => true,
+        listener: (context, state) {},
+        buildWhen: (_, currState) =>
             currState is HomeInitial || currState is HomeLoadingState,
         builder: (context, state) {
-          // ignore: close_sinks
           final bloc = BlocProvider.of<HomeBloc>(context);
           if (state is HomeInitial) {
             bloc.add(HomeInitialEvent());
-          } else if (state is HomeLoadingState) {
-            return Stack(
-              children: [
-                ScreenTemplate(
-                    index: 0, title: 'Home', isAppBar: true, body: _Body()),
-                PlantsLoading()
-              ],
-            );
           }
-          return ScreenTemplate(
-            index: 0,
-            title: 'Home',
-            isAppBar: true,
-            body: _Body(),
+          return Stack(
+            children: [
+              ScreenTemplate(
+                index: 0,
+                title: 'Home',
+                appBar: _createAppBar(bloc),
+                isAppBar: true,
+                body: HomeContent(),
+              ),
+              if (state is HomeLoadingState) PlantsLoading(),
+            ],
           );
         },
       ),
     );
   }
-}
 
-class _Body extends StatefulWidget {
-  _Body({Key key}) : super(key: key);
-
-  @override
-  __BodyState createState() => __BodyState();
-}
-
-class __BodyState extends State<_Body> {
-  RefreshController _refreshController = RefreshController(
-    initialRefresh: false,
-  );
-
-  void _onRefresh() async {
-    HapticFeedback.heavyImpact();
-    await Future.delayed(
-      Duration(milliseconds: 1000),
-    );
-    _refreshController.refreshCompleted();
-    setState(() {});
-  }
-
-  void _onLoading() async {
-    await Future.delayed(
-      Duration(milliseconds: 1000),
-    );
-    _refreshController.loadComplete();
-  }
-
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    // ignore: close_sinks
-    final bloc = BlocProvider.of<HomeBloc>(context);
-
-    return Padding(
-      padding: const EdgeInsets.only(top: 90.0),
-      child: SmartRefresher(
-        enablePullDown: true,
-        controller: _refreshController,
-        onRefresh: _onRefresh,
-        onLoading: _onLoading,
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
-            bloc.add(RefreshEvent());
-            return SingleChildScrollView(
-              child: (bloc.listPlantsModels ?? []).isNotEmpty ?? false
-                  ? HomeRecentlyAdded(
-                      listPlantsModels: bloc.listPlantsModels,
-                      size: size,
-                    )
-                  : _createNoPlants(size),
-            );
-          },
+  Widget _createAppBar(HomeBloc bloc) {
+    return AppBarTextField(
+      backgroundColor: Colors.white,
+      iconTheme: IconThemeData(color: Colors.black),
+      searchContainerColor: Colors.white,
+      trailingActionButtons: [
+        Avatar(),
+      ],
+      title: Text(
+        "Home",
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
         ),
       ),
-    );
-  }
-
-  Widget _createNoPlants(Size size) {
-    return Padding(
-      padding: EdgeInsets.only(top: size.height * 0.3),
-      child: Center(
-        child: Text(
-          'No plants yet',
-          style: TextStyle(color: Colors.grey, fontSize: 23.0),
-        ),
-      ),
+      onBackPressed: () {
+        bloc.add(SearchBackTappedEvent());
+      },
+      onClearPressed: () {
+        bloc.add(SearchClearTappedEvent());
+      },
+      onChanged: (query) {
+        bloc.add(SearchPlantsEvent(query: query));
+      },
     );
   }
 }
