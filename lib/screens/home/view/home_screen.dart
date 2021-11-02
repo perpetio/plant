@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_content.dart';
-import 'package:plant/screens/home/widget/home_search_list.dart';
 import 'package:plant/utils/debouncer.dart';
 import 'package:plant/utils/router.dart';
 import 'package:plant/widgets/avatar.dart';
@@ -50,7 +49,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 title: 'Home',
                 appBar: _createAppBar(bloc),
                 isAppBar: true,
-                // onPressed: _createSearchPlants,
                 body: HomeContent(),
               ),
               if (state is HomeLoadingState) PlantsLoading(),
@@ -106,56 +104,4 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
-
-//   void _createSearchPlants() {
-//     showSearch(context: context, delegate: Search());
-//   }
-// }
-
-// class Search extends SearchDelegate {
-//   String selectedResult;
-//   List<String> listExample;
-
-//   @override
-//   List<Widget> buildActions(BuildContext context) {
-//     return [
-//       IconButton(
-//           icon: Icon(Icons.close),
-//           onPressed: () {
-//             query = '';
-//           }),
-//     ];
-//   }
-
-//   @override
-//   Widget buildLeading(BuildContext context) {
-//     return IconButton(
-//       icon: Icon(Icons.arrow_back),
-//       onPressed: () => Navigator.pop(context),
-//     );
-//   }
-
-//   @override
-//   Widget buildResults(BuildContext context) {
-//     return Container(
-//       child: Center(
-//         child: Text(selectedResult),
-//       ),
-//     );
-//   }
-
-//   @override
-//   Widget buildSuggestions(BuildContext context) {
-//     return BlocProvider(
-//       create: (context) => HomeBloc(),
-//       child: BlocBuilder<HomeBloc, HomeState>(
-//         builder: (context, state) {
-//           final bloc = BlocProvider.of<HomeBloc>(context);
-//           return HomeSearchPlantsList(
-//             plants: bloc.listPlantsModels,
-//           );
-//         },
-//       ),
-//     );
-//   }
 }

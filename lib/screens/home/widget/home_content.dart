@@ -41,7 +41,21 @@ class _HomeContentState extends State<HomeContent> {
           currState is SearchPlantsState || currState is SearchBackTappedState,
       builder: (context, state) {
         if (state is SearchPlantsState) {
-          return HomeSearchPlantsList(plants: state.plantsModels);
+          if (state.plantsModels.isEmpty) {
+            return Container(
+              color: Colors.white,
+              width: double.infinity,
+              height: double.infinity,
+              child: Center(
+                child: Text(
+                  "No plants",
+                  style: TextStyle(color: Colors.grey, fontSize: 23),
+                ),
+              ),
+            );
+          } else {
+            return HomeSearchPlantsList(plants: state.plantsModels);
+          }
         }
         return _createHomeData(context, bloc);
       },
@@ -85,7 +99,7 @@ class _HomeContentState extends State<HomeContent> {
       child: Center(
         child: Text(
           'No plants yet',
-          style: TextStyle(color: Colors.grey, fontSize: 23.0),
+          style: TextStyle(color: Colors.grey, fontSize: 23),
         ),
       ),
     );

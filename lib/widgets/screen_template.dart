@@ -9,14 +9,12 @@ class ScreenTemplate extends StatelessWidget {
   final AppBarTextField appBar;
   final bool isAppBar;
   final int index;
-  final Function() onPressed;
   ScreenTemplate({
     this.body,
     this.index,
     this.appBar,
     this.title,
     this.isAppBar,
-    this.onPressed,
   });
 
   @override
@@ -30,7 +28,6 @@ class ScreenTemplate extends StatelessWidget {
               ? appBar
               : CustomAppBar(
                   title: title,
-                  onPressed: onPressed,
                 )
           : null,
       body: body,
