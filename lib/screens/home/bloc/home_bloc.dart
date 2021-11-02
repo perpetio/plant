@@ -37,6 +37,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else if (event is SearchClearTappedEvent) {
     } else if (event is OpenPlantDetailEvent) {
       yield OpenPlantDetailState(plant: event.plant);
+    } else if (event is AvatarTappedEvent) {
+      yield AvatarTappedState();
     }
   }
 

@@ -38,3 +38,5 @@ class OpenPlantDetailEvent extends HomeEvent {
     @required this.plant,
   });
 }
+
+class AvatarTappedEvent extends HomeEvent {}

@@ -50,25 +50,30 @@ class _HomeContentState extends State<HomeContent> {
 
   Widget _createHomeData(BuildContext context, HomeBloc bloc) {
     final size = MediaQuery.of(context).size;
-    return Padding(
-      padding: const EdgeInsets.only(top: 90.0),
-      child: SmartRefresher(
-        enablePullDown: true,
-        controller: _refreshController,
-        onRefresh: _onRefresh,
-        onLoading: _onLoading,
-        child: BlocBuilder<HomeBloc, HomeState>(
-          builder: (context, state) {
-            bloc.add(RefreshEvent());
-            return SingleChildScrollView(
-              child: (bloc.listPlantsModels ?? []).isNotEmpty ?? false
-                  ? HomeRecentlyAdded(
-                      listPlantsModels: bloc.listPlantsModels,
-                      size: size,
-                    )
-                  : _createNoPlants(size),
-            );
-          },
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 90.0),
+        child: SmartRefresher(
+          enablePullDown: true,
+          controller: _refreshController,
+          onRefresh: _onRefresh,
+          onLoading: _onLoading,
+          child: BlocBuilder<HomeBloc, HomeState>(
+            builder: (context, state) {
+              bloc.add(RefreshEvent());
+              return SingleChildScrollView(
+                child: (bloc.listPlantsModels ?? []).isNotEmpty ?? false
+                    ? HomeRecentlyAdded(
+                        listPlantsModels: bloc.listPlantsModels,
+                        size: size,
+                      )
+                    : _createNoPlants(size),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -29,10 +29,6 @@ class _EditProfileContentState extends State<EditProfileContent> {
     userNameController.text = widget.user.name;
     userEmailController.text = widget.user.email;
 
-    // userNameController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: userNameController.text.length));
-    // userEmailController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: userEmailController.text.length));
     super.initState();
   }
 

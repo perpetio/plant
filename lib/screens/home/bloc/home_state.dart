@@ -32,3 +32,5 @@ class OpenPlantDetailState extends HomeState {
     @required this.plant,
   });
 }
+
+class AvatarTappedState extends HomeState {}

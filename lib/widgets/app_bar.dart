@@ -7,8 +7,12 @@ import 'package:plant/widgets/avatar.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
+  final Function() onPressed;
 
-  CustomAppBar({Key key, this.title}) : super(key: key);
+  CustomAppBar({
+    this.title,
+    this.onPressed,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(60);
@@ -18,7 +22,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     final List<Widget> actions = [
       IconButton(
         icon: Icon(Icons.search, color: Colors.black, size: 30),
-        onPressed: () {},
+        onPressed: () {
+          onPressed();
+        },
       ),
       SizedBox(width: 10.0),
       InkWell(
