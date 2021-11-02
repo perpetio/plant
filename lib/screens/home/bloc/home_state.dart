@@ -24,3 +24,11 @@ class SearchPlantsState extends HomeState {
 }
 
 class SearchBackTappedState extends HomeState {}
+
+class OpenPlantDetailState extends HomeState {
+  final PlantsModels plant;
+
+  OpenPlantDetailState({
+    @required this.plant,
+  });
+}

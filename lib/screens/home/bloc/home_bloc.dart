@@ -34,7 +34,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield SearchPlantsState(plantsModels: plants);
     } else if (event is SearchBackTappedEvent) {
       yield SearchBackTappedState();
-    } else if (event is SearchClearTappedEvent) {}
+    } else if (event is SearchClearTappedEvent) {
+    } else if (event is OpenPlantDetailEvent) {
+      yield OpenPlantDetailState(plant: event.plant);
+    }
   }
 
   Future<void> _getPlantsData() async {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/models/plant_model.dart';
+import 'package:plant/screens/home/bloc/home_bloc.dart';
 
 class HomeSearchPlantsList extends StatelessWidget {
   final List<PlantsModels> plants;
@@ -10,10 +12,11 @@ class HomeSearchPlantsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = BlocProvider.of<HomeBloc>(context);
     return ListView.separated(
       itemCount: plants.length,
       itemBuilder: (context, index) {
-        return _createCell(plants[index]);
+        return _createCell(plants[index], bloc);
       },
       separatorBuilder: (context, index) {
         return Padding(
@@ -24,12 +27,12 @@ class HomeSearchPlantsList extends StatelessWidget {
     );
   }
 
-  Widget _createCell(PlantsModels plant) {
+  Widget _createCell(PlantsModels plant, HomeBloc bloc) {
     final name = plant.plantModels[0].plantName;
     final imageUrl = plant.plantsImages[0].url;
     return InkWell(
       onTap: () {
-        print(plant);
+        bloc.add(OpenPlantDetailEvent(plant: plant));
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
