@@ -38,21 +38,18 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     } else if (event is EditProfileReloadImageEvent) {
       yield EditProfileReloadImageState(userImage: event.userImage);
     } else if (event is EditProfileChangeDataEvent) {
-      if (_checkValidatorsOfTextField(
-          event.nameController.text, event.emailController.text)) {
-        try {
-          await UserService.changeUserEmail(
-              email: event.emailController.text,
-              password: event.passwordController.text);
-          _saveData(event.nameController, event.emailController);
-          yield EditProfileSuccessState(message: 'Data successfully updated!');
-        } catch (e) {
-          log(e.toString());
-          yield EditProfileErrorState(message: e.toString());
-        }
-      } else {
-        yield EditProfileShowErrorState();
+      try {
+        await UserService.changeUserEmail(
+            email: event.emailController.text,
+            password: event.passwordController.text);
+        _saveData(event.nameController, event.emailController);
+        yield EditProfileSuccessState(message: 'Data successfully updated!');
+      } catch (e) {
+        log(e.toString());
+        yield EditProfileErrorState(message: e.toString());
       }
+    } else {
+      yield EditProfileShowErrorState();
     }
   }
 
@@ -117,10 +114,5 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
         "email": emailController.text,
       });
     }
-  }
-
-  bool _checkValidatorsOfTextField(String userName, String email) {
-    return ValidationService.username(userName) &&
-        ValidationService.email(email);
   }
 }

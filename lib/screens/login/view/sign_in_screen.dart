@@ -6,6 +6,7 @@ import 'package:plant/common_widget/plants_text_field.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/bloc/login_bloc.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
+import 'package:plant/screens/login/widget/login_text_field.dart';
 import 'package:plant/service/auth_service.dart';
 import 'package:plant/service/validation_service.dart';
 import 'package:plant/utils/router.dart';
@@ -119,28 +120,15 @@ class SignInScreen extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 50),
-        // padding: const EdgeInsets.fromLTRB(36.0, 56.0, 26.0, 36.0),
         child: Form(
           key: _formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Email',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17.0,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              PlantsTextField(
-                placeHolder: 'example@gmail.com',
+              LoginTextField(
                 controller: emailController,
+                title: 'Email',
+                placeHolder: 'example@gmail.com',
                 validator: (email) {
                   if (ValidationService.email(email))
                     return null;
@@ -148,32 +136,21 @@ class SignInScreen extends StatelessWidget {
                     return 'Enter your email';
                 },
               ),
-              SizedBox(height: 30),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  'Password',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17.0,
-                    color: Colors.black87,
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              PlantsTextField(
-                placeHolder: 'password',
+              SizedBox(height: 25),
+              LoginTextField(
                 controller: emailController,
-                validator: (email) {
-                  if (ValidationService.email(email))
+                title: 'Password',
+                placeHolder: 'password',
+                validator: (password) {
+                  if (ValidationService.password(password))
                     return null;
                   else
-                    return 'Email should contain at least 6 characters';
+                    return 'Password should contain at least 6 characters';
                 },
               ),
               SizedBox(height: 40),
               _createSignInButton(context, bloc),
-              SizedBox(height: 20.0),
+              SizedBox(height: 20),
               _createDoNotHaveAccount(bloc),
             ],
           ),

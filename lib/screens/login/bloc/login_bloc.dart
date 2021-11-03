@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
-import 'package:plant/service/auth_service.dart';
 
 part 'login_event.dart';
 part 'login_state.dart';
@@ -18,6 +19,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       yield SignInTappedState();
     } else if (event is SignInDoNotHaveAccountEvent) {
       yield SignInDoNotHaveAccountState();
+    } else if (event is SignUpTappedEvent) {
+      _createFirebaseUser(event.user, event.name, event.email);
+      yield SignUpTappedState();
+    } else if (event is SignUpAlreadyHaveAccountEvent) {
+      yield SignUpAlreadyHaveAccountState();
     }
+  }
+
+  _createFirebaseUser(User newUser, String name, String email) {
+    FirebaseFirestore.instance.collection("users").doc(newUser.uid).set({
+      "uid": newUser.uid,
+      "name": name,
+      "email": email,
+      "image": '',
+    });
   }
 }
