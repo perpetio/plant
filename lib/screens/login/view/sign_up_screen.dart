@@ -13,7 +13,7 @@ class SignUpScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
 
   String _email;
-  static String password;
+  String password;
   String _name;
 
   @override
