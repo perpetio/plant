@@ -14,6 +14,7 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
   TextEditingController oldPasswordController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -25,48 +26,54 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
       child: BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
         buildWhen: (_, currState) => currState is ChangePasswordShowErrorState,
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Column(
-                children: [
-                  const SizedBox(height: 25),
-                  PlantsTextField(
-                    title: 'Old password',
-                    placeHolder: 'Enter an old password',
-                    controller: oldPasswordController,
-                    errorText: 'Password should contain at least 6 characters',
-                    isError: state is ChangePasswordShowErrorState
-                        ? !ValidationService.password(
-                            oldPasswordController.text)
-                        : false,
-                  ),
-                  const SizedBox(height: 20),
-                  PlantsTextField(
-                    title: 'New password',
-                    placeHolder: 'Enter a new password',
-                    controller: newPasswordController,
-                    errorText: 'Password should contain at least 6 characters',
-                    isError: state is ChangePasswordShowErrorState
-                        ? !ValidationService.password(
-                            newPasswordController.text)
-                        : false,
-                  ),
-                  const SizedBox(height: 20),
-                  PlantsTextField(
-                    title: 'Confirm password',
-                    placeHolder: 'Re-enter password',
-                    controller: confirmPasswordController,
-                    errorText: 'Password is not the same',
-                    isError: state is ChangePasswordShowErrorState
-                        ? !ValidationService.confirmPassword(
-                            newPasswordController.text,
-                            confirmPasswordController.text)
-                        : false,
-                  ),
-                  const SizedBox(height: 20),
-                  _createSaveButton(bloc),
-                ],
+          return Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 25),
+                    PlantsTextField(
+                      labelText: 'Old password',
+                      placeHolder: 'Enter an old password',
+                      controller: oldPasswordController,
+                      validator: (password) {
+                        if (ValidationService.password(password))
+                          return null;
+                        else
+                          return 'Password should contain at least 6 characters';
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PlantsTextField(
+                      labelText: 'New password',
+                      placeHolder: 'Enter a new password',
+                      controller: newPasswordController,
+                      validator: (newPassword) {
+                        if (ValidationService.password(newPassword))
+                          return null;
+                        else
+                          return 'Password should contain at least 6 characters';
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    PlantsTextField(
+                      labelText: 'Confirm password',
+                      placeHolder: 'Re-enter password',
+                      controller: confirmPasswordController,
+                      validator: (confirmPassword) {
+                        if (ValidationService.confirmPassword(
+                            newPasswordController.text, confirmPassword))
+                          return null;
+                        else
+                          return 'Password is not the same';
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    _createSaveButton(bloc),
+                  ],
+                ),
               ),
             ),
           );
@@ -79,13 +86,14 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
     return PlantButton(
       title: 'Save',
       onTap: () {
-        bloc.add(
-          ChangePasswordSaveTappedEvent(
-            oldPasswordController: oldPasswordController,
-            newPasswordController: newPasswordController,
-            confirmPasswordController: confirmPasswordController,
-          ),
-        );
+        if (_formKey.currentState.validate())
+          bloc.add(
+            ChangePasswordSaveTappedEvent(
+              oldPasswordController: oldPasswordController,
+              newPasswordController: newPasswordController,
+              confirmPasswordController: confirmPasswordController,
+            ),
+          );
       },
     );
   }

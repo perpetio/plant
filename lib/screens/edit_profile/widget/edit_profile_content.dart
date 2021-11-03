@@ -26,6 +26,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
   TextEditingController userPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -102,29 +103,36 @@ class _EditProfileContentState extends State<EditProfileContent> {
       child: BlocBuilder<EditProfileBloc, EditProfileState>(
         buildWhen: (_, currState) => currState is EditProfileShowErrorState,
         builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PlantsTextField(
-                controller: userNameController,
-                errorText: 'Enter a valid name (more than 1 character)',
-                isError: state is EditProfileShowErrorState
-                    ? !ValidationService.username(userNameController.text)
-                    : false,
-                placeHolder: 'Enter your name',
-                title: 'Name',
-              ),
-              SizedBox(height: 15),
-              PlantsTextField(
-                controller: userEmailController,
-                errorText: 'Enter a valid email',
-                isError: state is EditProfileShowErrorState
-                    ? !ValidationService.email(userEmailController.text)
-                    : false,
-                placeHolder: 'Enter your email',
-                title: 'Email',
-              ),
-            ],
+          return Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PlantsTextField(
+                  controller: userNameController,
+                  validator: (name) {
+                    if (ValidationService.username(name))
+                      return null;
+                    else
+                      return 'Enter a valid name (more than 1 character)';
+                  },
+                  placeHolder: 'Enter your name',
+                  labelText: 'Name',
+                ),
+                SizedBox(height: 15),
+                PlantsTextField(
+                  controller: userEmailController,
+                  placeHolder: 'Enter your email',
+                  labelText: 'Email',
+                  validator: (email) {
+                    if (ValidationService.email(email))
+                      return null;
+                    else
+                      return 'Enter a valid email';
+                  },
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -137,8 +145,11 @@ class _EditProfileContentState extends State<EditProfileContent> {
       child: PlantButton(
         title: 'Save',
         onTap: () async {
-          if (userEmailController.text != AuthService.auth.currentUser.email) {
-            _createShowYourPasswordAlert(context, bloc);
+          if (_formKey.currentState.validate()) {
+            if (userEmailController.text !=
+                AuthService.auth.currentUser.email) {
+              _createShowYourPasswordAlert(context, bloc);
+            }
           }
         },
       ),

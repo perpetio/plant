@@ -51,7 +51,7 @@ class ModalService {
           content: Container(
             height: 100,
             child: PlantsTextField(
-              title: 'Password',
+              labelText: 'Password',
               placeHolder: 'Enter your password',
               controller: passwordController,
             ),
