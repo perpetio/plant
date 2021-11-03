@@ -8,3 +8,5 @@ class ProfileInitialEvent extends ProfileEvent {}
 class ProfileReloadImageEvent extends ProfileEvent {}
 
 class ProfileReloadUserDataEvent extends ProfileEvent {}
+
+class SingOutTappedEvent extends ProfileEvent {}

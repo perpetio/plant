@@ -2,11 +2,13 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/common_widget/plants_button.dart';
+import 'package:plant/common_widget/plants_loading.dart';
+import 'package:plant/common_widget/plants_text_field.dart';
 import 'package:plant/models/user_data.dart';
-import 'package:plant/screens/common_widget/plants_text_field.dart';
-import 'package:plant/screens/common_widget/plants_button.dart';
-import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
+import 'package:plant/service/auth_service.dart';
+import 'package:plant/service/modal_service.dart';
 import 'package:plant/service/validation_service.dart';
 import 'package:plant/utils/router.dart';
 
@@ -23,16 +25,14 @@ class EditProfileContent extends StatefulWidget {
 class _EditProfileContentState extends State<EditProfileContent> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController userEmailController = TextEditingController();
+  TextEditingController userPasswordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     userNameController.text = widget.user.name;
     userEmailController.text = widget.user.email;
 
-    // userNameController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: userNameController.text.length));
-    // userEmailController.selection = TextSelection.fromPosition(
-    //     TextPosition(offset: userEmailController.text.length));
     super.initState();
   }
 
@@ -61,7 +61,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
           const SizedBox(height: 20),
           _createChangePassword(),
           const SizedBox(height: 15),
-          _createSaveButton(bloc),
+          _createSaveButton(bloc, context),
         ],
       ),
     );
@@ -103,46 +103,54 @@ class _EditProfileContentState extends State<EditProfileContent> {
       child: BlocBuilder<EditProfileBloc, EditProfileState>(
         buildWhen: (_, currState) => currState is EditProfileShowErrorState,
         builder: (context, state) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              PlantsTextField(
-                controller: userNameController,
-                errorText: 'Enter a valid name (more than 1 character)',
-                isError: state is EditProfileShowErrorState
-                    ? !ValidationService.username(userNameController.text)
-                    : false,
-                placeHolder: 'Enter your name',
-                title: 'Name',
-              ),
-              SizedBox(height: 15),
-              PlantsTextField(
-                controller: userEmailController,
-                errorText: 'Enter a valid email',
-                isError: state is EditProfileShowErrorState
-                    ? !ValidationService.email(userEmailController.text)
-                    : false,
-                placeHolder: 'Enter your email',
-                title: 'Email',
-              ),
-            ],
+          return Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                PlantsTextField(
+                  controller: userNameController,
+                  validator: (name) {
+                    if (ValidationService.username(name))
+                      return null;
+                    else
+                      return 'Enter a valid name (more than 1 character)';
+                  },
+                  placeHolder: 'Enter your name',
+                  labelText: 'Name',
+                ),
+                SizedBox(height: 15),
+                PlantsTextField(
+                  controller: userEmailController,
+                  placeHolder: 'Enter your email',
+                  labelText: 'Email',
+                  validator: (email) {
+                    if (ValidationService.email(email))
+                      return null;
+                    else
+                      return 'Enter a valid email';
+                  },
+                ),
+              ],
+            ),
           );
         },
       ),
     );
   }
 
-  Widget _createSaveButton(EditProfileBloc bloc) {
+  Widget _createSaveButton(EditProfileBloc bloc, BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: PlantButton(
         title: 'Save',
-        onTap: () {
-          bloc.add(
-            EditProfileChangeDataEvent(
-                emailController: userEmailController,
-                nameController: userNameController),
-          );
+        onTap: () async {
+          if (_formKey.currentState.validate()) {
+            if (userEmailController.text !=
+                AuthService.auth.currentUser.email) {
+              _createShowYourPasswordAlert(context, bloc);
+            }
+          }
         },
       ),
     );
@@ -152,14 +160,24 @@ class _EditProfileContentState extends State<EditProfileContent> {
     showDialog(
       context: context,
       builder: (BuildContext context) => AlertDialog(
-        content: Text('Choose image source'),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        title: Text(
+          'Choose image source',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
+          ),
+        ),
         actions: [
           TextButton(
-            child: Text('Camera'),
+            child: Text('Camera', style: TextStyle(fontSize: 15)),
             onPressed: () => _getCameraImage(bloc, context),
           ),
           TextButton(
-              child: Text('Gallery'),
+              child: Text('Gallery', style: TextStyle(fontSize: 15)),
               onPressed: () => _getGalleryImage(bloc, context)),
         ],
       ),
@@ -200,6 +218,22 @@ class _EditProfileContentState extends State<EditProfileContent> {
               Icon(Icons.arrow_forward_ios, color: Colors.orange),
             ],
           )),
+    );
+  }
+
+  void _createShowYourPasswordAlert(
+      BuildContext context, EditProfileBloc bloc) {
+    ModalService.showPasswordAlertDialog(
+      context,
+      title: "Enter your password",
+      passwordController: userPasswordController,
+      onSaveTapped: (password) {
+        bloc.add(EditProfileChangeDataEvent(
+          nameController: userNameController,
+          emailController: userEmailController,
+          passwordController: userPasswordController,
+        ));
+      },
     );
   }
 }

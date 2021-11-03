@@ -10,6 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
 import 'package:plant/models/user_data.dart';
+import 'package:plant/service/auth_service.dart';
+import 'package:plant/service/user_service.dart';
 import 'package:plant/service/validation_service.dart';
 
 part 'edit_profile_event.dart';
@@ -39,7 +41,11 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
       if (_checkValidatorsOfTextField(
           event.nameController.text, event.emailController.text)) {
         try {
+          await UserService.changeUserEmail(
+              email: event.emailController.text,
+              password: event.passwordController.text);
           _saveData(event.nameController, event.emailController);
+          yield EditProfileSuccessState(message: 'Data successfully updated!');
         } catch (e) {
           log(e.toString());
           yield EditProfileErrorState(message: e.toString());
@@ -105,10 +111,12 @@ class EditProfileBloc extends Bloc<EditProfileEvent, EditProfileState> {
     DocumentReference sightingRef = FirebaseFirestore.instance
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser.uid);
-    sightingRef.update({
-      "name": nameController.text,
-      "email": emailController.text,
-    });
+    if (emailController.text == AuthService.auth.currentUser.email) {
+      sightingRef.update({
+        "name": nameController.text,
+        "email": emailController.text,
+      });
+    }
   }
 
   bool _checkValidatorsOfTextField(String userName, String email) {
