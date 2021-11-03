@@ -1,7 +1,7 @@
 import 'package:appbar_textfield/appbar_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/screens/common_widget/plants_loading.dart';
+import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_content.dart';
 import 'package:plant/utils/debouncer.dart';

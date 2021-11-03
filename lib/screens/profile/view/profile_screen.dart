@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:plant/screens/common_widget/plants_loading.dart';
+import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
 import 'package:plant/utils/router.dart';
@@ -101,14 +101,14 @@ class __BodyState extends State<_Body> {
 
     return Padding(
       padding: const EdgeInsets.only(top: 70.0),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            BlocBuilder<ProfileBloc, ProfileState>(
-              builder: (context, state) {
-                // ignore: close_sinks
-                final bloc = BlocProvider.of<ProfileBloc>(context);
-                return Column(
+      child: BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          // ignore: close_sinks
+          final bloc = BlocProvider.of<ProfileBloc>(context);
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Column(
                   children: [
                     Center(
                       child: CircleAvatar(
@@ -133,42 +133,43 @@ class __BodyState extends State<_Body> {
                       style: TextStyle(fontSize: 15.0, color: Colors.grey),
                     ),
                   ],
-                );
-              },
+                ),
+                SizedBox(height: 20.0),
+                InkWell(
+                  onTap: () {
+                    bloc.add(SingOutTappedEvent());
+                    Navigator.of(context).pushAndRemoveUntil(
+                      PageTransition(
+                          type: PageTransitionType.fade, child: SignInScreen()),
+                      ModalRoute.withName(Routers.sign_in),
+                    );
+                  },
+                  child: Container(
+                    height: size.height * 0.06,
+                    width: size.width * 0.8,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25.0),
+                      color: Color(0xFFF3F7FB),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(width: 20.0),
+                        Icon(Icons.logout),
+                        SizedBox(width: 10.0),
+                        Text('Logout'),
+                        Spacer(),
+                        Icon(Icons.arrow_forward_ios_rounded),
+                        SizedBox(
+                          width: 20.0,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
             ),
-            SizedBox(height: 20.0),
-            InkWell(
-              onTap: () {
-                Navigator.of(context).pushAndRemoveUntil(
-                  PageTransition(
-                      type: PageTransitionType.fade, child: SignInScreen()),
-                  ModalRoute.withName(Routers.sign_in),
-                );
-              },
-              child: Container(
-                height: size.height * 0.06,
-                width: size.width * 0.8,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25.0),
-                  color: Color(0xFFF3F7FB),
-                ),
-                child: Row(
-                  children: [
-                    SizedBox(width: 20.0),
-                    Icon(Icons.logout),
-                    SizedBox(width: 10.0),
-                    Text('Logout'),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios_rounded),
-                    SizedBox(
-                      width: 20.0,
-                    )
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+          );
+        },
       ),
     );
   }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/models/user_data.dart';
-import 'package:plant/screens/common_widget/plants_loading.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:plant/screens/edit_profile/widget/edit_profile_content.dart';
+import 'package:plant/service/modal_service.dart';
 
 class EditProfileScreen extends StatelessWidget {
   final UserData user;
@@ -35,9 +36,7 @@ class EditProfileScreen extends StatelessWidget {
       create: (BuildContext context) => EditProfileBloc(),
       child: BlocConsumer<EditProfileBloc, EditProfileState>(
         buildWhen: (_, currState) =>
-            currState is EditProfileInitial ||
-            currState is EditProfileProgress ||
-            currState is EditProfileErrorState,
+            currState is EditProfileInitial || currState is EditProfileProgress,
         builder: (context, state) {
           // ignore: close_sinks
           final bloc = BlocProvider.of<EditProfileBloc>(context);
@@ -47,28 +46,19 @@ class EditProfileScreen extends StatelessWidget {
             return Stack(
               children: [EditProfileContent(user: user), PlantsLoading()],
             );
-          } else if (state is EditProfileErrorState) {
-            _showErrorMessage(context, state.message);
           }
           return EditProfileContent(user: user);
         },
-        listenWhen: (_, currState) => true,
-        listener: (context, state) {},
-      ),
-    );
-  }
-
-  _showErrorMessage(BuildContext context, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        content: Text(message),
-        actions: [
-          TextButton(
-            child: Text('OK'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-        ],
+        listenWhen: (_, currState) =>
+            currState is EditProfileErrorState ||
+            currState is EditProfileSuccessState,
+        listener: (context, state) {
+          if (state is EditProfileErrorState) {
+            ModalService.showAlertDialog(context, description: state.message);
+          } else if (state is EditProfileSuccessState) {
+            ModalService.showAlertDialog(context, description: state.message);
+          }
+        },
       ),
     );
   }

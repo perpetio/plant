@@ -1,20 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
+import 'package:plant/service/auth_service.dart';
 import 'package:plant/utils/router.dart';
 
 // ignore: must_be_immutable
 class SignUpScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final _auth = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
   String _email;
-  String _password;
+  static String password;
   String _name;
 
   @override
@@ -54,7 +53,7 @@ class SignUpScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: MediaQuery.of(context).size.height / 6,
+            top: MediaQuery.of(context).size.height / 5,
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
@@ -157,7 +156,7 @@ class SignUpScreen extends StatelessWidget {
                         TextFormField(
                           obscureText: true,
                           onSaved: (passValue) {
-                            _password = passValue;
+                            password = passValue;
                           },
                           style: TextStyle(color: Colors.grey),
                           decoration: InputDecoration(
@@ -184,15 +183,14 @@ class SignUpScreen extends StatelessWidget {
                             _formKey.currentState.save();
                             try {
                               final newUser =
-                                  await _auth.createUserWithEmailAndPassword(
-                                      email: _email, password: _password);
+                                  await AuthService.signUp(_email, password);
 
                               if (newUser != null) {
                                 FirebaseFirestore.instance
                                     .collection("users")
-                                    .doc(newUser.user.uid)
+                                    .doc(newUser.uid)
                                     .set({
-                                  "uid": newUser.user.uid,
+                                  "uid": newUser.uid,
                                   "name": _name,
                                   "email": _email,
                                   "image": ''

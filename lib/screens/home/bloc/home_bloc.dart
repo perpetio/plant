@@ -58,6 +58,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         .toList();
     if (lstPlantsModels.isNotEmpty) {
       listPlantsModels = lstPlantsModels;
+    } else {
+      listPlantsModels = [];
     }
   }
 
