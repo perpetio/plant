@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/models/plant_model.dart';
+import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
-import 'package:plant/utils/router.dart';
 
 class HomePlantItem extends StatelessWidget {
   final PlantsModels plantsModels;
@@ -14,13 +14,11 @@ class HomePlantItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final bloc = BlocProvider.of<HomeBloc>(context);
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          Routers.plant,
-          arguments: plantsModels,
-        );
+        bloc.add(OpenPlantDetailEvent(plant: plantsModels));
       },
       child: Padding(
         padding:
@@ -36,7 +34,7 @@ class HomePlantItem extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.2),
                 spreadRadius: 7,
                 blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: Offset(0, 3),
               ),
             ],
           ),

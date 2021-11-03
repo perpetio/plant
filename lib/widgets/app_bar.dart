@@ -8,7 +8,9 @@ import 'package:plant/widgets/avatar.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
 
-  CustomAppBar({Key key, this.title}) : super(key: key);
+  CustomAppBar({
+    this.title,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(60);

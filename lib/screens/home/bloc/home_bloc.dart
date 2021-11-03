@@ -14,23 +14,31 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   int currentPromo = 0;
 
   // PlantsModels plantsModels;
-  List<PlantsModels> listPlantsModels;
+  List<PlantsModels> listPlantsModels = <PlantsModels>[];
 
   @override
   Stream<HomeState> mapEventToState(
     HomeEvent event,
   ) async* {
     if (event is HomeInitialEvent) {
-      yield HomeLoadingState();
+      // yield HomeLoadingState();
       await _getPlantsData();
       yield HomeInitial();
     } else if (event is NextImageEvent) {
       currentPromo = event.index;
       yield RefreshState();
-    }
-
-    if (event is RefreshEvent) {
+    } else if (event is RefreshEvent) {
       yield InitialOrderingState();
+    } else if (event is SearchPlantsEvent) {
+      final plants = _getPlantsByQuery(event.query);
+      yield SearchPlantsState(plantsModels: plants);
+    } else if (event is SearchBackTappedEvent) {
+      yield SearchBackTappedState();
+    } else if (event is SearchClearTappedEvent) {
+    } else if (event is OpenPlantDetailEvent) {
+      yield OpenPlantDetailState(plant: event.plant);
+    } else if (event is AvatarTappedEvent) {
+      yield AvatarTappedState();
     }
   }
 
@@ -53,5 +61,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else {
       listPlantsModels = [];
     }
+  }
+
+  List<PlantsModels> _getPlantsByQuery(String query) {
+    final List<PlantsModels> foundPlants = listPlantsModels
+        .where((PlantsModels plant) =>
+            plant.plantModels
+                .map((e) => e.plantName)
+                .toString()
+                .toLowerCase()
+                .indexOf(query.toLowerCase()) >
+            -1)
+        .toList();
+
+    return foundPlants;
   }
 }

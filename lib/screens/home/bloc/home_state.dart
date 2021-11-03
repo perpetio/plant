@@ -14,3 +14,23 @@ class InitialOrderingState extends HomeState {
 class RefreshState extends HomeState {
   List<Object> get props => [];
 }
+
+class SearchPlantsState extends HomeState {
+  final List<PlantsModels> plantsModels;
+
+  SearchPlantsState({
+    @required this.plantsModels,
+  });
+}
+
+class SearchBackTappedState extends HomeState {}
+
+class OpenPlantDetailState extends HomeState {
+  final PlantsModels plant;
+
+  OpenPlantDetailState({
+    @required this.plant,
+  });
+}
+
+class AvatarTappedState extends HomeState {}

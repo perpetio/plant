@@ -1,3 +1,4 @@
+import 'package:appbar_textfield/appbar_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:plant/widgets/app_bar.dart';
 import 'package:plant/widgets/bottom_navigation_bar.dart';
@@ -5,11 +6,13 @@ import 'package:plant/widgets/bottom_navigation_bar.dart';
 class ScreenTemplate extends StatelessWidget {
   final Widget body;
   final String title;
+  final AppBarTextField appBar;
   final bool isAppBar;
   final int index;
   ScreenTemplate({
     this.body,
     this.index,
+    this.appBar,
     this.title,
     this.isAppBar,
   });
@@ -21,9 +24,11 @@ class ScreenTemplate extends StatelessWidget {
       extendBody: true,
       backgroundColor: Colors.white,
       appBar: isAppBar
-          ? CustomAppBar(
-              title: title,
-            )
+          ? appBar != null
+              ? appBar
+              : CustomAppBar(
+                  title: title,
+                )
           : null,
       body: body,
       bottomNavigationBar: CustomBottomNavigationBar(

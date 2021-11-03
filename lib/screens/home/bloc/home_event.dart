@@ -18,3 +18,25 @@ class NextImageEvent extends HomeEvent {
 class RefreshEvent extends HomeEvent {
   List<Object> get props => [];
 }
+
+class SearchPlantsEvent extends HomeEvent {
+  final String query;
+
+  SearchPlantsEvent({
+    @required this.query,
+  });
+}
+
+class SearchBackTappedEvent extends HomeEvent {}
+
+class SearchClearTappedEvent extends HomeEvent {}
+
+class OpenPlantDetailEvent extends HomeEvent {
+  final PlantsModels plant;
+
+  OpenPlantDetailEvent({
+    @required this.plant,
+  });
+}
+
+class AvatarTappedEvent extends HomeEvent {}
