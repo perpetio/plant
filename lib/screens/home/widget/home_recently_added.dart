@@ -4,12 +4,10 @@ import 'package:plant/screens/home/widget/home_plant_slider.dart';
 
 class HomeRecentlyAdded extends StatelessWidget {
   final List<PlantsModels> listPlantsModels;
-  // final PlantsModels plantsModels;
   final Size size;
 
   const HomeRecentlyAdded({
     @required this.listPlantsModels,
-    // @required this.plantsModels,
     @required this.size,
   });
 
@@ -31,7 +29,7 @@ class HomeRecentlyAdded extends StatelessWidget {
                 color: Colors.grey.withOpacity(0.1),
                 spreadRadius: 7,
                 blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: Offset(0, 3),
               ),
             ],
           ),

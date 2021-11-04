@@ -1,5 +1,6 @@
 import 'dart:core';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_button.dart';
@@ -159,25 +160,32 @@ class _EditProfileContentState extends State<EditProfileContent> {
   void _showPickImageAlert(BuildContext context, EditProfileBloc bloc) {
     showDialog(
       context: context,
-      builder: (BuildContext context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        title: Text(
-          'Choose image source',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-            color: Colors.black,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Center(
+          child: Text(
+            'Choose image source',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
+            ),
           ),
         ),
         actions: [
-          TextButton(
-            child: Text('Camera', style: TextStyle(fontSize: 15)),
+          CupertinoButton(
+            child: Text('Camera',
+                style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.orange,
+                    fontWeight: FontWeight.w600)),
             onPressed: () => _getCameraImage(bloc, context),
           ),
-          TextButton(
-              child: Text('Gallery', style: TextStyle(fontSize: 15)),
+          CupertinoButton(
+              child: Text('Gallery',
+                  style: TextStyle(
+                      fontSize: 15,
+                      color: Colors.orange,
+                      fontWeight: FontWeight.w600)),
               onPressed: () => _getGalleryImage(bloc, context)),
         ],
       ),

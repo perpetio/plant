@@ -18,11 +18,11 @@ class HomePlantItem extends StatelessWidget {
     final bloc = BlocProvider.of<HomeBloc>(context);
     return GestureDetector(
       onTap: () {
+        // Navigator.of(context).push(_createRoute());
         bloc.add(OpenPlantDetailEvent(plant: plantsModels));
       },
       child: Padding(
-        padding:
-            EdgeInsets.only(left: 4.0, right: 4.0, bottom: 20.0, top: 10.0),
+        padding: EdgeInsets.only(left: 4, right: 4, bottom: 20, top: 10),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -40,7 +40,7 @@ class HomePlantItem extends StatelessWidget {
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
+              Radius.circular(20),
             ),
             child: BlocProvider(
               create: (context) => ScanBloc(),
@@ -50,8 +50,8 @@ class HomePlantItem extends StatelessWidget {
                     child: Image.network(
                       plantsModels.plantsImages[0].url,
                       fit: BoxFit.cover,
-                      width: 1000.0,
-                      height: 1000.0,
+                      width: 1000,
+                      height: 1000,
                     ),
                   ),
                   Positioned(

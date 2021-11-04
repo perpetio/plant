@@ -109,57 +109,6 @@ class PlantDetailsPanel extends StatelessWidget {
     );
   }
 
-  // Widget _createPlantsImages() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       Text(
-  //         'Common Images: ',
-  //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-  //       ),
-  //       SizedBox(height: 10),
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: [
-  //           ClipRRect(
-  //             borderRadius: BorderRadius.circular(16),
-  //             child: Container(
-  //               width: 100,
-  //               height: 100,
-  //               child: Image.network(
-  //                 plantModel.plantDetails.wikiImages[0].value.toString(),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //           ClipRRect(
-  //             borderRadius: BorderRadius.circular(16),
-  //             child: Container(
-  //               width: 100,
-  //               height: 100,
-  //               child: Image.network(
-  //                 plantModel.plantDetails.wikiImages[1].value.toString(),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //           ClipRRect(
-  //             borderRadius: BorderRadius.circular(16),
-  //             child: Container(
-  //               width: 100,
-  //               height: 100,
-  //               child: Image.network(
-  //                 plantModel.plantDetails.wikiImages[2].value.toString(),
-  //                 fit: BoxFit.cover,
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Widget _createPlantsImages() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
