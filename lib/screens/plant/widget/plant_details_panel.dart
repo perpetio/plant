@@ -32,6 +32,11 @@ class PlantDetailsPanel extends StatelessWidget {
                 const SizedBox(height: 15),
                 _plantDetails(
                     'Synonyms: ', plantModel.plantDetails.synonyms.join(', ')),
+                const SizedBox(height: 15),
+                plantModel.plantDetails.wikiImages != null ||
+                        plantModel.plantDetails.wikiImages != []
+                    ? _createPlantsImages()
+                    : Container(),
                 const SizedBox(height: 80),
               ],
             ),
@@ -86,22 +91,114 @@ class PlantDetailsPanel extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         InkWell(
-            child: Text(
-              plantModel.plantDetails.wikiDescription.citation,
-              style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.blue),
-            ),
-            onTap: () async {
-              final url = plantModel.plantDetails.wikiDescription.citation;
-              if (await launch(url)) {
-                await launch(url);
-              } else {
-                throw 'Could not launch $url';
-              }
-            }),
+          child: Text(
+            plantModel.plantDetails.wikiDescription.citation,
+            style: TextStyle(
+                fontSize: 16, fontWeight: FontWeight.w500, color: Colors.blue),
+          ),
+          onTap: () async {
+            final url = plantModel.plantDetails.wikiDescription.citation;
+            if (await launch(url)) {
+              await launch(url);
+            } else {
+              throw 'Could not launch $url';
+            }
+          },
+        ),
       ],
+    );
+  }
+
+  // Widget _createPlantsImages() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Text(
+  //         'Common Images: ',
+  //         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+  //       ),
+  //       SizedBox(height: 10),
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           ClipRRect(
+  //             borderRadius: BorderRadius.circular(16),
+  //             child: Container(
+  //               width: 100,
+  //               height: 100,
+  //               child: Image.network(
+  //                 plantModel.plantDetails.wikiImages[0].value.toString(),
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //           ),
+  //           ClipRRect(
+  //             borderRadius: BorderRadius.circular(16),
+  //             child: Container(
+  //               width: 100,
+  //               height: 100,
+  //               child: Image.network(
+  //                 plantModel.plantDetails.wikiImages[1].value.toString(),
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //           ),
+  //           ClipRRect(
+  //             borderRadius: BorderRadius.circular(16),
+  //             child: Container(
+  //               width: 100,
+  //               height: 100,
+  //               child: Image.network(
+  //                 plantModel.plantDetails.wikiImages[2].value.toString(),
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
+
+  Widget _createPlantsImages() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Common Images: ',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        SizedBox(height: 10),
+        Container(
+          width: double.infinity,
+          height: 200,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: plantModel.plantDetails.wikiImages.length,
+            itemBuilder: (context, index) {
+              return _createImage(plantModel.plantDetails.wikiImages[index]);
+            },
+            separatorBuilder: (context, index) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Divider(color: Colors.grey),
+              );
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _createImage(WikiImage image) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(33),
+      child: Image.network(
+        image.value,
+        fit: BoxFit.cover,
+        width: 200,
+        height: 100,
+      ),
     );
   }
 }

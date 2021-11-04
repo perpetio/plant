@@ -76,14 +76,13 @@ class PlantDetails {
   });
 
   factory PlantDetails.fromJson(Map<String, dynamic> json) {
-    final images = (json["wiki_images"] as List) ?? [];
+    final wikiImages = (json["wiki_images"] as List) ?? [];
     return PlantDetails(
       commonNames: List<String>.from(json["common_names"] ?? [].map((e) => e)),
       url: json != null ? json["url"] : '',
       wikiDescription: WikiDescription.fromJson(json["wiki_description"]),
       taxonomy: Taxonomy.fromJson(json["taxonomy"]),
-      wikiImages: images.map((e) => WikiImage.fromJson(e)).toList(),
-      // wikiImages: tempWikiImages != null ? tempWikiImages : [],
+      wikiImages: wikiImages.map((e) => WikiImage.fromJson(e)).toList(),
       synonyms: List<String>.from((json["synonyms"] ?? []).map((e) => e)),
       propagationMethods:
           List<String>.from((json["propagation_methods"] ?? []).map((e) => e)),
