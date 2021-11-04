@@ -33,12 +33,15 @@ class ForgotPasswordScreen extends StatelessWidget {
     return BlocProvider<ForgotPasswordBloc>(
       create: (BuildContext context) => ForgotPasswordBloc(),
       child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
-        buildWhen: (_, currState) =>
-            currState is ForgotPasswordInitial ||
-            currState is ForgotPassErrorState ||
-            currState is ForgotPassSuccessState,
+        buildWhen: (_, currState) => currState is ForgotPasswordInitial,
         builder: (context, state) {
           final bloc = BlocProvider.of<ForgotPasswordBloc>(context);
+          return _buildContent(context, bloc);
+        },
+        listenWhen: (_, currState) =>
+            currState is ForgotPassErrorState ||
+            currState is ForgotPassSuccessState,
+        listener: (context, state) {
           if (state is ForgotPassSuccessState) {
             Scaffold.of(context).showSnackBar(SnackBar(
                 backgroundColor: Colors.orange,
@@ -50,10 +53,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 content: Text(state.error),
                 duration: Duration(seconds: 3)));
           }
-          return _buildContent(context, bloc);
         },
-        listenWhen: (_, currState) => true,
-        listener: (context, state) {},
       ),
     );
   }
@@ -79,7 +79,7 @@ class ForgotPasswordScreen extends StatelessWidget {
             ),
             SizedBox(height: 40),
             PlantButton(
-              title: 'Save',
+              title: 'Reset',
               onTap: () {
                 if (_formKey.currentState.validate())
                   bloc.add(

@@ -40,16 +40,11 @@ class ChangePasswordScreen extends StatelessWidget {
               children: [ChangePasswordContent(), PlantsLoading()],
             );
           } else if (state is ChangePasswordSuccessState) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(state.message),
-                  duration: Duration(seconds: 3)));
-            });
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text(state.message), duration: Duration(seconds: 3)));
           } else if (state is ChangePasswordErrorState) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text(state.error), duration: Duration(seconds: 3)));
-            });
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text(state.error), duration: Duration(seconds: 3)));
           }
           return ChangePasswordContent();
         },
