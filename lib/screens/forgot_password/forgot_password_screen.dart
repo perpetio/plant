@@ -40,19 +40,15 @@ class ForgotPasswordScreen extends StatelessWidget {
         builder: (context, state) {
           final bloc = BlocProvider.of<ForgotPasswordBloc>(context);
           if (state is ForgotPassSuccessState) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  backgroundColor: Colors.orange,
-                  content: Text(state.message),
-                  duration: Duration(seconds: 3)));
-            });
+            Scaffold.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.orange,
+                content: Text(state.message),
+                duration: Duration(seconds: 3)));
           } else if (state is ForgotPassErrorState) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Scaffold.of(context).showSnackBar(SnackBar(
-                  backgroundColor: Colors.orange,
-                  content: Text(state.error),
-                  duration: Duration(seconds: 3)));
-            });
+            Scaffold.of(context).showSnackBar(SnackBar(
+                backgroundColor: Colors.orange,
+                content: Text(state.error),
+                duration: Duration(seconds: 3)));
           }
           return _buildContent(context, bloc);
         },
