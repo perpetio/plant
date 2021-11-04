@@ -12,7 +12,6 @@ import 'package:meta/meta.dart';
 import 'package:plant/models/user_data.dart';
 import 'package:plant/service/auth_service.dart';
 import 'package:plant/service/user_service.dart';
-import 'package:plant/service/validation_service.dart';
 
 part 'edit_profile_event.dart';
 part 'edit_profile_state.dart';

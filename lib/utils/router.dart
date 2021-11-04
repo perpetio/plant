@@ -4,6 +4,7 @@ import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/change_password/page/change_password_screen.dart';
 import 'package:plant/screens/edit_profile/page/edit_profile_screen.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
+import 'package:plant/screens/forgot_password/forgot_password_screen.dart';
 import 'package:plant/screens/login/view/sign_in_screen.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
 import 'package:plant/screens/plant/view/plant_screen.dart';
@@ -21,6 +22,7 @@ class Routers {
   static const String plant = '/plant';
   static const String edit_profile = '/edit_profile';
   static const String change_password = '/change_password';
+  static const String forgot_password = '/forgot_password';
 }
 
 ///Return MaterialPageRoute depends of route name
@@ -79,6 +81,12 @@ Route<dynamic> router(RouteSettings routeSetting) {
     case Routers.change_password:
       return MaterialPageRoute(
         builder: (context) => ChangePasswordScreen(),
+        settings: routeSetting,
+      );
+
+    case Routers.forgot_password:
+      return MaterialPageRoute(
+        builder: (context) => ForgotPasswordScreen(),
         settings: routeSetting,
       );
   }

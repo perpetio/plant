@@ -22,6 +22,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     } else if (event is SignUpTappedEvent) {
       _createFirebaseUser(event.user, event.name, event.email);
       yield SignUpTappedState();
+    } else if (event is SignInForgotPasswordEvent) {
+      yield SignInForgotPasswordState();
     } else if (event is SignUpAlreadyHaveAccountEvent) {
       yield SignUpAlreadyHaveAccountState();
     }

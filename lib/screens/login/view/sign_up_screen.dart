@@ -128,6 +128,7 @@ class SignUpScreen extends StatelessWidget {
                 controller: nameController,
                 title: 'Your Name',
                 placeHolder: 'Name',
+                obscureText: false,
                 validator: (name) {
                   if (ValidationService.username(name))
                     return null;
@@ -140,6 +141,7 @@ class SignUpScreen extends StatelessWidget {
                 controller: emailController,
                 title: 'Email',
                 placeHolder: 'example@gmail.com',
+                obscureText: false,
                 validator: (email) {
                   if (ValidationService.email(email))
                     return null;
@@ -152,6 +154,7 @@ class SignUpScreen extends StatelessWidget {
                 controller: passwordController,
                 title: 'Password',
                 placeHolder: 'password',
+                obscureText: true,
                 validator: (email) {
                   if (ValidationService.email(email))
                     return null;

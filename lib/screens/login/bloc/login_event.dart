@@ -19,4 +19,6 @@ class SignUpTappedEvent extends LoginEvent {
   });
 }
 
+class SignInForgotPasswordEvent extends LoginEvent {}
+
 class SignUpAlreadyHaveAccountEvent extends LoginEvent {}

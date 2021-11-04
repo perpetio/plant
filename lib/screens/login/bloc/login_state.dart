@@ -11,4 +11,6 @@ class SignInDoNotHaveAccountState extends LoginState {}
 
 class SignUpTappedState extends LoginState {}
 
+class SignInForgotPasswordState extends LoginState {}
+
 class SignUpAlreadyHaveAccountState extends LoginState {}

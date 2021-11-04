@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/common_widget/plants_button.dart';
-import 'package:plant/common_widget/plants_text_field.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/bloc/login_bloc.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
@@ -14,7 +13,7 @@ import 'package:plant/utils/router.dart';
 // ignore: must_be_immutable
 class SignInScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -43,7 +42,8 @@ class SignInScreen extends StatelessWidget {
         },
         listenWhen: (_, currState) =>
             currState is SignInTappedState ||
-            currState is SignInDoNotHaveAccountState,
+            currState is SignInDoNotHaveAccountState ||
+            currState is SignInForgotPasswordState,
         listener: (context, state) {
           if (state is SignInTappedState) {
             Navigator.of(context).pushAndRemoveUntil(
@@ -54,11 +54,11 @@ class SignInScreen extends StatelessWidget {
           } else if (state is SignInDoNotHaveAccountState) {
             Navigator.of(context).pushAndRemoveUntil(
               PageTransition(
-                type: PageTransitionType.fade,
-                child: SignUpScreen(),
-              ),
+                  type: PageTransitionType.fade, child: SignUpScreen()),
               ModalRoute.withName(Routers.sign_up),
             );
+          } else if (state is SignInForgotPasswordState) {
+            Navigator.pushNamed(context, Routers.forgot_password);
           }
         },
       ),
@@ -79,7 +79,7 @@ class SignInScreen extends StatelessWidget {
             Text(
               'Welcome',
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 16,
                 color: Colors.white70,
               ),
             ),
@@ -88,7 +88,7 @@ class SignInScreen extends StatelessWidget {
               'Sign In',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 25.0,
+                fontSize: 25,
                 color: Colors.white,
               ),
             ),
@@ -129,6 +129,7 @@ class SignInScreen extends StatelessWidget {
                 controller: emailController,
                 title: 'Email',
                 placeHolder: 'example@gmail.com',
+                obscureText: false,
                 validator: (email) {
                   if (ValidationService.email(email))
                     return null;
@@ -138,9 +139,10 @@ class SignInScreen extends StatelessWidget {
               ),
               SizedBox(height: 25),
               LoginTextField(
-                controller: emailController,
+                controller: passwordController,
                 title: 'Password',
                 placeHolder: 'password',
+                obscureText: true,
                 validator: (password) {
                   if (ValidationService.password(password))
                     return null;
@@ -150,7 +152,9 @@ class SignInScreen extends StatelessWidget {
               ),
               SizedBox(height: 40),
               _createSignInButton(context, bloc),
-              SizedBox(height: 20),
+              SizedBox(height: 10),
+              _createForgotPassword(bloc),
+              SizedBox(height: 10),
               _createDoNotHaveAccount(bloc),
             ],
           ),
@@ -182,17 +186,36 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
+  Widget _createForgotPassword(LoginBloc bloc) {
+    return TextButton(
+        onPressed: () {
+          bloc.add(SignInForgotPasswordEvent());
+        },
+        child: Text(
+          'Forgot password?',
+          style: TextStyle(
+            color: Colors.orange,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ));
+  }
+
   Widget _createDoNotHaveAccount(LoginBloc bloc) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Don\'t have an account? '),
+        Text(
+          'Don\'t have an account? ',
+          style: TextStyle(fontSize: 15),
+        ),
         InkWell(
           onTap: () => bloc.add(SignInDoNotHaveAccountEvent()),
           child: Text(
             'Sign Up',
             style: TextStyle(
               color: Colors.orange,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -6,12 +6,14 @@ class LoginTextField extends StatelessWidget {
   final String title;
   final String placeHolder;
   final String Function(String) validator;
+  final bool obscureText;
 
   LoginTextField({
     @required this.controller,
     @required this.title,
     @required this.placeHolder,
     @required this.validator,
+    @required this.obscureText,
   });
 
   @override
@@ -34,6 +36,7 @@ class LoginTextField extends StatelessWidget {
           placeHolder: placeHolder,
           controller: controller,
           validator: validator,
+          obscureText: obscureText,
         ),
       ],
     );
