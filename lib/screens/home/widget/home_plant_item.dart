@@ -21,8 +21,7 @@ class HomePlantItem extends StatelessWidget {
         bloc.add(OpenPlantDetailEvent(plant: plantsModels));
       },
       child: Padding(
-        padding:
-            EdgeInsets.only(left: 4.0, right: 4.0, bottom: 20.0, top: 10.0),
+        padding: EdgeInsets.only(left: 4, right: 4, bottom: 20, top: 10),
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -39,19 +38,20 @@ class HomePlantItem extends StatelessWidget {
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20.0),
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
             child: BlocProvider(
               create: (context) => ScanBloc(),
               child: Stack(
                 children: [
                   Container(
-                    child: Image.network(
-                      plantsModels.plantsImages[0].url,
-                      fit: BoxFit.cover,
-                      width: 1000.0,
-                      height: 1000.0,
+                    child: Hero(
+                      tag: 'plant${plantsModels.plantsImages[0].url}',
+                      child: Image.network(
+                        plantsModels.plantsImages[0].url,
+                        fit: BoxFit.cover,
+                        width: 1000,
+                        height: 1000,
+                      ),
                     ),
                   ),
                   Positioned(

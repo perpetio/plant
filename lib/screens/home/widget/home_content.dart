@@ -69,7 +69,7 @@ class _HomeContentState extends State<HomeContent> {
         FocusScope.of(context).unfocus();
       },
       child: Padding(
-        padding: const EdgeInsets.only(top: 90.0),
+        padding: const EdgeInsets.only(top: 90),
         child: SmartRefresher(
           enablePullDown: true,
           controller: _refreshController,
