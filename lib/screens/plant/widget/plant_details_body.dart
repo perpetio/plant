@@ -29,9 +29,12 @@ class PlantDetailsBody extends StatelessWidget {
   Widget _createImage() {
     return Container(
       width: double.infinity,
-      child: Image(
-        image: NetworkImage(image),
-        fit: BoxFit.cover,
+      child: Hero(
+        tag: 'plant$image',
+        child: Image(
+          image: NetworkImage(image),
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }
@@ -52,7 +55,7 @@ class PlantDetailsBody extends StatelessWidget {
                   color: Colors.grey.withOpacity(0.1),
                   spreadRadius: 7,
                   blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
+                  offset: Offset(0, 3),
                 ),
               ],
             ),
@@ -101,7 +104,7 @@ class PlantDetailsBody extends StatelessWidget {
             color: Colors.grey.withOpacity(0.1),
             spreadRadius: 7,
             blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: Offset(0, 3),
           ),
         ],
       ),

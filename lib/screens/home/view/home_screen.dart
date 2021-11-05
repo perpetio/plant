@@ -2,10 +2,8 @@ import 'package:appbar_textfield/appbar_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_loading.dart';
-import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_content.dart';
-import 'package:plant/screens/plant/view/plant_screen.dart';
 import 'package:plant/utils/debouncer.dart';
 import 'package:plant/utils/router.dart';
 import 'package:plant/widgets/avatar.dart';
@@ -32,8 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
             currState is OpenPlantDetailState || currState is AvatarTappedState,
         listener: (context, state) {
           if (state is OpenPlantDetailState) {
-            Navigator.of(context).push(_createRoute(state.plant));
-            // Navigator.pushNamed(context, Routers.plant, arguments: state.plant);
+            Navigator.pushNamed(context, Routers.plant, arguments: state.plant);
           } else if (state is AvatarTappedState) {
             Navigator.pushNamed(context, Routers.profile);
           }
@@ -104,27 +101,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _debouncer.run(() {
           bloc.add(SearchPlantsEvent(query: query));
         });
-      },
-    );
-  }
-
-  Route<Object> _createRoute(PlantsModels plants) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          PlantScreen(plantsModels: plants),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return ScaleTransition(
-          scale: Tween<double>(
-            begin: 0.0,
-            end: 1.0,
-          ).animate(
-            CurvedAnimation(
-              parent: animation,
-              curve: Curves.fastOutSlowIn,
-            ),
-          ),
-          child: child,
-        );
       },
     );
   }

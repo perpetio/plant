@@ -18,7 +18,6 @@ class HomePlantItem extends StatelessWidget {
     final bloc = BlocProvider.of<HomeBloc>(context);
     return GestureDetector(
       onTap: () {
-        // Navigator.of(context).push(_createRoute());
         bloc.add(OpenPlantDetailEvent(plant: plantsModels));
       },
       child: Padding(
@@ -39,19 +38,20 @@ class HomePlantItem extends StatelessWidget {
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.all(
-              Radius.circular(20),
-            ),
+            borderRadius: BorderRadius.all(Radius.circular(20)),
             child: BlocProvider(
               create: (context) => ScanBloc(),
               child: Stack(
                 children: [
                   Container(
-                    child: Image.network(
-                      plantsModels.plantsImages[0].url,
-                      fit: BoxFit.cover,
-                      width: 1000,
-                      height: 1000,
+                    child: Hero(
+                      tag: 'plant${plantsModels.plantsImages[0].url}',
+                      child: Image.network(
+                        plantsModels.plantsImages[0].url,
+                        fit: BoxFit.cover,
+                        width: 1000,
+                        height: 1000,
+                      ),
                     ),
                   ),
                   Positioned(
