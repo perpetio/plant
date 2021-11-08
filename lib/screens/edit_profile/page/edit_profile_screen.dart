@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_loading.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:plant/screens/edit_profile/widget/edit_profile_content.dart';
@@ -33,7 +34,7 @@ class EditProfileScreen extends StatelessWidget {
 
   BlocProvider<EditProfileBloc> _buildBody(BuildContext context) {
     return BlocProvider<EditProfileBloc>(
-      create: (BuildContext context) => EditProfileBloc(),
+      create: (_) => serviceLocator<EditProfileBloc>(),
       child: BlocConsumer<EditProfileBloc, EditProfileState>(
         buildWhen: (_, currState) =>
             currState is EditProfileInitial || currState is EditProfileProgress,

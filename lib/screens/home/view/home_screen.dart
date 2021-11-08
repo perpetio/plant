@@ -2,6 +2,7 @@ import 'package:appbar_textfield/appbar_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_loading.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_content.dart';
 import 'package:plant/utils/debouncer.dart';
@@ -21,10 +22,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return HomeBloc();
-      },
+    return BlocProvider<HomeBloc>(
+      create: (_) => serviceLocator<HomeBloc>(),
       child: BlocConsumer<HomeBloc, HomeState>(
         listenWhen: (_, currState) =>
             currState is OpenPlantDetailState || currState is AvatarTappedState,

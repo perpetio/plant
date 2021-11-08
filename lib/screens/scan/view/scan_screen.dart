@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
 import 'package:plant/screens/scan/widget/scan_content.dart';
 
@@ -20,7 +21,7 @@ class ScanScreen extends StatelessWidget {
 
   BlocProvider<ScanBloc> _buildContext(BuildContext context) {
     return BlocProvider<ScanBloc>(
-      create: (BuildContext context) => ScanBloc(),
+      create: (_) => serviceLocator<ScanBloc>(),
       child: BlocConsumer<ScanBloc, ScanState>(
         buildWhen: (_, currState) =>
             currState is ScanInitial || currState is DataPlantGotState,

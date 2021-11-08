@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_loading.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/screens/change_password/bloc/change_password_bloc.dart';
 import 'package:plant/screens/change_password/content/change_password_content.dart';
 
@@ -26,7 +27,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
   BlocProvider<ChangePasswordBloc> _buildBody(BuildContext context) {
     return BlocProvider<ChangePasswordBloc>(
-      create: (BuildContext context) => ChangePasswordBloc(),
+      create: (_) => serviceLocator<ChangePasswordBloc>(),
       child: BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
         buildWhen: (_, currState) =>
             currState is ChangePasswordInitial ||

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/common_widget/plants_button.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/login/bloc/login_bloc.dart';
 import 'package:plant/screens/login/view/sign_up_screen.dart';
@@ -27,7 +28,7 @@ class SignInScreen extends StatelessWidget {
 
   BlocProvider<LoginBloc> _buildBody(BuildContext context) {
     return BlocProvider<LoginBloc>(
-      create: (BuildContext context) => LoginBloc(),
+      create: (_) => serviceLocator<LoginBloc>(),
       child: BlocConsumer<LoginBloc, LoginState>(
         buildWhen: (_, currState) => currState is LoginInitial,
         builder: (context, state) {

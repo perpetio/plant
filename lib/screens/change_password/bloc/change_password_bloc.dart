@@ -11,8 +11,6 @@ class ChangePasswordBloc
     extends Bloc<ChangePasswordEvent, ChangePasswordState> {
   ChangePasswordBloc() : super(ChangePasswordInitial());
 
-  final FirebaseAuth firebase = FirebaseAuth.instance;
-
   @override
   Stream<ChangePasswordState> mapEventToState(
     ChangePasswordEvent event,
