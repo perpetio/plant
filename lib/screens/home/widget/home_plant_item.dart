@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
 
 class HomePlantItem extends StatelessWidget {
   final PlantsModels plantsModels;
+  final HomeBloc bloc = serviceLocator.get<HomeBloc>();
 
-  const HomePlantItem({
-    Key key,
+  HomePlantItem({
     @required this.plantsModels,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    // ignore: close_sinks
-    final bloc = BlocProvider.of<HomeBloc>(context);
+    final String imageUrl = plantsModels.plantsImages[0].url;
     return GestureDetector(
       onTap: () {
         bloc.add(OpenPlantDetailEvent(plant: plantsModels));
@@ -45,7 +45,7 @@ class HomePlantItem extends StatelessWidget {
                 children: [
                   Container(
                     child: Hero(
-                      tag: 'plant${plantsModels.plantsImages[0].url}',
+                      tag: 'image$imageUrl',
                       child: Image.network(
                         plantsModels.plantsImages[0].url,
                         fit: BoxFit.cover,
@@ -56,7 +56,7 @@ class HomePlantItem extends StatelessWidget {
                   ),
                   Positioned(
                     bottom: 0,
-                    child: buildMainInfo(context),
+                    child: buildMainInfo(context, imageUrl),
                   ),
                 ],
               ),
@@ -67,7 +67,7 @@ class HomePlantItem extends StatelessWidget {
     );
   }
 
-  Widget buildMainInfo(BuildContext context) {
+  Widget buildMainInfo(BuildContext context, String imageUrl) {
     final size = MediaQuery.of(context).size;
     return Container(
       width: size.width,
@@ -79,14 +79,19 @@ class HomePlantItem extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Flexible(
-              child: Container(
-                width: size.width * 0.6,
-                child: Text(
-                  plantsModels.plantModels[0].plantName,
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold),
+              child: Hero(
+                tag: 'text$imageUrl',
+                child: Container(
+                  width: size.width * 0.6,
+                  child: Material(
+                    child: Text(
+                      plantsModels.plantModels[0].plantName,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
                 ),
               ),
             ),

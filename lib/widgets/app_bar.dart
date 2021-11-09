@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:plant/screens/profile/view/profile_screen.dart';
+import 'package:plant/screens/profile/page/profile_screen.dart';
 import 'package:plant/utils/router.dart';
 import 'package:plant/widgets/avatar.dart';
 

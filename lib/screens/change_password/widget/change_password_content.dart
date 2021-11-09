@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_button.dart';
 import 'package:plant/common_widget/plants_text_field.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/screens/change_password/bloc/change_password_bloc.dart';
 import 'package:plant/service/validation_service.dart';
 
@@ -11,14 +12,15 @@ class ChangePasswordContent extends StatefulWidget {
 }
 
 class _ChangePasswordContentState extends State<ChangePasswordContent> {
-  TextEditingController oldPasswordController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController oldPasswordController = TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final ChangePasswordBloc bloc = serviceLocator.get<ChangePasswordBloc>();
 
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<ChangePasswordBloc>(context);
     return Container(
       height: double.infinity,
       width: double.infinity,
@@ -71,7 +73,7 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    _createSaveButton(bloc),
+                    _createSaveButton(),
                   ],
                 ),
               ),
@@ -82,7 +84,7 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
     );
   }
 
-  Widget _createSaveButton(ChangePasswordBloc bloc) {
+  Widget _createSaveButton() {
     return PlantButton(
       title: 'Save',
       onTap: () {
@@ -96,5 +98,11 @@ class _ChangePasswordContentState extends State<ChangePasswordContent> {
           );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
   }
 }

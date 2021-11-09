@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/common_widget/plants_button.dart';
-import 'package:plant/screens/home/view/home_screen.dart';
+import 'package:plant/injection_container.dart';
+import 'package:plant/screens/home/page/home_screen.dart';
 import 'package:plant/screens/login/bloc/login_bloc.dart';
-import 'package:plant/screens/login/view/sign_up_screen.dart';
+import 'package:plant/screens/login/page/sign_in_screen.dart';
 import 'package:plant/screens/login/widget/login_text_field.dart';
 import 'package:plant/service/auth_service.dart';
 import 'package:plant/service/validation_service.dart';
 import 'package:plant/utils/router.dart';
 
-// ignore: must_be_immutable
-class SignInScreen extends StatelessWidget {
+class SignUpScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -26,46 +27,46 @@ class SignInScreen extends StatelessWidget {
   }
 
   BlocProvider<LoginBloc> _buildBody(BuildContext context) {
+    final LoginBloc bloc = serviceLocator.get<LoginBloc>();
     return BlocProvider<LoginBloc>(
-      create: (BuildContext context) => LoginBloc(),
+      create: (_) => bloc,
       child: BlocConsumer<LoginBloc, LoginState>(
         buildWhen: (_, currState) => currState is LoginInitial,
         builder: (context, state) {
-          final bloc = BlocProvider.of<LoginBloc>(context);
+          // final bloc = BlocProvider.of<LoginBloc>(context);
 
           return Stack(
             children: [
-              _createSignInBackground(context),
-              _createUserDataPanel(context, bloc),
+              _createSignUpBackground(context),
+              _createAddingUserDataPanel(context, bloc),
             ],
           );
         },
         listenWhen: (_, currState) =>
-            currState is SignInTappedState ||
-            currState is SignInDoNotHaveAccountState ||
-            currState is SignInForgotPasswordState,
+            currState is SignUpTappedState ||
+            currState is SignUpAlreadyHaveAccountState,
         listener: (context, state) {
-          if (state is SignInTappedState) {
+          if (state is SignUpTappedState) {
             Navigator.of(context).pushAndRemoveUntil(
               PageTransition(
                   type: PageTransitionType.fade, child: HomeScreen()),
               ModalRoute.withName(Routers.home),
             );
-          } else if (state is SignInDoNotHaveAccountState) {
+          } else if (state is SignUpAlreadyHaveAccountState) {
             Navigator.of(context).pushAndRemoveUntil(
               PageTransition(
-                  type: PageTransitionType.fade, child: SignUpScreen()),
-              ModalRoute.withName(Routers.sign_up),
+                type: PageTransitionType.fade,
+                child: SignInScreen(),
+              ),
+              ModalRoute.withName(Routers.sign_in),
             );
-          } else if (state is SignInForgotPasswordState) {
-            Navigator.pushNamed(context, Routers.forgot_password);
           }
         },
       ),
     );
   }
 
-  Widget _createSignInBackground(BuildContext context) {
+  Widget _createSignUpBackground(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -79,16 +80,16 @@ class SignInScreen extends StatelessWidget {
             Text(
               'Welcome',
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 16.0,
                 color: Colors.white70,
               ),
             ),
             SizedBox(height: 5),
             Text(
-              'Sign In',
+              'Sign Up',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 25,
+                fontSize: 25.0,
                 color: Colors.white,
               ),
             ),
@@ -98,7 +99,7 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-  Widget _createUserDataPanel(BuildContext context, LoginBloc bloc) {
+  Widget _createAddingUserDataPanel(BuildContext context, LoginBloc bloc) {
     return Positioned(
       top: MediaQuery.of(context).size.height / 5,
       child: Container(
@@ -126,6 +127,19 @@ class SignInScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               LoginTextField(
+                controller: nameController,
+                title: 'Your Name',
+                placeHolder: 'Name',
+                obscureText: false,
+                validator: (name) {
+                  if (ValidationService.username(name))
+                    return null;
+                  else
+                    return 'Enter your name';
+                },
+              ),
+              SizedBox(height: 25),
+              LoginTextField(
                 controller: emailController,
                 title: 'Email',
                 placeHolder: 'example@gmail.com',
@@ -143,19 +157,17 @@ class SignInScreen extends StatelessWidget {
                 title: 'Password',
                 placeHolder: 'password',
                 obscureText: true,
-                validator: (password) {
-                  if (ValidationService.password(password))
+                validator: (email) {
+                  if (ValidationService.email(email))
                     return null;
                   else
-                    return 'Password should contain at least 6 characters';
+                    return 'Email should contain at least 6 characters';
                 },
               ),
               SizedBox(height: 40),
               _createSignInButton(context, bloc),
-              SizedBox(height: 10),
-              _createForgotPassword(bloc),
-              SizedBox(height: 10),
-              _createDoNotHaveAccount(bloc),
+              SizedBox(height: 20),
+              _createAlreadyHaveAccount(bloc),
             ],
           ),
         ),
@@ -165,14 +177,18 @@ class SignInScreen extends StatelessWidget {
 
   Widget _createSignInButton(BuildContext context, LoginBloc bloc) {
     return PlantButton(
-      title: 'Sign In',
+      title: 'Sign Up',
       onTap: () async {
         FocusScope.of(context).unfocus();
         try {
-          final user = await AuthService.signIn(
+          final newUser = await AuthService.signUp(
               emailController.text, passwordController.text);
-          if (user != null) {
-            bloc.add(SignInTappedEvent());
+          if (newUser != null) {
+            bloc.add(SignUpTappedEvent(
+              user: newUser,
+              name: nameController.text,
+              email: emailController.text,
+            ));
           }
         } catch (e) {
           _scaffoldKey.currentState.showSnackBar(
@@ -186,36 +202,17 @@ class SignInScreen extends StatelessWidget {
     );
   }
 
-  Widget _createForgotPassword(LoginBloc bloc) {
-    return TextButton(
-        onPressed: () {
-          bloc.add(SignInForgotPasswordEvent());
-        },
-        child: Text(
-          'Forgot password?',
-          style: TextStyle(
-            color: Colors.orange,
-            fontSize: 15,
-            fontWeight: FontWeight.bold,
-          ),
-        ));
-  }
-
-  Widget _createDoNotHaveAccount(LoginBloc bloc) {
+  Widget _createAlreadyHaveAccount(LoginBloc bloc) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          'Don\'t have an account? ',
-          style: TextStyle(fontSize: 15),
-        ),
+        Text('Already have an account? '),
         InkWell(
-          onTap: () => bloc.add(SignInDoNotHaveAccountEvent()),
+          onTap: () => bloc.add(SignUpAlreadyHaveAccountEvent()),
           child: Text(
-            'Sign Up',
+            'Sign In',
             style: TextStyle(
               color: Colors.orange,
-              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),

@@ -3,12 +3,12 @@ import 'package:plant/models/plant_model.dart';
 import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/change_password/page/change_password_screen.dart';
 import 'package:plant/screens/edit_profile/page/edit_profile_screen.dart';
-import 'package:plant/screens/home/view/home_screen.dart';
 import 'package:plant/screens/forgot_password/forgot_password_screen.dart';
-import 'package:plant/screens/login/view/sign_in_screen.dart';
-import 'package:plant/screens/login/view/sign_up_screen.dart';
-import 'package:plant/screens/plant/view/plant_screen.dart';
-import 'package:plant/screens/profile/view/profile_screen.dart';
+import 'package:plant/screens/home/page/home_screen.dart';
+import 'package:plant/screens/login/page/sign_in_screen.dart';
+import 'package:plant/screens/login/page/sign_up_screen.dart';
+import 'package:plant/screens/plant/page/plant_screen.dart';
+import 'package:plant/screens/profile/page/profile_screen.dart';
 
 /// Generator callback allowing the app to be navigated to a named route.
 
