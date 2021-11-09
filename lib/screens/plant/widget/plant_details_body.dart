@@ -30,7 +30,7 @@ class PlantDetailsBody extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: Hero(
-        tag: 'plant$image',
+        tag: 'image$image',
         child: Image(
           image: NetworkImage(image),
           fit: BoxFit.cover,
@@ -77,18 +77,21 @@ class PlantDetailsBody extends StatelessWidget {
     return Positioned(
       top: 50,
       right: 10,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          _createPlantDescription(
-              'Family: ', plantModel.plantDetails.taxonomy.family),
-          const SizedBox(height: 5),
-          _createPlantDescription(
-              'Genus: ', plantModel.plantDetails.taxonomy.genus),
-          const SizedBox(height: 5),
-          _createPlantDescription(
-              'Class: ', plantModel.plantDetails.taxonomy.tClass),
-        ],
+      child: Hero(
+        tag: 'content$image',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            _createPlantDescription(
+                'Family: ', plantModel.plantDetails.taxonomy.family),
+            const SizedBox(height: 5),
+            _createPlantDescription(
+                'Genus: ', plantModel.plantDetails.taxonomy.genus),
+            const SizedBox(height: 5),
+            _createPlantDescription(
+                'Class: ', plantModel.plantDetails.taxonomy.tClass),
+          ],
+        ),
       ),
     );
   }

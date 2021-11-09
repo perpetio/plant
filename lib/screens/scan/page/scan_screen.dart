@@ -7,6 +7,7 @@ import 'package:plant/screens/scan/widget/scan_content.dart';
 
 class ScanScreen extends StatelessWidget {
   final CameraDescription camera;
+  final ScanBloc bloc = serviceLocator.get<ScanBloc>();
 
   ScanScreen({
     @required this.camera,
@@ -21,13 +22,13 @@ class ScanScreen extends StatelessWidget {
 
   BlocProvider<ScanBloc> _buildContext(BuildContext context) {
     return BlocProvider<ScanBloc>(
-      create: (_) => serviceLocator<ScanBloc>(),
+      create: (_) => bloc,
       child: BlocConsumer<ScanBloc, ScanState>(
         buildWhen: (_, currState) =>
             currState is ScanInitial || currState is DataPlantGotState,
         builder: (context, state) {
           // ignore: close_sinks
-          final bloc = BlocProvider.of<ScanBloc>(context);
+          // final bloc = BlocProvider.of<ScanBloc>(context);
           if (state is ScanInitial) {
             bloc.add(ScanInitialEvent());
           } else if (state is DataPlantGotState) {

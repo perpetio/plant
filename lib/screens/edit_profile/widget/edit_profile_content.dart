@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_button.dart';
 import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/common_widget/plants_text_field.dart';
+import 'package:plant/injection_container.dart';
 import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
 import 'package:plant/service/auth_service.dart';
@@ -24,10 +25,11 @@ class EditProfileContent extends StatefulWidget {
 }
 
 class _EditProfileContentState extends State<EditProfileContent> {
-  TextEditingController userNameController = TextEditingController();
-  TextEditingController userEmailController = TextEditingController();
-  TextEditingController userPasswordController = TextEditingController();
+  final TextEditingController userNameController = TextEditingController();
+  final TextEditingController userEmailController = TextEditingController();
+  final TextEditingController userPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final EditProfileBloc bloc = serviceLocator.get<EditProfileBloc>();
 
   @override
   void initState() {
@@ -39,7 +41,6 @@ class _EditProfileContentState extends State<EditProfileContent> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = BlocProvider.of<EditProfileBloc>(context);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,23 +53,23 @@ class _EditProfileContentState extends State<EditProfileContent> {
             builder: (context, state) {
               if (state is EditProfileReloadImageState)
                 widget.user.imageUrl = state.userImage;
-              return _getImage(bloc);
+              return _getImage();
             },
           )),
           const SizedBox(height: 15),
-          Center(child: _changeImage(bloc)),
+          Center(child: _changeImage()),
           const SizedBox(height: 15),
-          _getUserData(bloc),
+          _getUserData(),
           const SizedBox(height: 20),
           _createChangePassword(),
           const SizedBox(height: 15),
-          _createSaveButton(bloc, context),
+          _createSaveButton(context),
         ],
       ),
     );
   }
 
-  Widget _getImage(EditProfileBloc bloc) {
+  Widget _getImage() {
     if (widget.user != null) {
       if (widget.user.imageUrl.startsWith('https://')) {
         return CircleAvatar(
@@ -82,10 +83,10 @@ class _EditProfileContentState extends State<EditProfileContent> {
     return PlantsLoading();
   }
 
-  Widget _changeImage(EditProfileBloc bloc) {
+  Widget _changeImage() {
     return TextButton(
       onPressed: () {
-        _showPickImageAlert(context, bloc);
+        _showPickImageAlert(context);
       },
       child: Text(
         'Edit photo',
@@ -98,7 +99,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  Widget _getUserData(EditProfileBloc bloc) {
+  Widget _getUserData() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: BlocBuilder<EditProfileBloc, EditProfileState>(
@@ -140,7 +141,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  Widget _createSaveButton(EditProfileBloc bloc, BuildContext context) {
+  Widget _createSaveButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
       child: PlantButton(
@@ -149,7 +150,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
           if (_formKey.currentState.validate()) {
             if (userEmailController.text !=
                 AuthService.auth.currentUser.email) {
-              _createShowYourPasswordAlert(context, bloc);
+              _createShowYourPasswordAlert(context);
             }
           }
         },
@@ -157,7 +158,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  void _showPickImageAlert(BuildContext context, EditProfileBloc bloc) {
+  void _showPickImageAlert(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) => CupertinoAlertDialog(
@@ -178,7 +179,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
                     fontSize: 15,
                     color: Colors.orange,
                     fontWeight: FontWeight.w600)),
-            onPressed: () => _getCameraImage(bloc, context),
+            onPressed: () => _getCameraImage(context),
           ),
           CupertinoButton(
               child: Text('Gallery',
@@ -186,18 +187,18 @@ class _EditProfileContentState extends State<EditProfileContent> {
                       fontSize: 15,
                       color: Colors.orange,
                       fontWeight: FontWeight.w600)),
-              onPressed: () => _getGalleryImage(bloc, context)),
+              onPressed: () => _getGalleryImage(context)),
         ],
       ),
     );
   }
 
-  void _getCameraImage(EditProfileBloc bloc, BuildContext context) {
+  void _getCameraImage(BuildContext context) {
     bloc.add(EditProfileTakeImageEvent());
     Navigator.of(context).pop();
   }
 
-  void _getGalleryImage(EditProfileBloc bloc, BuildContext context) {
+  void _getGalleryImage(BuildContext context) {
     bloc.add(EditProfileChangeImageEvent());
     Navigator.of(context).pop();
   }
@@ -229,8 +230,7 @@ class _EditProfileContentState extends State<EditProfileContent> {
     );
   }
 
-  void _createShowYourPasswordAlert(
-      BuildContext context, EditProfileBloc bloc) {
+  void _createShowYourPasswordAlert(BuildContext context) {
     ModalService.showPasswordAlertDialog(
       context,
       title: "Enter your password",
@@ -243,5 +243,11 @@ class _EditProfileContentState extends State<EditProfileContent> {
         ));
       },
     );
+  }
+
+  @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
   }
 }

@@ -4,11 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:plant/utils/authentication.dart';
 import 'package:plant/utils/router.dart';
 
-import 'injection_container.dart' as inj_cont;
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  inj_cont.init();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   runApp(MyApp());

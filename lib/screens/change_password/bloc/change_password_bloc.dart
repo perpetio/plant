@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:plant/service/user_service.dart';
@@ -17,7 +16,7 @@ class ChangePasswordBloc
   ) async* {
     if (event is ChangePasswordSaveTappedEvent) {
       try {
-        yield ChangePasswordProgress();
+        // yield ChangePasswordProgress();
         await UserService.changeUserPassword(
             newPassword: event.newPasswordController.text,
             oldPassword: event.oldPasswordController.text);

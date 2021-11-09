@@ -5,6 +5,7 @@ import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/injection_container.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_content.dart';
+import 'package:plant/screens/plant/page/plant_screen.dart';
 import 'package:plant/utils/debouncer.dart';
 import 'package:plant/utils/router.dart';
 import 'package:plant/widgets/avatar.dart';
@@ -18,18 +19,46 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Debouncer _debouncer = Debouncer(milliseconds: 1000);
   final TextEditingController searchController = TextEditingController();
-  FocusNode focusNode = FocusNode();
+  final FocusNode focusNode = FocusNode();
+  final HomeBloc bloc = serviceLocator.get<HomeBloc>();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<HomeBloc>(
-      create: (_) => serviceLocator<HomeBloc>(),
+      create: (_) => bloc,
       child: BlocConsumer<HomeBloc, HomeState>(
         listenWhen: (_, currState) =>
             currState is OpenPlantDetailState || currState is AvatarTappedState,
         listener: (context, state) {
           if (state is OpenPlantDetailState) {
-            Navigator.pushNamed(context, Routers.plant, arguments: state.plant);
+            // Navigator.pushNamed(context, Routers.plant, arguments: state.plant);
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                fullscreenDialog: true,
+                transitionDuration: Duration(microseconds: 100),
+                pageBuilder: (BuildContext context, Animation<double> animation,
+                    Animation<double> secAnimation) {
+                  return PlantScreen(plantsModels: state.plant);
+                },
+                transitionsBuilder: (BuildContext context,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                    Widget child) {
+                  return ScaleTransition(
+                    scale: Tween<double>(
+                      begin: 0.0,
+                      end: 1.0,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.slowMiddle,
+                      ),
+                    ),
+                    child: child,
+                  );
+                },
+              ),
+            );
           } else if (state is AvatarTappedState) {
             Navigator.pushNamed(context, Routers.profile);
           }
@@ -37,7 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
         buildWhen: (_, currState) =>
             currState is HomeInitial || currState is HomeLoadingState,
         builder: (context, state) {
-          final bloc = BlocProvider.of<HomeBloc>(context);
           if (state is HomeInitial) {
             bloc.add(HomeInitialEvent());
           }
@@ -46,7 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ScreenTemplate(
                 index: 0,
                 title: 'Home',
-                appBar: _createAppBar(bloc),
+                appBar: _createAppBar(),
                 isAppBar: true,
                 body: HomeContent(),
               ),
@@ -58,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _createAppBar(HomeBloc bloc) {
+  Widget _createAppBar() {
     return AppBarTextField(
       autofocus: false,
       focusNode: focusNode,

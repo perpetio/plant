@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/models/plant_model.dart';
-import 'package:plant/screens/home/view/home_screen.dart';
+import 'package:plant/screens/home/page/home_screen.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
 import 'package:plant/utils/router.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';

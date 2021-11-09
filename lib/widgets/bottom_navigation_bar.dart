@@ -2,9 +2,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:plant/screens/home/view/home_screen.dart';
-import 'package:plant/screens/profile/view/profile_screen.dart';
-import 'package:plant/screens/scan/view/scan_screen.dart';
+import 'package:plant/screens/home/page/home_screen.dart';
+import 'package:plant/screens/profile/page/profile_screen.dart';
+import 'package:plant/screens/scan/page/scan_screen.dart';
 import 'package:plant/utils/router.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {

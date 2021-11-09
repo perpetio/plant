@@ -13,7 +13,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   int currentPromo = 0;
 
-  // PlantsModels plantsModels;
   List<PlantsModels> listPlantsModels = <PlantsModels>[];
 
   @override
