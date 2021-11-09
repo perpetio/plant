@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/injection_container.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
 
 class HomePlantItem extends StatelessWidget {
   final PlantsModels plantsModels;
-  final HomeBloc bloc = serviceLocator.get<HomeBloc>();
 
   HomePlantItem({
     @required this.plantsModels,
@@ -15,6 +13,8 @@ class HomePlantItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // ignore: close_sinks
+    final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
     final String imageUrl = plantsModels.plantsImages[0].url;
     return GestureDetector(
       onTap: () {

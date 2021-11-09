@@ -32,6 +32,7 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   BlocProvider<EditProfileBloc> _buildBody(BuildContext context) {
+    // ignore: close_sinks
     final EditProfileBloc bloc = BlocProvider.of<EditProfileBloc>(context);
     return BlocProvider<EditProfileBloc>(
       create: (_) => EditProfileBloc(),
