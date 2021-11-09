@@ -32,14 +32,15 @@ class EditProfileScreen extends StatelessWidget {
   }
 
   BlocProvider<EditProfileBloc> _buildBody(BuildContext context) {
-    // ignore: close_sinks
-    final EditProfileBloc bloc = BlocProvider.of<EditProfileBloc>(context);
     return BlocProvider<EditProfileBloc>(
       create: (_) => EditProfileBloc(),
       child: BlocConsumer<EditProfileBloc, EditProfileState>(
         buildWhen: (_, currState) =>
             currState is EditProfileInitial || currState is EditProfileProgress,
         builder: (context, state) {
+          // ignore: close_sinks
+          final EditProfileBloc bloc =
+              BlocProvider.of<EditProfileBloc>(context);
           if (state is EditProfileInitial) {
             bloc.add(EditProfileInitialEvent());
           } else if (state is EditProfileProgress) {

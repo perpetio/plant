@@ -6,6 +6,7 @@ class ModalService {
   static void showAlertDialog(
     BuildContext context, {
     @required String description,
+    Function() onTap,
   }) {
     showDialog(
       context: context,
@@ -13,12 +14,13 @@ class ModalService {
         return CupertinoAlertDialog(
           content: Text(
             description,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
           ),
           actions: [
             CupertinoButton(
               child: Text('OK'),
               onPressed: () {
+                onTap();
                 Navigator.of(dialogContext).pop();
               },
             ),

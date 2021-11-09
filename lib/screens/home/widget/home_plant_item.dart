@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
+import 'package:plant/service/modal_service.dart';
 
 class HomePlantItem extends StatelessWidget {
   final PlantsModels plantsModels;
@@ -43,20 +44,15 @@ class HomePlantItem extends StatelessWidget {
               create: (context) => ScanBloc(),
               child: Stack(
                 children: [
-                  Container(
-                    child: Hero(
-                      tag: 'image$imageUrl',
-                      child: Image.network(
-                        plantsModels.plantsImages[0].url,
-                        fit: BoxFit.cover,
-                        width: 1000,
-                        height: 1000,
-                      ),
-                    ),
+                  _createBackgroundImage(imageUrl),
+                  Positioned(
+                    top: 10,
+                    right: 10,
+                    child: _createDeleteItem(context, bloc),
                   ),
                   Positioned(
                     bottom: 0,
-                    child: buildMainInfo(context, imageUrl),
+                    child: _createMainInfo(context, imageUrl),
                   ),
                 ],
               ),
@@ -67,7 +63,42 @@ class HomePlantItem extends StatelessWidget {
     );
   }
 
-  Widget buildMainInfo(BuildContext context, String imageUrl) {
+  Widget _createBackgroundImage(String image) {
+    return Container(
+      child: Hero(
+        tag: 'image$image',
+        child: Image.network(
+          plantsModels.plantsImages[0].url,
+          fit: BoxFit.cover,
+          width: 1000,
+          height: 1000,
+        ),
+      ),
+    );
+  }
+
+  Widget _createDeleteItem(BuildContext context, HomeBloc bloc) {
+    return InkWell(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(25),
+          color: Colors.white,
+        ),
+        child: Icon(
+          Icons.delete_outline,
+          size: 35,
+          color: Colors.red,
+        ),
+      ),
+      onTap: () => ModalService.showAlertDialog(
+        context,
+        description: 'Delete the plant?',
+        onTap: () => bloc.add(DeletePlantItemEvent(plant: plantsModels)),
+      ),
+    );
+  }
+
+  Widget _createMainInfo(BuildContext context, String imageUrl) {
     final size = MediaQuery.of(context).size;
     return Container(
       width: size.width,

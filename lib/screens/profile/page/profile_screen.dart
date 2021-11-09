@@ -11,7 +11,6 @@ import 'package:plant/widgets/bottom_navigation_bar.dart';
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ProfileBloc bloc = BlocProvider.of<ProfileBloc>(context);
     return BlocProvider<ProfileBloc>(
       create: (_) => ProfileBloc(),
       child: BlocConsumer<ProfileBloc, ProfileState>(
@@ -20,6 +19,7 @@ class ProfileScreen extends StatelessWidget {
         buildWhen: (_, currState) =>
             currState is ProfileInitial || currState is ProfileLoadingState,
         builder: (context, state) {
+          final ProfileBloc bloc = BlocProvider.of<ProfileBloc>(context);
           if (state is ProfileInitial) {
             bloc.add(ProfileInitialEvent());
           } else if (state is ProfileLoadingState) {

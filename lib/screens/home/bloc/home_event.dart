@@ -40,3 +40,11 @@ class OpenPlantDetailEvent extends HomeEvent {
 }
 
 class AvatarTappedEvent extends HomeEvent {}
+
+class DeletePlantItemEvent extends HomeEvent {
+  final PlantsModels plant;
+
+  DeletePlantItemEvent({
+    @required this.plant,
+  });
+}

@@ -30,13 +30,13 @@ class ForgotPasswordScreen extends StatelessWidget {
   }
 
   BlocProvider<ForgotPasswordBloc> _buildBody(BuildContext context) {
-    final ForgotPasswordBloc bloc =
-        BlocProvider.of<ForgotPasswordBloc>(context);
     return BlocProvider<ForgotPasswordBloc>(
       create: (_) => ForgotPasswordBloc(),
       child: BlocConsumer<ForgotPasswordBloc, ForgotPasswordState>(
         buildWhen: (_, currState) => currState is ForgotPasswordInitial,
         builder: (context, state) {
+          final ForgotPasswordBloc bloc =
+              BlocProvider.of<ForgotPasswordBloc>(context);
           return _buildContent(context, bloc);
         },
         listenWhen: (_, currState) =>

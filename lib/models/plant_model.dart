@@ -4,10 +4,12 @@ import 'package:plant/models/plant_image.dart';
 class PlantsModels {
   final List<PlantImage> plantsImages;
   final List<PlantModel> plantModels;
+  final String plantId;
 
   PlantsModels({
     @required this.plantsImages,
     @required this.plantModels,
+    @required this.plantId,
   });
 
   factory PlantsModels.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,7 @@ class PlantsModels {
     return PlantsModels(
       plantsImages: images.map((e) => PlantImage.fromJson(e)).toList(),
       plantModels: plants.map((e) => PlantModel.fromJson(e)).toList(),
+      plantId: json["plantId"],
     );
   }
 
@@ -29,6 +32,7 @@ class PlantsModels {
   Map<String, dynamic> toJson() => {
         "images": plantsImages.map((e) => e.toJson()).toList(),
         "suggestions": plantModels.map((e) => e.toJson()).toList(),
+        "plantId": plantId,
       };
 }
 

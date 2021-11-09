@@ -38,6 +38,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       yield OpenPlantDetailState(plant: event.plant);
     } else if (event is AvatarTappedEvent) {
       yield AvatarTappedState();
+    } else if (event is DeletePlantItemEvent) {
+      _deletePlantItem(event.plant);
     }
   }
 
@@ -53,8 +55,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         .map((e) => PlantsModels.fromJson({
               "images": e["images"] == null ? [] : e["images"],
               "suggestions": e["suggestions"] == null ? [] : e["suggestions"],
+              "plantId": e.id,
             }))
         .toList();
+
     if (lstPlantsModels.isNotEmpty) {
       listPlantsModels = lstPlantsModels;
     } else {
@@ -74,5 +78,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         .toList();
 
     return foundPlants;
+  }
+
+  Future<void> _deletePlantItem(PlantsModels plant) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .collection('plants')
+        .doc(plant.plantId)
+        .delete();
   }
 }

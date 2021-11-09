@@ -25,12 +25,12 @@ class SignInScreen extends StatelessWidget {
   }
 
   BlocProvider<LoginBloc> _buildBody(BuildContext context) {
-    final LoginBloc bloc = BlocProvider.of<LoginBloc>(context);
     return BlocProvider<LoginBloc>(
       create: (_) => LoginBloc(),
       child: BlocConsumer<LoginBloc, LoginState>(
         buildWhen: (_, currState) => currState is LoginInitial,
         builder: (context, state) {
+          final LoginBloc bloc = BlocProvider.of<LoginBloc>(context);
           return Stack(
             children: [
               _createSignInBackground(context),

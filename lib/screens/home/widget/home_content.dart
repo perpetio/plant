@@ -34,11 +34,11 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   Widget build(BuildContext context) {
-    final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (_, currState) =>
           currState is SearchPlantsState || currState is SearchBackTappedState,
       builder: (context, state) {
+        final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
         if (state is SearchPlantsState) {
           if (state.plantsModels.isEmpty) {
             return Container(
