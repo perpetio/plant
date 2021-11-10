@@ -6,9 +6,9 @@ import 'package:plant/screens/home/page/home_screen.dart';
 import 'package:plant/screens/login/bloc/login_bloc.dart';
 import 'package:plant/screens/login/page/sign_in_screen.dart';
 import 'package:plant/screens/login/widget/login_text_field.dart';
-import 'package:plant/service/auth_service.dart';
-import 'package:plant/service/validation_service.dart';
-import 'package:plant/utils/router.dart';
+import 'package:plant/core/service/auth_service.dart';
+import 'package:plant/core/service/validation_service.dart';
+import 'package:plant/core/utils/router.dart';
 
 class SignUpScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();

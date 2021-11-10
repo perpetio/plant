@@ -6,12 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_button.dart';
 import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/common_widget/plants_text_field.dart';
+import 'package:plant/core/service/auth_service.dart';
+import 'package:plant/core/service/modal_service.dart';
+import 'package:plant/core/service/validation_service.dart';
+import 'package:plant/core/utils/router.dart';
 import 'package:plant/models/user_data.dart';
 import 'package:plant/screens/edit_profile/bloc/edit_profile_bloc.dart';
-import 'package:plant/service/auth_service.dart';
-import 'package:plant/service/modal_service.dart';
-import 'package:plant/service/validation_service.dart';
-import 'package:plant/utils/router.dart';
 
 class EditProfileContent extends StatefulWidget {
   final UserData user;

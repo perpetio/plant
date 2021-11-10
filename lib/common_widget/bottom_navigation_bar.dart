@@ -5,7 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/home/page/home_screen.dart';
 import 'package:plant/screens/profile/page/profile_screen.dart';
 import 'package:plant/screens/scan/page/scan_screen.dart';
-import 'package:plant/utils/router.dart';
+import 'package:plant/core/utils/router.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int index;

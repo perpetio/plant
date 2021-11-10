@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
-import 'package:plant/service/modal_service.dart';
+import 'package:plant/core/service/modal_service.dart';
 
 class HomePlantItem extends StatelessWidget {
   final PlantsModels plantsModels;

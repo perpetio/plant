@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/screens/profile/page/profile_screen.dart';
-import 'package:plant/utils/router.dart';
-import 'package:plant/widgets/avatar.dart';
+import 'package:plant/core/utils/router.dart';
+import 'package:plant/common_widget/avatar.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;

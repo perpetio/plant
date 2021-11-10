@@ -5,8 +5,8 @@ import 'package:page_transition/page_transition.dart';
 import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/screens/login/page/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
-import 'package:plant/utils/router.dart';
-import 'package:plant/widgets/bottom_navigation_bar.dart';
+import 'package:plant/core/utils/router.dart';
+import 'package:plant/common_widget/bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override

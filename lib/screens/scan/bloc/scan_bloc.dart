@@ -5,13 +5,13 @@ import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
-import 'package:plant/api/plant_id_api.dart';
+import 'package:plant/api/external_api_client.dart';
+import 'package:plant/api/firestore_api_client.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -52,7 +52,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
       _takeImage();
     } else if (event is GetDataPlantEvent) {
       try {
-        plantsModels = await getPlants(event.image);
+        plantsModels = await ExternalApiClient.getPlants(event.image);
         print(plantsModels.toJson());
         if (plantsModels.plantModels.isNotEmpty) {
           plantModel = plantsModels.plantModels[0];
@@ -69,8 +69,6 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }
 
   void _pickImage() async {
-    //this function to pick the image from galery
-
     HapticFeedback.selectionClick();
     PickedFile pickedImage = await picker.getImage(source: ImageSource.gallery);
     if (pickedImage == null) return null;
@@ -96,8 +94,6 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }
 
   void _takeImage() async {
-    //this function to take the image from camera
-
     HapticFeedback.mediumImpact();
     addPlantController.reset();
     if (!isFromGallery) {
@@ -122,48 +118,16 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }
 
   void _addPlant() async {
-    //this function to add the plant to th Firestore
-
     HapticFeedback.selectionClick();
-    DocumentReference sightingRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .collection('plants')
-        .doc();
-
-    plantImage = await uploadFile(image);
-
-    final listPlantImage = plantsModels.plantsImages[0].toJson();
-    final listPlantModel = plantsModels.plantModels[0].toJson();
-
-    if (plantExistInList == false) {
-      sightingRef.set({
-        "createdAt": DateTime.now().microsecondsSinceEpoch,
-        "images": [listPlantImage],
-        "suggestions": [listPlantModel],
-      });
+    plantImage = await FirestoreApiClient.addPlant(
+        image, plantsModels, plantExistInList, onSuccess: () {
       addPlantController.success();
-    } else if (plantExistInList == true) {
+    }, onError: () {
       addPlantController.error();
-    }
-  }
-
-  Future<String> uploadFile(File image) async {
-    StorageReference storageReference =
-        FirebaseStorage.instance.ref().child(image.path.split('/').last);
-    StorageUploadTask uploadTask = storageReference.putFile(image);
-    await uploadTask.onComplete;
-    print('File Uploaded');
-    String returnURL;
-    await storageReference.getDownloadURL().then((fileURL) {
-      returnURL = fileURL;
     });
-    return returnURL;
   }
 
   void _getPlantsList() async {
-    // function to get plants list from Firestore
-
     QuerySnapshot snapshot = await FirebaseFirestore.instance
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser.uid)
@@ -182,8 +146,6 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
   }
 
   void _checkPlantsList() {
-    // function to check new plant existence in list
-
     for (var plant in plantsModelsList) {
       if (plant.plantModels.every((element) =>
           element.plantName == plantsModels.plantModels[0].plantName)) {

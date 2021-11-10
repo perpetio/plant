@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:plant/models/user_data.dart';
-import 'package:plant/service/auth_service.dart';
+import 'package:plant/core/service/auth_service.dart';
 
 part 'profile_event.dart';
 part 'profile_state.dart';

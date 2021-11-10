@@ -9,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:meta/meta.dart';
+import 'package:plant/core/service/auth_service.dart';
+import 'package:plant/core/service/user_service.dart';
 import 'package:plant/models/user_data.dart';
-import 'package:plant/service/auth_service.dart';
-import 'package:plant/service/user_service.dart';
 
 part 'edit_profile_event.dart';
 part 'edit_profile_state.dart';

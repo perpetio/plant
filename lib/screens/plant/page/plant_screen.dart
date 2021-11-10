@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/plant/widget/plant_details_body.dart';
 import 'package:plant/screens/plant/widget/plant_details_panel.dart';
-import 'package:plant/widgets/screen_template.dart';
+import 'package:plant/common_widget/screen_template.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class PlantScreen extends StatelessWidget {

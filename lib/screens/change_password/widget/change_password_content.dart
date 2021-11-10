@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_button.dart';
 import 'package:plant/common_widget/plants_text_field.dart';
+import 'package:plant/core/service/validation_service.dart';
 import 'package:plant/screens/change_password/bloc/change_password_bloc.dart';
-import 'package:plant/service/validation_service.dart';
 
 class ChangePasswordContent extends StatefulWidget {
   @override

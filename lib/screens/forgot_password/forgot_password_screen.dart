@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_button.dart';
+import 'package:plant/core/service/validation_service.dart';
 import 'package:plant/screens/forgot_password/bloc/forgot_password_bloc.dart';
 import 'package:plant/screens/login/widget/login_text_field.dart';
-import 'package:plant/service/validation_service.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();

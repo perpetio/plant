@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
+import 'package:plant/api/firestore_api_client.dart';
 import 'package:plant/models/plant_model.dart';
 
 part 'home_event.dart';
@@ -21,7 +20,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async* {
     if (event is HomeInitialEvent) {
       // yield HomeLoadingState();
-      await _getPlantsData();
+      listPlantsModels = await FirestoreApiClient.getPlantsData();
       yield HomeInitial();
     } else if (event is NextImageEvent) {
       currentPromo = event.index;
@@ -39,30 +38,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } else if (event is AvatarTappedEvent) {
       yield AvatarTappedState();
     } else if (event is DeletePlantItemEvent) {
-      _deletePlantItem(event.plant);
-    }
-  }
-
-  Future<void> _getPlantsData() async {
-    QuerySnapshot snapshot = await FirebaseFirestore.instance
-        .collection("users")
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .collection("plants")
-        .orderBy("createdAt")
-        .get();
-
-    final lstPlantsModels = snapshot.docs
-        .map((e) => PlantsModels.fromJson({
-              "images": e["images"] == null ? [] : e["images"],
-              "suggestions": e["suggestions"] == null ? [] : e["suggestions"],
-              "plantId": e.id,
-            }))
-        .toList();
-
-    if (lstPlantsModels.isNotEmpty) {
-      listPlantsModels = lstPlantsModels;
-    } else {
-      listPlantsModels = [];
+      await FirestoreApiClient.deletePlantItem(event.plant);
     }
   }
 
@@ -78,14 +54,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         .toList();
 
     return foundPlants;
-  }
-
-  Future<void> _deletePlantItem(PlantsModels plant) {
-    return FirebaseFirestore.instance
-        .collection('users')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .collection('plants')
-        .doc(plant.plantId)
-        .delete();
   }
 }

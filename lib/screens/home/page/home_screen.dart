@@ -5,10 +5,10 @@ import 'package:plant/common_widget/plants_loading.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_content.dart';
 import 'package:plant/screens/plant/page/plant_screen.dart';
-import 'package:plant/utils/debouncer.dart';
-import 'package:plant/utils/router.dart';
-import 'package:plant/widgets/avatar.dart';
-import 'package:plant/widgets/screen_template.dart';
+import 'package:plant/core/utils/debouncer.dart';
+import 'package:plant/core/utils/router.dart';
+import 'package:plant/common_widget/avatar.dart';
+import 'package:plant/common_widget/screen_template.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.of(context).push(
               PageRouteBuilder(
                 fullscreenDialog: true,
-                transitionDuration: Duration(microseconds: 100),
+                transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (BuildContext context, Animation<double> animation,
                     Animation<double> secAnimation) {
                   return PlantScreen(plantsModels: state.plant);
@@ -49,7 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ).animate(
                       CurvedAnimation(
                         parent: animation,
-                        curve: Curves.slowMiddle,
+                        reverseCurve: Curves.easeOut,
+                        curve: Interval(
+                          0.50,
+                          1.00,
+                          curve: Curves.linear,
+                        ),
                       ),
                     ),
                     child: child,
