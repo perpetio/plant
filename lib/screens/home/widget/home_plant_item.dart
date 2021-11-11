@@ -17,6 +17,7 @@ class HomePlantItem extends StatelessWidget {
     // ignore: close_sinks
     final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
     final String imageUrl = plantsModels.plantsImages[0].url;
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         bloc.add(OpenPlantDetailEvent(plant: plantsModels));
@@ -54,6 +55,29 @@ class HomePlantItem extends StatelessWidget {
                     bottom: 0,
                     child: _createMainInfo(context, imageUrl),
                   ),
+                  Positioned(
+                    top: 150,
+                    child: Container(
+                      color: Colors.red,
+                      child: Text('wow'),
+                    ),
+                  ),
+                  // Positioned(
+                  //   child: Flexible(
+                  //     child: Container(
+                  //       width: size.width * 0.6,
+                  //       child: Material(
+                  //         child: Text(
+                  //           plantsModels.plantModels[0].plantName,
+                  //           style: TextStyle(
+                  //               color: Colors.black,
+                  //               fontSize: 20,
+                  //               fontWeight: FontWeight.bold),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -100,18 +124,18 @@ class HomePlantItem extends StatelessWidget {
 
   Widget _createMainInfo(BuildContext context, String imageUrl) {
     final size = MediaQuery.of(context).size;
-    return Container(
-      width: size.width,
-      height: size.height * 0.25,
-      color: Color.fromRGBO(255, 255, 255, 0.97),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(
-              child: Hero(
-                tag: 'text$imageUrl',
+    return Hero(
+      tag: 'panel$imageUrl',
+      child: Container(
+        width: size.width,
+        height: size.height * 0.25,
+        color: Color.fromRGBO(255, 255, 255, 0.97),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
                 child: Container(
                   width: size.width * 0.6,
                   child: Material(
@@ -125,8 +149,8 @@ class HomePlantItem extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

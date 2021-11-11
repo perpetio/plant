@@ -27,10 +27,22 @@ class PlantScreen extends StatelessWidget {
   Widget _createPlantDetails(BuildContext context) {
     return SlidingUpPanel(
       header: _createHeader(context),
-      panel: PlantDetailsPanel(plantModel: plantsModels.plantModels[0]),
-      body: PlantDetailsBody(
-        image: plantsModels.plantsImages[0].url ?? '',
-        plantModel: plantsModels.plantModels[0],
+      panel: Hero(
+        tag: 'panel${plantsModels.plantsImages[0].url}',
+        child: Material(
+          color: Colors.transparent,
+          child: PlantDetailsPanel(
+            plantModel: plantsModels.plantModels[0],
+            image: plantsModels.plantsImages[0].url,
+          ),
+        ),
+      ),
+      body: Hero(
+        tag: 'image${plantsModels.plantsImages[0].url}',
+        child: PlantDetailsBody(
+          image: plantsModels.plantsImages[0].url ?? '',
+          plantModel: plantsModels.plantModels[0],
+        ),
       ),
       minHeight: MediaQuery.of(context).size.height * 0.65,
       maxHeight: MediaQuery.of(context).size.height * 0.95,
@@ -47,9 +59,12 @@ class PlantScreen extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(top: 15),
       child: Center(
-        child: Text(
-          plantsModels.plantModels[0].plantName,
-          style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+        child: Hero(
+          tag: 'plantName${plantsModels.plantsImages[0].url}',
+          child: Text(
+            plantsModels.plantModels[0].plantName,
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          ),
         ),
       ),
     );
