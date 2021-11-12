@@ -61,9 +61,12 @@ class PlantScreen extends StatelessWidget {
       child: Center(
         child: Hero(
           tag: 'plantName${plantsModels.plantsImages[0].url}',
-          child: Text(
-            plantsModels.plantModels[0].plantName,
-            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+          child: Material(
+            color: Colors.transparent,
+            child: Text(
+              plantsModels.plantModels[0].plantName,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
           ),
         ),
       ),

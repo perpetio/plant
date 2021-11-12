@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:plant/core/service/modal_service.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/scan/bloc/scan_bloc.dart';
-import 'package:plant/core/service/modal_service.dart';
 
 class HomePlantItem extends StatelessWidget {
   final PlantsModels plantsModels;
@@ -17,7 +17,6 @@ class HomePlantItem extends StatelessWidget {
     // ignore: close_sinks
     final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
     final String imageUrl = plantsModels.plantsImages[0].url;
-    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         bloc.add(OpenPlantDetailEvent(plant: plantsModels));
@@ -56,28 +55,24 @@ class HomePlantItem extends StatelessWidget {
                     child: _createMainInfo(context, imageUrl),
                   ),
                   Positioned(
-                    top: 150,
+                    top: 165,
+                    left: 10,
                     child: Container(
-                      color: Colors.red,
-                      child: Text('wow'),
+                      child: Hero(
+                        tag: 'plantName$imageUrl',
+                        child: Material(
+                          child: Text(
+                            plantsModels.plantModels[0].plantName,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  // Positioned(
-                  //   child: Flexible(
-                  //     child: Container(
-                  //       width: size.width * 0.6,
-                  //       child: Material(
-                  //         child: Text(
-                  //           plantsModels.plantModels[0].plantName,
-                  //           style: TextStyle(
-                  //               color: Colors.black,
-                  //               fontSize: 20,
-                  //               fontWeight: FontWeight.bold),
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -102,23 +97,42 @@ class HomePlantItem extends StatelessWidget {
   }
 
   Widget _createDeleteItem(BuildContext context, HomeBloc bloc) {
-    return InkWell(
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(25),
-          color: Colors.white,
+    return PopupMenuButton(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      icon: Icon(Icons.more_horiz),
+      color: Colors.white,
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          child: InkWell(
+            child: Row(
+              children: [
+                Icon(Icons.delete_outline, color: Colors.red),
+                SizedBox(width: 5),
+                Text('Delete plant',
+                    style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 15))
+              ],
+            ),
+            onTap: () => ModalService.showCustomAlertDialog(
+              context,
+              image1: Image.asset(
+                'assets/images/deleteEmoji.png',
+                width: 32,
+                height: 32,
+              ),
+              image2: Image.asset('assets/images/plant.png'),
+              title: 'Delete plant',
+              description:
+                  'Are you sure you want to delete ${plantsModels.plantModels[0].plantName} plant?',
+              agreementButton: 'Yes, delete',
+              onTapAgreement: () =>
+                  bloc.add(DeletePlantItemEvent(plant: plantsModels)),
+            ),
+          ),
         ),
-        child: Icon(
-          Icons.delete_outline,
-          size: 35,
-          color: Colors.red,
-        ),
-      ),
-      onTap: () => ModalService.showAlertDialog(
-        context,
-        description: 'Delete the plant?',
-        onTap: () => bloc.add(DeletePlantItemEvent(plant: plantsModels)),
-      ),
+      ],
     );
   }
 
@@ -130,28 +144,28 @@ class HomePlantItem extends StatelessWidget {
         width: size.width,
         height: size.height * 0.25,
         color: Color.fromRGBO(255, 255, 255, 0.97),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                child: Container(
-                  width: size.width * 0.6,
-                  child: Material(
-                    child: Text(
-                      plantsModels.plantModels[0].plantName,
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+        // child: Padding(
+        //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       Flexible(
+        //         child: Container(
+        //           width: size.width * 0.6,
+        //           child: Material(
+        //             child: Text(
+        //               plantsModels.plantModels[0].plantName,
+        //               style: TextStyle(
+        //                   color: Colors.black,
+        //                   fontSize: 20.0,
+        //                   fontWeight: FontWeight.bold),
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ),
     );
   }

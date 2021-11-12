@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant/const/color_const.dart';
 
 class PlantButton extends StatelessWidget {
   final String title;
@@ -15,10 +16,11 @@ class PlantButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 55,
+      height: 48,
       decoration: BoxDecoration(
-        color: isEnabled ? Colors.orange : Colors.grey,
-        borderRadius: BorderRadius.circular(100),
+        color: isEnabled ? ColorConstants.green : Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: ColorConstants.green, width: 2),
       ),
       child: Material(
         color: Colors.transparent,
@@ -29,9 +31,9 @@ class PlantButton extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                color: isEnabled ? Colors.white : Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
               ),
             ),
           ),
