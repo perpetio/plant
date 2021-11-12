@@ -22,7 +22,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         icon: Icon(Icons.search, color: Colors.black, size: 30),
         onPressed: () {},
       ),
-      SizedBox(width: 10.0),
+      SizedBox(width: 10),
       InkWell(
         onTap: () {
           HapticFeedback.selectionClick();
@@ -34,13 +34,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
         child: Avatar(),
       ),
-      SizedBox(width: 15.0)
+      SizedBox(width: 15)
     ];
 
     return Padding(
       padding: const EdgeInsets.only(top: 12.0),
       child: AppBar(
-        elevation: 0.0,
+        elevation: 0,
         brightness: Brightness.light,
         backgroundColor: Colors.white,
         title: Text(
@@ -68,8 +68,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         style: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 24.0,
-          letterSpacing: 1.0,
+          fontSize: 24,
+          letterSpacing: 1,
         ),
       ),
     );

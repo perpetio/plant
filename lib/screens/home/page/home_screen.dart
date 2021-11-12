@@ -77,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               ScreenTemplate(
                 index: 0,
-                title: 'Home',
                 appBar: _createAppBar(bloc),
                 isAppBar: true,
                 body: HomeContent(),
@@ -110,14 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ],
-      title: Text(
-        "Home",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+      title: _createAppBarTitle(bloc),
       onTap: () {
         focusNode.requestFocus();
       },
@@ -133,6 +125,38 @@ class _HomeScreenState extends State<HomeScreen> {
           bloc.add(SearchPlantsEvent(query: query));
         });
       },
+    );
+  }
+
+  Widget _createAppBarTitle(HomeBloc bloc) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              // bloc.user.name != null || bloc.user.name == ''
+              //     ? 'Hi ${bloc.user.name}'
+              //     : 'Hi, name!',
+              'hi',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 5),
+            Image.asset('assets/images/plant.png'),
+          ],
+        ),
+        SizedBox(height: 5),
+        Text(
+          'Let’s explore new plants!',
+          style: TextStyle(
+              color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
+        ),
+        SizedBox(height: 5),
+      ],
     );
   }
 }

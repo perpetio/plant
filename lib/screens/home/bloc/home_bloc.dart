@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:plant/api/firestore_api_client.dart';
 import 'package:plant/models/plant_model.dart';
+import 'package:plant/models/user_data.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -11,7 +12,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial());
 
   int currentPromo = 0;
-
+  UserData user;
   List<PlantsModels> listPlantsModels = <PlantsModels>[];
 
   @override
@@ -20,6 +21,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async* {
     if (event is HomeInitialEvent) {
       // yield HomeLoadingState();
+      user = await FirestoreApiClient.getData();
       listPlantsModels = await FirestoreApiClient.getPlantsData();
       yield HomeInitial();
     } else if (event is NextImageEvent) {

@@ -5,8 +5,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:plant/models/plant_model.dart';
+import 'package:plant/models/user_data.dart';
 
 class FirestoreApiClient {
+  static Future<dynamic> getData() async {
+    DocumentSnapshot snapshot = await FirebaseFirestore.instance
+        .collection("users")
+        .doc(FirebaseAuth.instance.currentUser.uid)
+        .get();
+
+    final Map<String, dynamic> userData = snapshot.data();
+    final UserData user = UserData.fromJson(userData);
+    return user;
+  }
+
   static Future<void> deletePlantItem(PlantsModels plant) {
     return FirebaseFirestore.instance
         .collection('users')

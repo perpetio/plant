@@ -28,16 +28,16 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
     final bloc = BlocProvider.of<HomeBloc>(context);
 
     return Padding(
-      padding: const EdgeInsets.only(top: 50.0),
+      padding: const EdgeInsets.only(top: 50),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30.0, bottom: 13.0),
+            padding: const EdgeInsets.only(left: 30, bottom: 13),
             child: Align(
               alignment: Alignment.topLeft,
               child: Text(
                 'My plants',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
               ),
             ),
           ),
@@ -66,8 +66,8 @@ class _HomePlantSliderState extends State<HomePlantsSlider> {
                   carouselController: _controller,
                 ),
                 Positioned(
-                  bottom: 0.0,
-                  right: 40.0,
+                  bottom: 0,
+                  right: 40,
                   child: HomeNextButton(controller: _controller),
                 )
               ],
