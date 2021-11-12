@@ -23,57 +23,43 @@ class HomePlantItem extends StatelessWidget {
       },
       child: Padding(
         padding: EdgeInsets.only(left: 4, right: 4, bottom: 20, top: 10),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(20),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
-                spreadRadius: 7,
-                blurRadius: 7,
-                offset: Offset(0, 3),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            child: BlocProvider(
-              create: (context) => ScanBloc(),
-              child: Stack(
-                children: [
-                  _createBackgroundImage(imageUrl),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: _createDeleteItem(context, bloc),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    child: _createMainInfo(context, imageUrl),
-                  ),
-                  Positioned(
-                    top: 165,
-                    left: 10,
-                    child: Container(
-                      child: Hero(
-                        tag: 'plantName$imageUrl',
-                        child: Material(
-                          child: Text(
-                            plantsModels.plantModels[0].plantName,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
+        child: Hero(
+          tag: 'panel$imageUrl',
+          child: Material(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(20),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 7,
+                    blurRadius: 7,
+                    offset: Offset(0, 3),
                   ),
                 ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                child: BlocProvider(
+                  create: (context) => ScanBloc(),
+                  child: Stack(
+                    children: [
+                      _createBackgroundImage(imageUrl),
+                      Positioned(
+                        top: 10,
+                        right: 10,
+                        child: _createDeleteItem(context, bloc),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        child: _createMainInfo(context, imageUrl),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -84,14 +70,11 @@ class HomePlantItem extends StatelessWidget {
 
   Widget _createBackgroundImage(String image) {
     return Container(
-      child: Hero(
-        tag: 'image$image',
-        child: Image.network(
-          plantsModels.plantsImages[0].url,
-          fit: BoxFit.cover,
-          width: 1000,
-          height: 1000,
-        ),
+      child: Image.network(
+        plantsModels.plantsImages[0].url,
+        fit: BoxFit.cover,
+        width: 1000,
+        height: 1000,
       ),
     );
   }
@@ -103,16 +86,19 @@ class HomePlantItem extends StatelessWidget {
       color: Colors.white,
       itemBuilder: (context) => [
         PopupMenuItem(
+          height: 30,
           child: InkWell(
             child: Row(
               children: [
                 Icon(Icons.delete_outline, color: Colors.red),
                 SizedBox(width: 5),
-                Text('Delete plant',
-                    style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 15))
+                Text(
+                  'Delete plant',
+                  style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15),
+                )
               ],
             ),
             onTap: () => ModalService.showCustomAlertDialog(
@@ -138,34 +124,34 @@ class HomePlantItem extends StatelessWidget {
 
   Widget _createMainInfo(BuildContext context, String imageUrl) {
     final size = MediaQuery.of(context).size;
-    return Hero(
-      tag: 'panel$imageUrl',
-      child: Container(
-        width: size.width,
-        height: size.height * 0.25,
-        color: Color.fromRGBO(255, 255, 255, 0.97),
-        // child: Padding(
-        //   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       Flexible(
-        //         child: Container(
-        //           width: size.width * 0.6,
-        //           child: Material(
-        //             child: Text(
-        //               plantsModels.plantModels[0].plantName,
-        //               style: TextStyle(
-        //                   color: Colors.black,
-        //                   fontSize: 20.0,
-        //                   fontWeight: FontWeight.bold),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+    return Container(
+      width: size.width * 0.75,
+      height: size.height * 0.2,
+      color: Color.fromRGBO(255, 255, 255, 0.97),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(top: 15, left: 10, right: 30, bottom: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(
+              child: Text(
+                plantsModels.plantModels[0].plantName,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              plantsModels.plantModels[0].plantDetails.wikiDescription.value,
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:plant/const/color_const.dart';
 
 class HomeNextButton extends StatelessWidget {
   final CarouselController controller;
@@ -9,14 +10,14 @@ class HomeNextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RawMaterialButton(
       onPressed: () => controller.nextPage(),
-      elevation: 7.0,
-      fillColor: Colors.orangeAccent,
+      elevation: 7,
+      fillColor: ColorConstants.green,
       child: Icon(
         Icons.arrow_forward_rounded,
-        size: 30.0,
+        size: 30,
         color: Colors.white,
       ),
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16),
       shape: CircleBorder(),
     );
   }
