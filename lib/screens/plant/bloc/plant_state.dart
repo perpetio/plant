@@ -4,3 +4,5 @@ part of 'plant_bloc.dart';
 abstract class PlantState {}
 
 class PlantInitial extends PlantState {}
+
+class PlantBackTappedState extends PlantState {}

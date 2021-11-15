@@ -12,5 +12,9 @@ class PlantBloc extends Bloc<PlantEvent, PlantState> {
   @override
   Stream<PlantState> mapEventToState(
     PlantEvent event,
-  ) async* {}
+  ) async* {
+    if (event is PlantBackTappedEvent) {
+      yield PlantBackTappedState();
+    }
+  }
 }

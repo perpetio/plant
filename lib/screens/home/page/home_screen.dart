@@ -43,20 +43,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Animation<double> secondaryAnimation,
                     Widget child) {
                   return ScaleTransition(
-                    scale: Tween<double>(
-                      begin: 0.0,
-                      end: 1.0,
-                    ).animate(
-                      CurvedAnimation(
-                        parent: animation,
-                        reverseCurve: Curves.easeOut,
-                        curve: Interval(
-                          0.50,
-                          1.00,
-                          curve: Curves.linear,
-                        ),
-                      ),
-                    ),
+                    scale: Tween<double>(begin: 0.0, end: 1.0).animate(
+                        CurvedAnimation(
+                            parent: animation,
+                            reverseCurve: Curves.easeOut,
+                            curve: Interval(0.50, 1.00, curve: Curves.linear))),
                     child: child,
                   );
                 },
@@ -77,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               ScreenTemplate(
                 index: 0,
-                appBar: _createAppBar(bloc),
+                appBar: _createAppBarTextField(bloc),
                 isAppBar: true,
                 body: HomeContent(),
               ),
@@ -89,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _createAppBar(HomeBloc bloc) {
+  Widget _createAppBarTextField(HomeBloc bloc) {
     return AppBarTextField(
       autofocus: false,
       focusNode: focusNode,

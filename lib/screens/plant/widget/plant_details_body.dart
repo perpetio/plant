@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plant/const/color_const.dart';
 import 'package:plant/models/plant_model.dart';
 
 class PlantDetailsBody extends StatelessWidget {
@@ -74,21 +75,18 @@ class PlantDetailsBody extends StatelessWidget {
     return Positioned(
       top: 50,
       right: 10,
-      child: Material(
-        color: Colors.transparent,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            _createPlantDescription(
-                'Family: ', plantModel.plantDetails.taxonomy.family),
-            const SizedBox(height: 5),
-            _createPlantDescription(
-                'Genus: ', plantModel.plantDetails.taxonomy.genus),
-            const SizedBox(height: 5),
-            _createPlantDescription(
-                'Class: ', plantModel.plantDetails.taxonomy.tClass),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          _createPlantDescription(
+              'Family: ', plantModel.plantDetails.taxonomy.family),
+          const SizedBox(width: 5),
+          _createPlantDescription(
+              'Genus: ', plantModel.plantDetails.taxonomy.genus),
+          const SizedBox(width: 5),
+          _createPlantDescription(
+              'Class: ', plantModel.plantDetails.taxonomy.tClass),
+        ],
       ),
     );
   }
@@ -98,7 +96,7 @@ class PlantDetailsBody extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(24)),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -110,10 +108,22 @@ class PlantDetailsBody extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(title,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-          Text(description,
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w700,
+              color: ColorConstants.green,
+            ),
+          ),
+          Text(
+            description,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Colors.black,
+            ),
+          ),
         ],
       ),
     );
