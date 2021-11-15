@@ -16,7 +16,7 @@ class HomeRecentlyAdded extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -27,7 +27,7 @@ class HomeRecentlyAdded extends StatelessWidget {
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                  width: size.width * 0.7,
+                  width: double.infinity,
                   height: 100,
                   decoration: BoxDecoration(
                     color: Colors.white,
