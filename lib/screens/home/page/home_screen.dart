@@ -135,10 +135,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           children: [
             Text(
-              // bloc.user.name != null || bloc.user.name == ''
-              //     ? 'Hi ${bloc.user.name}'
-              //     : 'Hi, name!',
-              'hi',
+              bloc.user != null ? 'Hi ${bloc.user.name}' : 'Hi, name!',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 24,
