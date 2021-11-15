@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_loading.dart';
-import 'package:plant/injection_container.dart';
+import 'package:plant/core/service/modal_service.dart';
 import 'package:plant/screens/change_password/bloc/change_password_bloc.dart';
 import 'package:plant/screens/change_password/widget/change_password_content.dart';
-import 'package:plant/service/modal_service.dart';
 
 class ChangePasswordScreen extends StatelessWidget {
-  final ChangePasswordBloc bloc = serviceLocator.get<ChangePasswordBloc>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +27,7 @@ class ChangePasswordScreen extends StatelessWidget {
 
   BlocProvider<ChangePasswordBloc> _buildBody(BuildContext context) {
     return BlocProvider<ChangePasswordBloc>(
-      create: (_) => bloc,
+      create: (_) => ChangePasswordBloc(),
       child: BlocConsumer<ChangePasswordBloc, ChangePasswordState>(
         buildWhen: (_, currState) =>
             currState is ChangePasswordInitial ||
@@ -56,9 +53,5 @@ class ChangePasswordScreen extends StatelessWidget {
         },
       ),
     );
-  }
-
-  void dispose() {
-    bloc.close();
   }
 }

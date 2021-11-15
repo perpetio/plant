@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:plant/service/user_service.dart';
+import 'package:plant/core/service/user_service.dart';
 
 part 'change_password_event.dart';
 part 'change_password_state.dart';

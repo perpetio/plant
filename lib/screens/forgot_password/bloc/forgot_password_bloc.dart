@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:plant/service/auth_service.dart';
+import 'package:plant/core/service/auth_service.dart';
 
 part 'forgot_password_event.dart';
 part 'forgot_password_state.dart';

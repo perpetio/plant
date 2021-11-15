@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:plant/injection_container.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_recently_added.dart';
 import 'package:plant/screens/home/widget/home_search_list.dart';
@@ -17,7 +16,6 @@ class HomeContent extends StatefulWidget {
 class _HomeContentState extends State<HomeContent> {
   final RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  // final HomeBloc bloc = serviceLocator.get<HomeBloc>();
 
   void _onRefresh() async {
     HapticFeedback.heavyImpact();
@@ -36,12 +34,11 @@ class _HomeContentState extends State<HomeContent> {
   }
 
   Widget build(BuildContext context) {
-    // final bloc = BlocProvider.of<HomeBloc>(context);
-    final HomeBloc bloc = serviceLocator.get<HomeBloc>();
     return BlocBuilder<HomeBloc, HomeState>(
       buildWhen: (_, currState) =>
           currState is SearchPlantsState || currState is SearchBackTappedState,
       builder: (context, state) {
+        final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
         if (state is SearchPlantsState) {
           if (state.plantsModels.isEmpty) {
             return Container(

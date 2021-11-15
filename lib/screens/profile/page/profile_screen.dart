@@ -3,26 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/common_widget/plants_loading.dart';
-import 'package:plant/injection_container.dart';
 import 'package:plant/screens/login/page/sign_in_screen.dart';
 import 'package:plant/screens/profile/bloc/profile_bloc.dart';
-import 'package:plant/utils/router.dart';
-import 'package:plant/widgets/bottom_navigation_bar.dart';
+import 'package:plant/core/utils/router.dart';
+import 'package:plant/common_widget/bottom_navigation_bar.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ProfileBloc bloc = serviceLocator.get<ProfileBloc>();
     return BlocProvider<ProfileBloc>(
-      create: (_) => bloc,
+      create: (_) => ProfileBloc(),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {},
         listenWhen: (_, currState) => true,
         buildWhen: (_, currState) =>
             currState is ProfileInitial || currState is ProfileLoadingState,
         builder: (context, state) {
-          // ignore: close_sinks
-          // final bloc = BlocProvider.of<ProfileBloc>(context);
+          final ProfileBloc bloc = BlocProvider.of<ProfileBloc>(context);
           if (state is ProfileInitial) {
             bloc.add(ProfileInitialEvent());
           } else if (state is ProfileLoadingState) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:plant/models/plant_model.dart';
 import 'package:plant/screens/plant/widget/plant_details_body.dart';
 import 'package:plant/screens/plant/widget/plant_details_panel.dart';
-import 'package:plant/widgets/screen_template.dart';
+import 'package:plant/common_widget/screen_template.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class PlantScreen extends StatelessWidget {
@@ -25,19 +25,27 @@ class PlantScreen extends StatelessWidget {
   }
 
   Widget _createPlantDetails(BuildContext context) {
-    return SlidingUpPanel(
-      header: _createHeader(context),
-      panel: PlantDetailsPanel(plantModel: plantsModels.plantModels[0]),
-      body: PlantDetailsBody(
-        image: plantsModels.plantsImages[0].url ?? '',
-        plantModel: plantsModels.plantModels[0],
-      ),
-      minHeight: MediaQuery.of(context).size.height * 0.65,
-      maxHeight: MediaQuery.of(context).size.height * 0.95,
-      isDraggable: true,
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(55),
-        topRight: Radius.circular(55),
+    return Hero(
+      tag: 'panel${plantsModels.plantsImages[0].url}',
+      child: Material(
+        child: SlidingUpPanel(
+          header: _createHeader(context),
+          panel: PlantDetailsPanel(
+            plantModel: plantsModels.plantModels[0],
+            image: plantsModels.plantsImages[0].url,
+          ),
+          body: PlantDetailsBody(
+            image: plantsModels.plantsImages[0].url ?? '',
+            plantModel: plantsModels.plantModels[0],
+          ),
+          minHeight: MediaQuery.of(context).size.height * 0.65,
+          maxHeight: MediaQuery.of(context).size.height * 0.95,
+          isDraggable: true,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(55),
+            topRight: Radius.circular(55),
+          ),
+        ),
       ),
     );
   }

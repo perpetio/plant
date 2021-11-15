@@ -2,10 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:plant/const/color_const.dart';
 import 'package:plant/screens/home/page/home_screen.dart';
 import 'package:plant/screens/profile/page/profile_screen.dart';
 import 'package:plant/screens/scan/page/scan_screen.dart';
-import 'package:plant/utils/router.dart';
+import 'package:plant/core/utils/router.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int index;
@@ -45,25 +46,25 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   final List<BottomNavigationBarItem> items = [
     BottomNavigationBarItem(
-      icon: Image.asset('assets/icons/home.png',
-          height: 25.0, color: Colors.grey),
+      icon:
+          Image.asset('assets/icons/home.png', height: 25, color: Colors.grey),
       activeIcon: Image.asset(
         'assets/icons/home.png',
-        height: 25.0,
-        color: Colors.orange,
+        height: 25,
+        color: ColorConstants.green,
       ),
       label: 'Home',
     ),
     BottomNavigationBarItem(
-      icon: Image.asset('assets/icons/scan.png', height: 25.0),
+      icon: Image.asset('assets/icons/scan.png', height: 56, width: 56),
       activeIcon: Image.asset('assets/icons/scan.png',
-          height: 25.0, color: Colors.orange),
+          height: 56, width: 56, color: ColorConstants.green),
       label: 'Scan',
     ),
     BottomNavigationBarItem(
       icon: Image.asset('assets/icons/profile.png', height: 25.0),
       activeIcon: Image.asset('assets/icons/profile.png',
-          height: 25.0, color: Colors.orange),
+          height: 25, color: ColorConstants.green),
       label: 'Profile',
     ),
   ];
@@ -81,8 +82,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
         elevation: 0.0,
         showUnselectedLabels: false,
         showSelectedLabels: false,
-        selectedLabelStyle: TextStyle(letterSpacing: 1.0, fontSize: 10.0),
-        unselectedLabelStyle: TextStyle(letterSpacing: 1.0, fontSize: 10.0),
+        selectedLabelStyle: TextStyle(letterSpacing: 1, fontSize: 10),
+        unselectedLabelStyle: TextStyle(letterSpacing: 1, fontSize: 10),
         items: items,
         currentIndex: this.index,
         onTap: (index) => _handleBottomNavigation(context, index),

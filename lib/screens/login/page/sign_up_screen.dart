@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:plant/common_widget/plants_button.dart';
-import 'package:plant/injection_container.dart';
 import 'package:plant/screens/home/page/home_screen.dart';
 import 'package:plant/screens/login/bloc/login_bloc.dart';
 import 'package:plant/screens/login/page/sign_in_screen.dart';
 import 'package:plant/screens/login/widget/login_text_field.dart';
-import 'package:plant/service/auth_service.dart';
-import 'package:plant/service/validation_service.dart';
-import 'package:plant/utils/router.dart';
+import 'package:plant/core/service/auth_service.dart';
+import 'package:plant/core/service/validation_service.dart';
+import 'package:plant/core/utils/router.dart';
 
 class SignUpScreen extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
@@ -27,14 +26,12 @@ class SignUpScreen extends StatelessWidget {
   }
 
   BlocProvider<LoginBloc> _buildBody(BuildContext context) {
-    final LoginBloc bloc = serviceLocator.get<LoginBloc>();
+    final bloc = BlocProvider.of<LoginBloc>(context);
     return BlocProvider<LoginBloc>(
-      create: (_) => bloc,
+      create: (_) => LoginBloc(),
       child: BlocConsumer<LoginBloc, LoginState>(
         buildWhen: (_, currState) => currState is LoginInitial,
         builder: (context, state) {
-          // final bloc = BlocProvider.of<LoginBloc>(context);
-
           return Stack(
             children: [
               _createSignUpBackground(context),

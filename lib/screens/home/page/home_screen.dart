@@ -2,14 +2,13 @@ import 'package:appbar_textfield/appbar_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:plant/common_widget/plants_loading.dart';
-import 'package:plant/injection_container.dart';
 import 'package:plant/screens/home/bloc/home_bloc.dart';
 import 'package:plant/screens/home/widget/home_content.dart';
 import 'package:plant/screens/plant/page/plant_screen.dart';
-import 'package:plant/utils/debouncer.dart';
-import 'package:plant/utils/router.dart';
-import 'package:plant/widgets/avatar.dart';
-import 'package:plant/widgets/screen_template.dart';
+import 'package:plant/core/utils/debouncer.dart';
+import 'package:plant/core/utils/router.dart';
+import 'package:plant/common_widget/avatar.dart';
+import 'package:plant/common_widget/screen_template.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -20,12 +19,11 @@ class _HomeScreenState extends State<HomeScreen> {
   final Debouncer _debouncer = Debouncer(milliseconds: 1000);
   final TextEditingController searchController = TextEditingController();
   final FocusNode focusNode = FocusNode();
-  final HomeBloc bloc = serviceLocator.get<HomeBloc>();
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<HomeBloc>(
-      create: (_) => bloc,
+      create: (_) => HomeBloc(),
       child: BlocConsumer<HomeBloc, HomeState>(
         listenWhen: (_, currState) =>
             currState is OpenPlantDetailState || currState is AvatarTappedState,
@@ -35,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.of(context).push(
               PageRouteBuilder(
                 fullscreenDialog: true,
-                transitionDuration: Duration(microseconds: 100),
+                transitionDuration: Duration(milliseconds: 500),
                 pageBuilder: (BuildContext context, Animation<double> animation,
                     Animation<double> secAnimation) {
                   return PlantScreen(plantsModels: state.plant);
@@ -51,7 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ).animate(
                       CurvedAnimation(
                         parent: animation,
-                        curve: Curves.slowMiddle,
+                        reverseCurve: Curves.easeOut,
+                        curve: Interval(
+                          0.50,
+                          1.00,
+                          curve: Curves.linear,
+                        ),
                       ),
                     ),
                     child: child,
@@ -66,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
         buildWhen: (_, currState) =>
             currState is HomeInitial || currState is HomeLoadingState,
         builder: (context, state) {
+          final HomeBloc bloc = BlocProvider.of<HomeBloc>(context);
           if (state is HomeInitial) {
             bloc.add(HomeInitialEvent());
           }
@@ -73,8 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               ScreenTemplate(
                 index: 0,
-                title: 'Home',
-                appBar: _createAppBar(),
+                appBar: _createAppBar(bloc),
                 isAppBar: true,
                 body: HomeContent(),
               ),
@@ -86,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _createAppBar() {
+  Widget _createAppBar(HomeBloc bloc) {
     return AppBarTextField(
       autofocus: false,
       focusNode: focusNode,
@@ -106,14 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
           },
         ),
       ],
-      title: Text(
-        "Home",
-        style: TextStyle(
-          color: Colors.black,
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+      title: _createAppBarTitle(bloc),
       onTap: () {
         focusNode.requestFocus();
       },
@@ -129,6 +125,35 @@ class _HomeScreenState extends State<HomeScreen> {
           bloc.add(SearchPlantsEvent(query: query));
         });
       },
+    );
+  }
+
+  Widget _createAppBarTitle(HomeBloc bloc) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(
+              bloc.user != null ? 'Hi ${bloc.user.name}' : 'Hi, name!',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            SizedBox(width: 5),
+            Image.asset('assets/images/plant.png'),
+          ],
+        ),
+        SizedBox(height: 5),
+        Text(
+          'Let’s explore new plants!',
+          style: TextStyle(
+              color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
+        ),
+        SizedBox(height: 5),
+      ],
     );
   }
 }

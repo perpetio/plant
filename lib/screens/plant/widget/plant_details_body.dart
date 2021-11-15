@@ -29,12 +29,9 @@ class PlantDetailsBody extends StatelessWidget {
   Widget _createImage() {
     return Container(
       width: double.infinity,
-      child: Hero(
-        tag: 'image$image',
-        child: Image(
-          image: NetworkImage(image),
-          fit: BoxFit.cover,
-        ),
+      child: Image(
+        image: NetworkImage(image),
+        fit: BoxFit.cover,
       ),
     );
   }
@@ -77,8 +74,8 @@ class PlantDetailsBody extends StatelessWidget {
     return Positioned(
       top: 50,
       right: 10,
-      child: Hero(
-        tag: 'content$image',
+      child: Material(
+        color: Colors.transparent,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [

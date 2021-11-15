@@ -4,9 +4,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PlantDetailsPanel extends StatelessWidget {
   final PlantModel plantModel;
+  final String image;
 
   PlantDetailsPanel({
     @required this.plantModel,
+    @required this.image,
   });
 
   @override
@@ -37,7 +39,7 @@ class PlantDetailsPanel extends StatelessWidget {
                         plantModel.plantDetails.wikiImages != []
                     ? _createPlantsImages()
                     : Container(),
-                const SizedBox(height: 80),
+                const SizedBox(height: 150),
               ],
             ),
           ),
